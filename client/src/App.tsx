@@ -21,7 +21,8 @@ import Ownerprofile from "./Pages/Employee/Ownerprofile";
 import PasswrdPage from "./Pages/authentication/PasswrdPage";
 import Landregistrated from "./Pages/Employee/Landregistrated";
 import Ownerstable from "./Pages/Employee/Ownerstable";
-
+import NotFound from "./Componets/Error/notFound";
+//import IdContext from "../src/Context/Context";
 function App() {
   Axios.defaults.withCredentials = true;
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +33,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Wellcomepage />} />
+          <Route path="/not_found" element={<NotFound />} />
           
             <Route path="/navbar" element={<Navbar />} />
             <Route path="/employeehomepage" element={<EmployeeHomePage />} />

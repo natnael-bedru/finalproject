@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 
 //import Aos from "aos";
 import "aos/dist/aos.css";
@@ -14,11 +14,8 @@ type Props = {};
 
 const AdminPage = (props: Props) => {
   const { user } = useContext(IdContext);
-  /*
-  useEffect(() => {
-    Aos.init({ duration: 2000 });
-  }, []);
-  */
+  console.log(`USER: ${JSON.stringify(user)}`);
+
   return (
     <>
       {/* <!-- This is an example component --> */}

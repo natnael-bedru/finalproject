@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 //import Graph from "../../assets/Graph.png";
 import Ownerprofile from "./Ownerprofile";
 //import { Dialog, Transition } from "@headlessui/react";
@@ -19,7 +19,7 @@ type Props = {
 const EmployeePage = (Props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useContext(IdContext);
-
+ 
   return (
     <>
       <div className="     ">

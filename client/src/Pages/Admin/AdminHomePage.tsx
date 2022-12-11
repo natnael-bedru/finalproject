@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import {Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
 type Props = {};
 
 const HomePage = (props: Props) => {
-  const navigate = useNavigate();
   /**
    * [Context variables]
    * @param  {[int]} id [description]
@@ -20,12 +19,7 @@ const HomePage = (props: Props) => {
     role: "",
     status: false,
   });
-  if (user.role === "Admin"){
-     // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-    navigate("/adminhomepage");
-  }else if (user.role === "Employee"){
-    navigate("/employeehomepage");
-  }
+  // Navigation Fix Here
   return (
     <>
       <IdContext.Provider value={{ user, setUser }}>

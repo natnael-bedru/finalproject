@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate, Navigate  } from "react-router-dom";
 import { Menu } from "@headlessui/react";
 import Axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -8,6 +8,7 @@ type Props = {};
 
 const Navbar = (props: Props) => {
   Axios.defaults.withCredentials = true;
+  const navigate = useNavigate();
   const defaultLogout: object = {
     id: 0,
     username: "",
@@ -51,23 +52,30 @@ const Navbar = (props: Props) => {
        * @return {[object]}      [returns a JSON object for these mentioned attributes]
        */
       if (response.status === 200) {
+       
         // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
         // "status":200,"statusText":"OK" Successfull Token Authentication
         // Standard response for successful HTTP requests
-        setUser({
-          id: response.data.userId,
-          username: response.data.username,
-          role: response.data.roleName,
-          status: true,
-        });
-      } else {
+          setUser({
+            id: response.data.userId,
+            username: response.data.username,
+            role: response.data.roleName,
+            status: true,
+          });  
+      } 
+    },(error) => {
+      console.log(`Nav error: ${JSON.stringify(error)}`);
         // 401 page here by using navigate(/)
         // 401 Unauthorized
         // Similar to 403 Forbidden, but specifically for use
         // when authentication is required and has failed or has not yet been provided.
-        setUser({ ...defaultLogout });
+      if(error.response.status === 401){
+        navigate("/not_found");
       }
+      setUser({ ...defaultLogout });
+
     });
+    console.log(`Previous user: ${JSON.stringify(user)}`);
   }, []);
 
   return (
