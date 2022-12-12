@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
 type Props = {};
 
 const HomePage = (props: Props) => {
+  const navigate = useNavigate();
   /**
    * [Context variables]
    * @param  {[int]} id [description]
@@ -20,6 +21,9 @@ const HomePage = (props: Props) => {
     status: false,
   });
   // Navigation Fix Here
+  if(user.role !== "Admin" ){
+    navigate("/not_found");
+  }
   return (
     <>
       <IdContext.Provider value={{ user, setUser }}>

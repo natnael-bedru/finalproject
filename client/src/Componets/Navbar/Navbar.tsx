@@ -9,6 +9,9 @@ type Props = {};
 const Navbar = (props: Props) => {
   Axios.defaults.withCredentials = true;
   const navigate = useNavigate();
+  //const [dateNow, setDateNow] = useState("");
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
   const defaultLogout: object = {
     id: 0,
     username: "",
@@ -126,7 +129,7 @@ const Navbar = (props: Props) => {
                         className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                         aria-current="page"
                       >
-                        Manage Employees
+                        Manage Staff
                       </Link>
                     </>
                   ) : user.role === "Employee" ? (
@@ -215,7 +218,7 @@ const Navbar = (props: Props) => {
                     {/* the logined in usr name */}
                     <div className="pl-2 md:flex flex-col justify-start hidden ">
                       <h1>{user.username}</h1>
-                      <p>date:12/09/22</p>
+                      <p>{today.toDateString()}</p>
                     </div>
                   </Menu.Button>
                 </div>

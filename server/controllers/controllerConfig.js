@@ -156,7 +156,7 @@ exports.loginStatus = (request, response) => {
     message: "You are authenticated!",
   });
 };
-/*
+
 exports.registerStaff = (request, response) => {
   //console.log(request.body);
   const { name } = request.body;
@@ -167,7 +167,7 @@ exports.registerStaff = (request, response) => {
     .then((data) => response.json({ data: data }))
     .catch((err) => console.log(err));
 };
-*/
+
 /*
 
 exports.insertNewName = (request, response) => {
