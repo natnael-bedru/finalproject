@@ -1,119 +1,28 @@
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useContext,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu } from "@headlessui/react";
 import Axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
-import IdContext from "../../Context/Context";
-
 type Props = {};
 
-const Navbar = (props: Props) => {
-  Axios.defaults.withCredentials = true;
+const EmpNavbar = (props: Props) => {
+  const [_username, setUserName] = useState("");
+  const [_name, setName] = useState("");
+  const [showOption, setShowOption] = useState(false);
   const navigate = useNavigate();
-  const timeElasped = Date.now();
-  const today = new Date(timeElasped);
-  const defaultLogout: object = {
-    id: 0,
-    username: "",
-    role: "",
-    status: false,
-  };
   const [nav, setNav] = useState(false);
-  const { user, setUser } = useContext(IdContext);
-
-  const handleClick = () => setNav(!nav); //?
-
-  /*
-  const [authState, setAuthState] = useState({
-    id: 0,
-    username: "",
-    role: "",
-    status: false,
-  });
-  */
-  const [showOption, setShowOption] = useState(false); //modal ui interface
-  // const [signout, setSignOut] = useState(false);
-  // const handlesignout = () => {
-  //   setSignOut(!signout);
-  // };
-  // const handleclick = () => {
-  //   setShowOption(!showOption);
-  // };
+  const handleClick = () => setNav(!nav);
+  const [signout, setSignOut] = useState(false);
+  const handlesignout = () => {
+    setSignOut(!signout);
+  };
+  const handleclick = () => {
+    setShowOption(!showOption);
+  };
   const logout = () => {
     localStorage.removeItem("token");
-    //navigate("/signup");
-    setUser({ ...defaultLogout });
-    //setAuthState({ ...authState });
+    navigate("/signup");
   };
-  // const { userid, setuserid } = useContext(IdContext);
-
-  // const [_username, setUserName] = useState({});
-  // const [_name, setName] = useState("");
-  // const [_email, setEmail] = useState("");
-  // const [_phoneNumber, setPhoneNumber] = useState("");
-  // const [_sex, setSex] = useState("");
-  // const [_birthday, setBirthday] = useState("");
-  // const [_assignedBy, setAssignedBy] = useState(0);
-
-  useLayoutEffect(() => {
-    Axios.get("http://localhost:3001/AALHRIA/isloggedin", {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then(
-      (response) => {
-        console.log(`Output ${JSON.stringify(response)}`);
-        /**
-         * [response.data]
-         * @param  {[boolean]} loggedIn [description]
-         * @param  {[int]} userId [description]
-         * @param  {[string]} username [description]
-         * @param  {[int]} assignedBy [description]
-         * @param  {[string]} adminName [Combination of the first name and the middle name]
-         * @param  {[string]} roleName [description]
-         * @param  {[string]} firstName [description]
-         * @param  {[string]} middleName [description]
-         * @param  {[string]} lastName [description]
-         * @param  {[string]} email [description]
-         * @param  {[string]} phoneNumber [description]
-         * @param  {[string]} sex [description]
-         * @param  {[string]} birthday [description]
-         * @param  {[string]} message [description]
-         * @return {[object]}      [returns a JSON object for these mentioned attributes]
-         */
-        if (response.status === 200) {
-          // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-          // "status":200,"statusText":"OK" Successfull Token Authentication
-          // Standard response for successful HTTP requests
-          setUser({
-            id: response.data.userId,
-            username: response.data.username,
-            role: response.data.roleName,
-            status: true,
-          });
-        }
-      },
-      (error) => {
-        console.log(`Nav error: ${JSON.stringify(error)}`);
-        // 401 page here by using navigate(/)
-        // 401 Unauthorized
-        // Similar to 403 Forbidden, but specifically for use
-        // when authentication is required and has failed or has not yet been provided.
-        if (error.response.status === 401) {
-          navigate("/not_found");
-        }
-        setUser({ ...defaultLogout });
-      }
-    );
-    console.log(`Previous user: ${JSON.stringify(user)}`);
-  }, []);
-
   return (
     <>
       <nav className="bg-gray-100 text-black ">
@@ -142,64 +51,46 @@ const Navbar = (props: Props) => {
                   src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                   alt="Your Company"
                 />
-
                 {/* logo */}
               </div>
 
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
-                  {user.role === "Admin" ? (
-                    <>
-                      <Link
-                        to="/adminhomepage"
-                        className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        aria-current="page"
-                      >
-                        HOME
-                      </Link>
-                      <Link
-                        to="/adminhomepage/employees"
-                        className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        aria-current="page"
-                      >
-                        Manage Employees
-                      </Link>
-                    </>
-                  ) : user.role === "Employee" ? (
-                    <>
-                      <Link
-                        to="/employeehomepage"
-                        className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        aria-current="page"
-                      >
-                        HOME
-                      </Link>
+                  <Link
+                    to="/employeehomepage"
+                    className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    aria-current="page"
+                  >
+                    HOME
+                  </Link>
+                  {/* <Link
+                    to="/adminhomepage/employees"
+                    className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    aria-current="page"
+                  >
+                    Manage Employees
+                  </Link> */}
 
-                      <Link
-                        to="/employeehomepage/lands"
-                        className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        aria-current="page"
-                      >
-                        Registered Lands
-                      </Link>
-                      <Link
-                        to="/employeehomepage/landregistration"
-                        className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        aria-current="page"
-                      >
-                        Register Land
-                      </Link>
-                      <Link
-                        to="/employeehomepage/owners"
-                        className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        aria-current="page"
-                      >
-                        Owners
-                      </Link>
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <Link
+                    to="/employeehomepage"
+                    className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    aria-current="page"
+                  >
+                    registerd lands
+                  </Link>
+                  <Link
+                    to="/"
+                    className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    {/*  */}
+                    Register Land
+                  </Link>
+                  <Link
+                    to="/"
+                    className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Owners
+                  </Link>
                 </div>
               </div>
               {/* 
@@ -249,9 +140,9 @@ const Navbar = (props: Props) => {
                       alt=""
                     />
                     {/* the logined in usr name */}
-                    <div className="pl-2 md:flex flex-col justify-start hidden ">
-                      <h1>{user.username}</h1>
-                      <p>{today.toDateString()}</p>
+                    <div className="pl-9 md:flex flex-col justify-start hidden ">
+                      <h1>{_name}</h1>
+                      <p>date:12/09/22</p>
                     </div>
                   </Menu.Button>
                 </div>
@@ -340,4 +231,4 @@ const Navbar = (props: Props) => {
   );
 };
 
-export default Navbar;
+export default EmpNavbar;

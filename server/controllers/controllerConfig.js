@@ -11,7 +11,8 @@ const saltRounds = 10;
 exports.verifyJWT = (request, response, next) => {
   const token = request.headers["x-access-token"];
   if (!token) {
-    response.status(401).send("Token is required!");
+    response.status(401).send("Token is Required");
+    //response.status(401).send("Token is required!");
   } else {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
@@ -140,7 +141,7 @@ exports.loginStatus = (request, response) => {
   console.log(`User role : ${request.roleName}`);
   console.log(`Admin name : ${request.adminName}`);
   response.json({
-    // loggedIn: true,
+    loggedIn: true,
     userId: request.userId,
     username: request.username,
     assignedBy: request.assignedBy,
@@ -156,7 +157,7 @@ exports.loginStatus = (request, response) => {
     message: "You are authenticated!",
   });
 };
-
+/*
 exports.registerStaff = (request, response) => {
   //console.log(request.body);
   const { name } = request.body;
@@ -167,7 +168,7 @@ exports.registerStaff = (request, response) => {
     .then((data) => response.json({ data: data }))
     .catch((err) => console.log(err));
 };
-
+*/
 /*
 
 exports.insertNewName = (request, response) => {

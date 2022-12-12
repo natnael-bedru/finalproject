@@ -258,7 +258,7 @@ const Landregistrated = (props: Props) => {
           </div>
         </div>
       </div>
-      <QRcodePage QRcode={showOption} setQRcode={setShowOption} />
+      {<QRcodePage QRcode={showOption} setQRcode={setShowOption} />}
       {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
     </>
   );

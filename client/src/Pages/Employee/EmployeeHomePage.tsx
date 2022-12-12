@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import EmpNavbar from "../../Componets/Navbar/EmpNavbar";
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
-
 type Props = {};
 
 const HomePage = (props: Props) => {
@@ -21,10 +21,10 @@ const HomePage = (props: Props) => {
     role: "",
     status: false,
   });
-  if(user.role !== "Employee" ){
+  // Navigation Fix Here
+  if (user.role !== "Employee") {
     navigate("/not_found");
   }
-  // Navigation Fix Here
   return (
     <>
       <IdContext.Provider value={{ user, setUser }}>

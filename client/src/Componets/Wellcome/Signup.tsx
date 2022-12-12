@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 type Props = {};
 
 const Signup = (props: Props) => {
-  const navigate = useNavigate();
   const [_errMsg, setErrorMsg] = useState("");
+  // useEffect(() => {
+
+  // }, [_errMsg]);
+  const navigate = useNavigate();
+
   const initialValues = {
     username: "",
     password: "",
@@ -38,29 +45,11 @@ const Signup = (props: Props) => {
             "x-access-token": response,
           },
         }).then((response) => {
-          console.log(`Output ${JSON.stringify(response)}`);
-          /**
-           * [response.data]
-           * @param  {[boolean]} loggedIn [description]
-           * @param  {[int]} userId [description]
-           * @param  {[string]} username [description]
-           * @param  {[int]} assignedBy [description]
-           * @param  {[string]} adminName [Combination of the first name and the middle name]
-           * @param  {[string]} roleName [description]
-           * @param  {[string]} firstName [description]
-           * @param  {[string]} middleName [description]
-           * @param  {[string]} lastName [description]
-           * @param  {[string]} email [description]
-           * @param  {[string]} phoneNumber [description]
-           * @param  {[string]} sex [description]
-           * @param  {[string]} birthday [description]
-           * @param  {[string]} message [description]
-           * @return {[object]}      [returns a JSON object for these mentioned attributes]
-           */
-          if (response.status === 200) {
-            // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-            // "status":200,"statusText":"OK" Successfull Token Authentication
-            // Standard response for successful HTTP requests
+          console.log(`fetch data login :${response.data.userId}`);
+          if (response.data.loggedIn === true) {
+            console.log(`Authentication Message: ${response.data.message}`);
+            console.log(`Authentication User Id: ${response.data.userId}`);
+            console.log(`Authentication Role Name: ${response.data.roleName}`);
             switch (response.data.roleName) {
               case "Admin":
                 navigate("/adminhomepage");
@@ -72,15 +61,19 @@ const Signup = (props: Props) => {
                 break;
             }
           } else {
-            // 401 page here by using navigate(/)
-            // 401 Unauthorized
-            // Similar to 403 Forbidden, but specifically for use
-            // when authentication is required and has failed or has not yet been provided.
             console.log("something wrong!");
           }
         });
       });
   };
+  useEffect(() => {
+    if (_errMsg) {
+      toast.error(_errMsg);
+      setErrorMsg("");
+    }
+    //
+  }, [_errMsg]);
+
   return (
     <>
       <div className=" ">
@@ -121,7 +114,8 @@ const Signup = (props: Props) => {
                             name="username"
                             id="text"
                             placeholder="Username"
-                            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-900 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                            required
+                            className="block w-full px-4 py-2 mt-2  text-gray-700 placeholder-gray-900 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                           />
                         </div>
 
@@ -143,6 +137,7 @@ const Signup = (props: Props) => {
 
                           <Field
                             autoComplete="off"
+                            required
                             type="password"
                             name="password"
                             id="password"
@@ -163,12 +158,11 @@ const Signup = (props: Props) => {
                         <p className="mt-6 text-sm text-center text-gray-400">
                           Don&#x27;t have an account yet?{" "}
                           <button
-                            //onClick={Signup}
+                            // onClick={notify}
                             className="text-blue-500 focus:outline-none focus:underline hover:underline"
                           >
                             Sign up
                           </button>
-                          .
                         </p>
                       </Form>
                     </Formik>
@@ -193,6 +187,7 @@ const Signup = (props: Props) => {
           </div>
         </div>
       </div>
+      {<ToastContainer />}
     </>
   );
 };

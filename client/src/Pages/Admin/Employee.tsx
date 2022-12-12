@@ -4,12 +4,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Menu } from "@headlessui/react";
 import Employeeprofile from "../Employee/Employeeprofile";
 import { Link } from "react-router-dom";
+import RegisterEmp from "./RegisterEmp";
 
 type Props = {};
 
 const Employee = (props: Props) => {
   const style = { color: "gray", fontSize: "1.5em" };
-  const [showOption, setShowOption] = useState(false);
+  const [reg, setreg] = useState(false);
 
   return (
     <>
@@ -55,8 +56,9 @@ const Employee = (props: Props) => {
                 placeholder="search for employee..."
               />
             </div>
-            <Link to="/adminhomepage/registerEmployee">
+            <Link to="">
               <button
+                onClick={() => setreg(true)}
                 type="button"
                 className="hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
               >
@@ -240,6 +242,7 @@ const Employee = (props: Props) => {
           </div>
         </div>
       </div>
+      {<RegisterEmp Empreg={reg} setEmpreg={setreg} />}
     </>
   );
 };

@@ -1,0 +1,122 @@
+import React, { useState, useLayoutEffect } from "react";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+
+import Axios from "axios";
+import { use } from "vue/types/umd";
+import { resolve } from "path";
+
+const Protectedroutes = (props: any) => {
+  const [user, setUser] = useState({
+    id: 0,
+    username: "",
+    role: "",
+    status: 0,
+  });
+  useLayoutEffect(() => {
+    //const user = localStorage.getItem("token");
+    //return new Promise((resolve, reject) => {
+    Axios.get("http://localhost:3001/AALHRIA/isloggedin", {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then(
+      (response) => {
+        console.log(`Output ${JSON.stringify(response.data.status)}`);
+        /**
+         * [response.data]
+         * @param  {[boolean]} loggedIn [description]
+         * @param  {[int]} userId [description]
+         * @param  {[string]} username [description]
+         * @param  {[int]} assignedBy [description]
+         * @param  {[string]} adminName [Combination of the first name and the middle name]
+         * @param  {[string]} roleName [description]
+         * @param  {[string]} firstName [description]
+         * @param  {[string]} middleName [description]
+         * @param  {[string]} lastName [description]
+         * @param  {[string]} email [description]
+         * @param  {[string]} phoneNumber [description]
+         * @param  {[string]} sex [description]
+         * @param  {[string]} birthday [description]
+         * @param  {[string]} message [description]
+         * @return {[object]}      [returns a JSON object for these mentioned attributes]
+         */
+        // if (response.status === 200) {
+        // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+        // "status":200,"statusText":"OK" Successfull Token Authentication
+        // Standard response for successful HTTP requests
+        if (response.data.status === 200) {
+          console.log(`Here 1 ${JSON.stringify(response.data.status)}`);
+          setUser({
+            id: response.data.userId,
+            username: response.data.username,
+            role: response.data.roleName,
+            status: response.status,
+          });
+          //console.log(`Outhere: ${JSON.stringify(user)}`);
+          // return user;
+        } else if (response.data.status === 401) {
+          console.log(`Here 2 ${JSON.stringify(response.data.status)}`);
+          setUser({
+            id: 0,
+            username: "",
+            role: "",
+            status: response.data.status,
+          });
+          // console.log(`Error here ${JSON.stringify(user)}`);
+        }
+
+        //
+
+        // 401 page here by using navigate(/)
+        // 401 Unauthorized
+        // Similar to 403 Forbidden, but specifically for use
+        // when authentication is required and has failed or has not yet been provided.
+        //setUser({ ...defaultLogout });      auth ? <Outlet /> : <Navigate to="/signup" />;
+        // }
+      }
+      // (error) => {
+      //   setUser({
+      //     id: 0,
+      //     username: "",
+      //     role: "",
+      //     status: error.status,
+      //   });
+      //   console.log(`Error here ${JSON.stringify(user)}`);
+      // }
+    );
+    console.log(`Here 3 ${JSON.stringify(user)}`);
+    // });
+  }, []);
+
+  // code here
+
+  //const auth = useAuth();
+  //auth.then((_user) => {
+  return (
+    <>
+      {/* user value is not tested  */}
+      {user.status === 401 ? (
+        <Navigate to="/notFound" />
+      ) : user.role === "Admin" ? (
+        <Navigate to="/adminhomepage" />
+      ) : user.role === "Employee" ? (
+        <Navigate to="/employeehomepage" />
+      ) : (
+        <></>
+      )}
+    </>
+  );
+
+  // });
+
+  //return ;
+};
+
+export default Protectedroutes;

@@ -1,13 +1,19 @@
-import React, { useState, Fragment, useContext } from "react";
-import { Link,useNavigate } from "react-router-dom";
-//import Graph from "../../assets/Graph.png";
+import React, {
+  useState,
+  Fragment,
+  Dispatch,
+  SetStateAction,
+  useContext,
+} from "react";
+import { Link } from "react-router-dom";
+import Graph from "../../assets/Graph.png";
 import Ownerprofile from "./Ownerprofile";
-//import { Dialog, Transition } from "@headlessui/react";
-//import Aos from "aos";
+import { Dialog, Transition } from "@headlessui/react";
+import Aos from "aos";
 import "aos/dist/aos.css";
 import Graphcharts from "../../Charts/Graphchart";
-//import Piechart from "../../Charts/Piechart";
-//import Barchart from "../../Charts/Barchart";
+import Piechart from "../../Charts/Piechart";
+import Barchart from "../../Charts/Barchart";
 import Colchart from "../../Charts/Colchart";
 import IdContext from "../../Context/Context";
 
@@ -17,9 +23,9 @@ type Props = {
 };
 
 const EmployeePage = (Props: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { user } = useContext(IdContext);
- 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
       <div className="     ">
@@ -41,7 +47,7 @@ const EmployeePage = (Props: Props) => {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex-shrink-0">
                           <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
-                            $45,385 {user.id} {user.username}
+                            $45,385 {user.username}
                           </span>
                           <h3 className="text-base font-normal text-gray-500">
                             Sales this week

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React, { useState, Dispatch } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+
+import Graph from "../../assets/Graph.png";
+import AdminNavbar from "../../Componets/Navbar/AdminNavbar";
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
 type Props = {};
@@ -21,7 +24,7 @@ const HomePage = (props: Props) => {
     status: false,
   });
   // Navigation Fix Here
-  if(user.role !== "Admin" ){
+  if (user.role !== "Admin") {
     navigate("/not_found");
   }
   return (
