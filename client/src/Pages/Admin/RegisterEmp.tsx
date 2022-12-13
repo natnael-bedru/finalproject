@@ -1,16 +1,12 @@
-import React, {
-  Dispatch,
-  Fragment,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
-import { Outlet } from "react-router-dom";
-import { Dialog, Transition } from "@headlessui/react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import Axios from "axios";
-import IdContext from "../../Context/Context";
+import React, { Dispatch, Fragment, SetStateAction, useContext, useState, useEffect } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import Axios from 'axios';
+import IdContext from '../../Context/Context';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {
   Empreg: boolean;
@@ -19,42 +15,76 @@ type Props = {
 
 const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
   const { user } = useContext(IdContext);
-
-  const initialValues = {
-    roleid: 2,
-    assignedBy: user.id,
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    username: "",
-    password: "",
-    email: "",
-    phonenumber: "",
-    sex: "",
-    birthday: "",
-    currnetAddress: "",
-  };
-  const validationSchema = Yup.object().shape({
-    // firstName: Yup.string().required(),
-    // middleName: Yup.string().required(),
-    // lastName: Yup.string().required(),
-    // username: Yup.string().required(),
-    // password: Yup.string().required(),
-    // sex: Yup.string().required(),
-    // birthday: Yup.string().required(),
-    // phonenumber: Yup.string().required(),
-    // email: Yup.string().required(),
-    //email: Yup.string().required('Email id is mendatory').email(),
-    // currnetAddress: Yup.string().required(),
-    // roleid: Yup.string().required(),
+  const [_msg, setMsg] = useState({
+    type: '',
+    message: '',
   });
 
-  const [date, setdate] = useState("");
-
-  //const formOptions = { resolver: yupResolver(validationSchema) };
+  const initialValues = {
+    roleid: '',
+    assignedBy: user.id,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    username: '',
+    password: '',
+    email: '',
+    phoneNumber: '',
+    sex: '',
+    birthday: '',
+    currentAddress: '',
+  };
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required('*required'),
+    middleName: Yup.string().required('*required'),
+    lastName: Yup.string().required('*required'),
+    username: Yup.string().required('*required'),
+    password: Yup.string().required('*required'),
+    sex: Yup.string().required('*required'),
+    birthday: Yup.string().required('*required'),
+    phoneNumber: Yup.string().required('*required'),
+    email: Yup.string().required('*required'),
+    currentAddress: Yup.string().required('*required'),
+    roleid: Yup.string().required('*required'),
+  });
   const onSubmit = (data: object) => {
     console.log(`DATA ${JSON.stringify(data)}`);
+    Axios.post('http://localhost:3001/AALHRIA/register', data, {
+      headers: {
+        'x-access-token': localStorage.getItem('token'),
+      },
+    }).then((response) => {
+      console.log(`Response: ${JSON.stringify(response.data)}`);
+      if (response.data.status === 'fail') {
+        //errorcode
+        //message
+        setMsg({
+          type: 'error',
+          message: response.data.message,
+        });
+      } else if (response.data.status === 'success') {
+        //affectedRows
+        //message
+        setMsg({
+          type: 'success',
+          message: response.data.message,
+        });
+      }
+    });
   };
+  useEffect(() => {
+    if (_msg.type) {
+      if (_msg.type === 'error') {
+        toast.error(_msg.message);
+      } else if (_msg.type === 'success') {
+        toast.success(_msg.message);
+      }
+      setMsg({
+        type: '',
+        message: '',
+      });
+    }
+  }, [_msg]);
   return (
     <>
       <Transition appear show={Empreg} as={Fragment}>
@@ -72,6 +102,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
+            {<ToastContainer />}
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
@@ -85,12 +116,8 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                 <div className="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle  transition-all">
                   <div className=" flex justify-between items-center p-3">
                     <div className="flex flex-col">
-                      <h2 className="text-2xl font-semibold my-0">
-                        Staff Registration
-                      </h2>
-                      <p className="text-sm font-light">
-                        Staff Registration From
-                      </p>
+                      <h2 className="text-2xl font-semibold my-0">Staff Registration</h2>
+                      <p className="text-sm font-light">Staff Registration From</p>
                     </div>
                     <button
                       type="button"
@@ -119,12 +146,10 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                 <div className="flex justify-between my-4  ">
                                   {/* IMAGE */}
                                   <div className="w-5/6  h- flex flex-col    px-2">
-                                    {" "}
+                                    {' '}
                                     <div className="">
                                       <div>
-                                        <label className="block text-sm  font-medium">
-                                          Employee Image
-                                        </label>
+                                        <label className="block text-sm  font-medium">Employee Image</label>
                                         <div className="mt-1 flex justify-center  items-center px-6 pt-5 pb-6 border-2 h-96 border-gray-300 border-dashed rounded-md">
                                           <div className="space-y-1 text-center">
                                             <svg
@@ -146,9 +171,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                                 htmlFor="file-upload"
                                                 className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                                               >
-                                                <span className="">
-                                                  Upload a file
-                                                </span>
+                                                <span className="">Upload a file</span>
                                                 <input
                                                   id="file-upload"
                                                   name="file-upload"
@@ -156,13 +179,9 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                                   className="sr-only"
                                                 />
                                               </label>
-                                              <p className="pl-1">
-                                                or drag and drop
-                                              </p>
+                                              <p className="pl-1">or drag and drop</p>
                                             </div>
-                                            <p className="text-xs">
-                                              PNG, JPG, GIF up to 10MB
-                                            </p>
+                                            <p className="text-xs">PNG, JPG, GIF up to 10MB</p>
                                           </div>
                                         </div>
                                       </div>
@@ -171,15 +190,17 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
 
                                   <div className="w-full  h-full  px-2 ">
                                     <div className="col-span-1 w-full space-y-5">
-                                      {" "}
+                                      {' '}
                                       <div className="flex space-x-4 ">
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="firstName"
-                                          >
+                                          <label className="" htmlFor="firstName">
                                             First Name
                                           </label>
+                                          <ErrorMessage
+                                            name="firstName"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="firstName"
                                             name="firstName"
@@ -188,12 +209,14 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           />
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="middleName"
-                                          >
+                                          <label className="" htmlFor="middleName">
                                             Middle Name
                                           </label>
+                                          <ErrorMessage
+                                            name="middleName"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="middleName"
                                             name="middleName"
@@ -202,65 +225,75 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           />
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="lastName"
-                                          >
+                                          <label className="" htmlFor="lastName">
                                             Last Name
                                           </label>
+                                          <ErrorMessage
+                                            name="lastName"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="lastName"
-                                            name="lasteName"
+                                            name="lastName"
                                             type="text"
                                             className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-800 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                       </div>
                                       <div className=" flex w-full space-x-8">
-                                        {" "}
+                                        {' '}
                                         <div className="w-full">
-                                          <label
-                                            className=" dark:text-gray-900"
-                                            htmlFor="sex"
-                                          >
+                                          <label className=" dark:text-gray-900" htmlFor="sex">
                                             Sex
                                           </label>
+                                          <ErrorMessage
+                                            name="sex"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             name="sex"
                                             as="select"
                                             className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-800 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           >
-                                            <option value="Male">Male</option>
-                                            <option value="Female">
-                                              Female
+                                            <option value="" disabled selected>
+                                              Unspecified
                                             </option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
                                           </Field>
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=" dark:text-gray-900"
-                                            htmlFor="roleid"
-                                          >
+                                          <label className=" dark:text-gray-900" htmlFor="roleid">
                                             Role
                                           </label>
+                                          <ErrorMessage
+                                            name="roleid"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             name="roleid"
                                             as="select"
                                             className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-800 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           >
-                                            <option value="1">Admin</option>
-                                            <option value="2" selected>
-                                              Employee
+                                            <option value="" disabled selected>
+                                              Unspecified
                                             </option>
+                                            <option value="1">Admin</option>
+                                            <option value="2">Employee</option>
                                           </Field>
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="birthday"
-                                          >
+                                          <label className="" htmlFor="birthday">
                                             Date of Birth
                                           </label>
+                                          <ErrorMessage
+                                            name="birthday"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="birthday"
                                             name="birthday"
@@ -271,33 +304,37 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                       </div>
                                       <div className="flex w-full space-x-8">
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="phoneNumber"
-                                          >
+                                          <label className="" htmlFor="phoneNumber">
                                             Phone number
                                           </label>
+                                          <ErrorMessage
+                                            name="phoneNumber"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="phoneNumber"
                                             name="phoneNumber"
-                                            type="tel"
                                             placeholder="+251"
-                                            placeholderTextColor="#808080"
+                                            type="tel"
                                             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor=" currnetAddress"
-                                          >
+                                          <label className="" htmlFor=" currentAddress">
                                             Currnet Address
                                           </label>
+                                          <ErrorMessage
+                                            name="currentAddress"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
-                                            id="currnetAddress"
-                                            name="currnetAddress"
+                                            id="currentAddress"
+                                            name="currentAddress"
+                                            placeholder="Bole"
                                             type="text"
-                                            className="block w-full px-4 py-2 mt-2 placeholder:text-black text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                                            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                       </div>
@@ -306,6 +343,11 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="email">
                                             Email
                                           </label>
+                                          <ErrorMessage
+                                            name="email"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="email"
                                             name="email"
@@ -316,12 +358,14 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           />
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="username"
-                                          >
+                                          <label className="" htmlFor="username">
                                             Username
                                           </label>
+                                          <ErrorMessage
+                                            name="username"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="username"
                                             name="username"
@@ -332,12 +376,14 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           />
                                         </div>
                                         <div className="w-full">
-                                          <label
-                                            className=""
-                                            htmlFor="password"
-                                          >
+                                          <label className="" htmlFor="password">
                                             Password
                                           </label>
+                                          <ErrorMessage
+                                            name="password"
+                                            component="span"
+                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
+                                          />
                                           <Field
                                             id="password"
                                             type="password"

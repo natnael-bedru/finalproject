@@ -157,9 +157,10 @@ exports.loginStatus = (request, response) => {
     message: "You are authenticated!",
   });
 };
-/*
+
 exports.registerStaff = (request, response) => {
   //console.log(request.body);
+  /*
   const { name } = request.body;
   const db = dbService.getDbServiceInstance();
   const result = db.insertNewName(name);
@@ -167,8 +168,59 @@ exports.registerStaff = (request, response) => {
   result
     .then((data) => response.json({ data: data }))
     .catch((err) => console.log(err));
+    */
+  console.log(`Server side: ${JSON.stringify(request.body)}`);
+  const {
+    roleid,
+    assignedBy,
+    firstName,
+    middleName,
+    lastName,
+    username,
+    password,
+    email,
+    phoneNumber,
+    sex,
+    birthday,
+    currentAddress,
+  } = request.body;
+  bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+    if (err) {
+      console.log(err);
+    }
+    request.body.password = hashedPassword;
+    const result = db.registerStaff(request.body);
+    result
+      .then((data) => {
+        // data = "fieldCount":0,"affectedRows":1,"insertId":32,"info":"","serverStatus":2,"warningStatus":0
+        response.json({
+          status: "success",
+          affectedRows: data.affectedRows,
+          message: `Staff member successfuly registered!`,
+        });
+      })
+      .catch((err) => {
+        //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
+        console.log(`Controller ERROR : ${JSON.stringify(err)}`);
+        console.log(`Controller ERROR : ${err.code}`);
+        console.log(`Controller ERROR : ${err.message}`);
+        // HTTP errors say something about the HTTP protocol.
+        // This specific error indicates a server is trying to relay the HTTP request,
+        // but the upstream server did not respond correctly.
+
+        // Your web application communicating with a database server is outside the realm of HTTP
+        // and any errors should be wrapped in the generic HTTP 500 Internal server error response code.
+        response.json({
+          status: "fail",
+          errorcode: err.code,
+          message: `The ${err.message} already in use.`,
+        });
+      });
+  });
+
+  //const result = db.registerStaff(...request.body , pas)
 };
-*/
+
 /*
 
 exports.insertNewName = (request, response) => {
