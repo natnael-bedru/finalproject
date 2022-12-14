@@ -14,13 +14,15 @@ router
   .get(_controllers.verifyJWT, _controllers.loginStatus);
 
 // add staff members
-
 router
   .route("/register")
   .post(_controllers.verifyJWT, _controllers.registerStaff);
 
-/*
+// view staff members
+router.route("/viewstaff").get(_controllers.verifyJWT, _controllers.viewStaff);
+//.get(_controllers.viewStaff);
 
+/*
 // create
 router.route("/insert").post(_controllers.insertNewName);
 

@@ -1,17 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { Dialog, Transition } from "@headlessui/react";
 import { Menu } from "@headlessui/react";
 import Employeeprofile from "../Employee/Employeeprofile";
 import { Link } from "react-router-dom";
 import RegisterEmp from "./RegisterEmp";
+import Axios, { AxiosResponse } from "axios";
+import { json } from "stream/consumers";
 
 type Props = {};
 
 const Employee = (props: Props) => {
+
   const style = { color: "gray", fontSize: "1.5em" };
   const [reg, setreg] = useState(false);
 
+  const [staffList, setStaffList] = useState([]); // array ??
+
+  useEffect(() => {
+    Axios.get("http://localhost:3001/AALHRIA/viewstaff", {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((data) => {
+      console.log(`DATA: ${typeof data}`);
+      //console.log(data.data);
+      setStaffList(data.data);
+
+
+    });
+    console.log(`DATA2: ${JSON.stringify(staffList)}`);
+  }, []);
+
+  //console.log (`DATA3: ${staffList}`);
   return (
     <>
       <div className="bg-white p-8 rounded-md w-full">
@@ -21,7 +42,7 @@ const Employee = (props: Props) => {
               Employee List
             </h2>
             <span className="md:text-xl text-base">
-              view employees status and activites
+              View employees status and activites
             </span>
           </div>
           {/* <div className="flex items-center justify-between ">
@@ -53,7 +74,7 @@ const Employee = (props: Props) => {
                 type="text"
                 name=""
                 id=""
-                placeholder="search for employee..."
+                placeholder="Search for employee . . ."
               />
             </div>
             <Link to="">
@@ -75,25 +96,27 @@ const Employee = (props: Props) => {
                       Name
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Account Created at
+                      Role
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Total Registration
+                      Joined Date
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Recent Registration
+                      Account Status
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Status
+                      Recent Activity
                     </th>
-                    <th className="px-8 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+
+                    {/* <th className="px-8 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Action
-                    </th>
+                    </th> */}
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       more
                     </th>
                   </tr>
                 </thead>
+
                 <tbody>
                   <tr>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -102,8 +125,7 @@ const Employee = (props: Props) => {
                           <img
                             className="w-full h-full rounded-full"
                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
+                            alt="" />
                         </div>
                         <div className="ml-3">
                           <p className="text-gray-900 whitespace-no-wrap">
@@ -121,9 +143,6 @@ const Employee = (props: Props) => {
                       </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                         <span
                           aria-hidden
@@ -131,6 +150,7 @@ const Employee = (props: Props) => {
                         ></span>
                         <span className="relative">Active</span>
                       </span>
+
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <button
@@ -138,7 +158,7 @@ const Employee = (props: Props) => {
                         type="button"
                         className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
                       >
-                        Profile
+                        View Activity
                       </button>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -182,17 +202,14 @@ const Employee = (props: Props) => {
                         </Menu.Items>
                       </Menu>
                     </td>
-                  </tr>
-
-                  <tr>
+                  </tr><tr>
                     <td className="px-5 py-5 bg-white text-sm">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 w-10 h-10">
                           <img
                             className="w-full h-full rounded-full"
                             src="https://images.unsplash.com/photo-1522609925277-66fea332c575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&h=160&w=160&q=80"
-                            alt=""
-                          />
+                            alt="" />
                         </div>
                         <div className="ml-3">
                           <p className="text-gray-900 whitespace-no-wrap">
@@ -210,9 +227,6 @@ const Employee = (props: Props) => {
                       </p>
                     </td>
                     <td className="px-5 py-5 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">70</p>
-                    </td>
-                    <td className="px-5 py-5 bg-white text-sm">
                       <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
                         <span
                           aria-hidden
@@ -220,9 +234,22 @@ const Employee = (props: Props) => {
                         ></span>
                         <span className="relative">Inactive</span>
                       </span>
+
+                    </td>
+                    <td className="px-5 py-5 bg-white text-sm">
+                      <button
+                        //onClick={() => setShowOption(true)}
+                        type="button"
+                        className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+                      >
+                        View Activity
+                      </button>
                     </td>
                   </tr>
+
+
                 </tbody>
+
               </table>
               <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
                 <span className="text-xs xs:text-sm text-gray-900">

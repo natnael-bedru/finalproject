@@ -32,7 +32,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     phoneNumber: '',
     sex: '',
     birthday: '',
-    currentAddress: '',
+    residentAddress: '',
   };
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('*required'),
@@ -44,7 +44,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     birthday: Yup.string().required('*required'),
     phoneNumber: Yup.string().required('*required'),
     email: Yup.string().required('*required'),
-    currentAddress: Yup.string().required('*required'),
+    residentAddress: Yup.string().required('*required'),
     roleid: Yup.string().required('*required'),
   });
   const onSubmit = (data: object) => {
@@ -85,6 +85,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
       });
     }
   }, [_msg]);
+
   return (
     <>
       <Transition appear show={Empreg} as={Fragment}>
@@ -149,7 +150,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                     {' '}
                                     <div className="">
                                       <div>
-                                        <label className="block text-sm  font-medium">Employee Image</label>
+                                        <label className="block text-sm  font-medium">Staff Image</label>
                                         <div className="mt-1 flex justify-center  items-center px-6 pt-5 pb-6 border-2 h-96 border-gray-300 border-dashed rounded-md">
                                           <div className="space-y-1 text-center">
                                             <svg
@@ -322,16 +323,16 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                         </div>
                                         <div className="w-full">
                                           <label className="" htmlFor=" currentAddress">
-                                            Currnet Address
+                                          Resident Address
                                           </label>
                                           <ErrorMessage
-                                            name="currentAddress"
+                                            name="residentAddress"
                                             component="span"
                                             className="ml-2 p-2 mb-2 text-sm text-red-700 "
                                           />
                                           <Field
-                                            id="currentAddress"
-                                            name="currentAddress"
+                                            id="residentAddress"
+                                            name="residentAddress"
                                             placeholder="Bole"
                                             type="text"
                                             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
@@ -353,7 +354,6 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             name="email"
                                             type="email"
                                             placeholder="johndoe@gmail.com"
-                                            placeholderTextColor="#808080"
                                             className="block w-full px-4 py-2 mt-2  text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
@@ -371,7 +371,6 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             name="username"
                                             type="text"
                                             placeholder="johndoe"
-                                            placeholderTextColor="#808080"
                                             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
@@ -389,7 +388,6 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             type="password"
                                             name="password"
                                             placeholder="********"
-                                            placeholderTextColor="#808080"
                                             className="block w-full px-4 py-2 mt-2 text-gray-800 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-900 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
@@ -407,8 +405,9 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                     Canel
                                   </button>
                                   <button
+                                 
                                     type="submit"
-                                    className="  hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                                    className=" dissabled hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                                   >
                                     Save
                                   </button>

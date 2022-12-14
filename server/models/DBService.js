@@ -67,6 +67,20 @@ class DbService {
       });
     });
   }
+
+  async viewStaff() {
+    return new Promise((resolve, reject) => {
+      // This adds staff members into the database
+      const query = `SELECT * FROM staff;`;
+      dbConn.query(query, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
+        if (result.length > 0) {
+          resolve(result);
+        }
+      });
+    });
+  }
+
   /*
   async getAllData() {
     try {

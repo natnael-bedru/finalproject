@@ -159,32 +159,7 @@ exports.loginStatus = (request, response) => {
 };
 
 exports.registerStaff = (request, response) => {
-  //console.log(request.body);
-  /*
-  const { name } = request.body;
-  const db = dbService.getDbServiceInstance();
-  const result = db.insertNewName(name);
-
-  result
-    .then((data) => response.json({ data: data }))
-    .catch((err) => console.log(err));
-    */
-  console.log(`Server side: ${JSON.stringify(request.body)}`);
-  const {
-    roleid,
-    assignedBy,
-    firstName,
-    middleName,
-    lastName,
-    username,
-    password,
-    email,
-    phoneNumber,
-    sex,
-    birthday,
-    currentAddress,
-  } = request.body;
-  bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+  bcrypt.hash(request.body.password, saltRounds, (err, hashedPassword) => {
     if (err) {
       console.log(err);
     }
@@ -201,9 +176,7 @@ exports.registerStaff = (request, response) => {
       })
       .catch((err) => {
         //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
-        console.log(`Controller ERROR : ${JSON.stringify(err)}`);
-        console.log(`Controller ERROR : ${err.code}`);
-        console.log(`Controller ERROR : ${err.message}`);
+        //
         // HTTP errors say something about the HTTP protocol.
         // This specific error indicates a server is trying to relay the HTTP request,
         // but the upstream server did not respond correctly.
@@ -217,8 +190,15 @@ exports.registerStaff = (request, response) => {
         });
       });
   });
+};
 
-  //const result = db.registerStaff(...request.body , pas)
+//viewStaff
+exports.viewStaff = (request, response) => {
+  const result = db.viewStaff();
+  result.then((data) => {
+    // response.send(JSON.stringify(data));
+    response.json(data);
+  });
 };
 
 /*

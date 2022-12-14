@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import EmpNavbar from "../../Componets/Navbar/EmpNavbar";
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
 type Props = {};
