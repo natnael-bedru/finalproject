@@ -57,11 +57,13 @@ CREATE TABLE `staff` (
   `lastName` varchar(100) DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   `password` varchar(72) DEFAULT NULL,
+  `accountStatus` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `phoneNumber` varchar(45) DEFAULT NULL,
   `sex` varchar(45) DEFAULT NULL,
   `birthday` date DEFAULT NULL,
   `residentAddress` varchar(200) DEFAULT NULL,
+  `joinedDate` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`firstName`,`middleName`,`lastName`) /*!80000 INVISIBLE */,
@@ -73,7 +75,7 @@ CREATE TABLE `staff` (
   KEY `id_idx` (`assignedBy`) /*!80000 INVISIBLE */,
   CONSTRAINT `id` FOREIGN KEY (`assignedBy`) REFERENCES `staff` (`id`),
   CONSTRAINT `roleid` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +84,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (12,1,NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','nati@gmail.com','0911223344','Male','1920-09-09',NULL),(14,2,12,'Kebede','Abe','Shemsu','Kebede','$2b$10$neNJICTR0/FDRiU.kCrjNe5Li/uuERjHDNMbOLeSpVzTMTUP9Svli','kebe@gmail.com','0922334455','Female','1911-03-15',NULL),(15,2,NULL,'Sami','Shemsu','Hopa','Sami','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','sami@gmail.com','1122334455','Male','1955-06-10',NULL),(123,1,12,'Natnaeloio','Bedru','Abdulkadir','nat','$2b$10$8wTXLzgUfWIlLSxnbOM1quUPGkdGyTxh5TYrShxdWRcOvgCC0wq7C','nat@gmail.com','0911223344909','Male','2022-12-09','Bole');
+INSERT INTO `staff` VALUES (12,1,NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09',NULL,'2022-12-16'),(14,2,12,'Kebede','Abe','Shemsu','Kebede','$2b$10$neNJICTR0/FDRiU.kCrjNe5Li/uuERjHDNMbOLeSpVzTMTUP9Svli','Active','kebe@gmail.com','0922334455','Female','1911-03-15',NULL,'2022-12-16'),(15,2,NULL,'Sami','Shemsu','Hopa','Sami','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','sami@gmail.com','1122334455','Male','1955-06-10',NULL,'2022-12-16'),(129,1,12,'Natnael','Bedru','qwerq','daveqwer','$2b$10$zU/0W5TNypgDtNGa8UTTuOBJJWA39XnoN4VVFeHQDjIOOWSC9X6ky','Active','qwqw@gmail.com','091122334432324','Male','2022-12-16','qwerqwe','2022-06-17');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -95,4 +97,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-14 22:44:04
+-- Dump completed on 2022-12-15  2:11:58

@@ -5,7 +5,7 @@ import { Menu } from '@headlessui/react';
 import Employeeprofile from '../Employee/Employeeprofile';
 import { Link } from 'react-router-dom';
 import RegisterEmp from './RegisterEmp';
-import Axios, { AxiosResponse } from 'axios';
+import Axios from 'axios';
 import { StaffSearch } from './StaffSearch';
 
 import { CellProps, Hooks, useSortBy, useGlobalFilter,  useTable } from 'react-table';
@@ -26,138 +26,65 @@ const Employee = (props: Props) => {
     }).then((data) => {
       setStaffList(data.data);
     });
-    console.log(`DATA2: ${JSON.stringify(staffList)}`);
   }, []);
-  console.log(staffList);
-
-  /*
-  const data = useMemo(
-    () => [
-      {
-        id: 14,
-        roleid: 2,
-        assignedBy: 12,
-        firstName: 'Kebede',
-        middleName: 'Abe',
-        lastName: 'Shemsu',
-        username: 'Kebede',
-        password: '$2b$10$neNJICTR0/FDRiU.kCrjNe5Li/uuERjHDNMbOLeSpVzTMTUP9Svli',
-        email: 'kebe@gmail.com',
-        phoneNumber: '0922334455',
-        sex: 'Female',
-        birthday: '1911-03-14T21:30:00.000Z',
-        residentAddress: null,
-      },
-      {
-        id: 15,
-        roleid: 2,
-        assignedBy: null,
-        firstName: 'Sami',
-        middleName: 'Shemsu',
-        lastName: 'Hopa',
-        username: 'Sami',
-        password: '$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O',
-        email: 'sami@gmail.com',
-        phoneNumber: '1122334455',
-        sex: 'Male',
-        birthday: '1955-06-09T21:00:00.000Z',
-        residentAddress: null,
-      },
-      {
-        id: 123,
-        roleid: 1,
-        assignedBy: 12,
-        firstName: 'Natnaeloio',
-        middleName: 'Bedru',
-        lastName: 'Abdulkadir',
-        username: 'nat',
-        password: '$2b$10$8wTXLzgUfWIlLSxnbOM1quUPGkdGyTxh5TYrShxdWRcOvgCC0wq7C',
-        email: 'nat@gmail.com',
-        phoneNumber: '0911223344909',
-        sex: 'Male',
-        birthday: '2022-12-08T21:00:00.000Z',
-        residentAddress: 'Bole',
-      },
-    ],
-    []
-  );
-
-  interface Data {
-    id: number;
-    roleid: number;
-    assignedBy: number;
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    username: string;
-    password: string;
-    email: string;
-    phoneNumber: string;
-    sex: string;
-    birthday: string;
-    residentAddress: string;
-  }
-  */
   const columns = useMemo(
     () => [
       {
         Header: 'ID',
-        accessor: 'id', // accessor is the "key" in the data
+        accessor: 'id',
       },
       {
-        Header: 'Firstname',
-        accessor: 'firstName',
+        Header: 'Name',
+        accessor: 'name',
       },
       {
-        Header: 'Middlename',
-        accessor: 'middleName',
+        Header: 'Role',
+        accessor: 'roleName',
       },
       {
-        Header: 'Lastname',
-        accessor: 'lastName',
+        Header: 'Account Status',
+        accessor: 'accountStatus',
       },
       {
-        Header: 'Username',
-        accessor: 'username',
+        Header: 'Joined Date',
+        accessor: 'joinedDate',
       },
     ],
     []
   );
-
   const staffData = useMemo(() => [...staffList], [staffList]);
-  const staffColumn = useMemo(
-    () =>
-      staffList[0]
-        ? Object.keys(staffList[0])
-            // .filter(
-            //   (key) =>
-            //     // u can choose what  not to be seen
-            //     key !== 'password' &&
-            //     key !== 'birthday' &&
-            //     key !== 'email' &&
-            //     key !== 'phoneNumber' &&
-            //     key !== 'firstName' &&
-            //     key !== 'middleName' &&
-            //     key !== 'lastName' &&
-            //     key !== 'sex' &&
-            //     key !== 'residentAddress'
-            // )
-            .map((key) => {
-              // for Image
-              // if(key === "image")
-              // return {
-              //   Header: key,
-              //   accessor: key,
-              //   Cell: ({ value }: CellProps<any>) => <img src={value}/>,maxWidth: 50,
-              // }
-              return { Header: key, accessor: key };
-            })
-        : [],
-    [staffList]
-  );
-  
-
-  const tableHooks = (hooks :Hooks) => {
+  // DYNAMIC COLUMN 
+  // const staffColumn = useMemo(
+  //   () =>
+  //     staffList[0]
+  //       ? Object.keys(staffList[0])
+  //           // .filter(
+  //           //   (key) =>
+  //           //     // u can choose what  not to be seen
+  //           //     key !== 'password' &&
+  //           //     key !== 'birthday' &&
+  //           //     key !== 'email' &&
+  //           //     key !== 'phoneNumber' &&
+  //           //     key !== 'firstName' &&
+  //           //     key !== 'middleName' &&
+  //           //     key !== 'lastName' &&
+  //           //     key !== 'sex' &&
+  //           //     key !== 'residentAddress'
+  //           // )
+  //           .map((key) => {
+  //             // for Image
+  //             // if(key === "image")
+  //             // return {
+  //             //   Header: key,
+  //             //   accessor: key,
+  //             //   Cell: ({ value }: CellProps<any>) => <img src={value}/>,maxWidth: 50,
+  //             // }
+  //             return { Header: key, accessor: key };
+  //           })
+  //       : [],
+  //   [staffList]
+  // );
+  const editHooks = (hooks :Hooks) => {
     hooks.visibleColumns.push((columns: any) =>[
       ...columns,
       {
@@ -169,8 +96,22 @@ const Employee = (props: Props) => {
       }
     ] )
   }
+  const activityHooks = (hooks :Hooks) => {
+    hooks.visibleColumns.push((columns: any) =>[
+      ...columns,
+      {
+        id: "Activity",
+        Header: "Recent Activity",
+        Cell: ({ row }: CellProps<any>) => (
+          <button onClick={()=> alert("Activity: "+row.values.id)} className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out">View Activity</button>
+        )
+      }
+    ] )
+  }
 
-  const tableInstance = useTable({ columns: staffColumn, data: staffData },useGlobalFilter ,tableHooks ,useSortBy);
+  const tableInstance = useTable({ columns: columns, data: staffData, initialState: {
+    hiddenColumns: ["id"]
+  } },useGlobalFilter, activityHooks, editHooks, useSortBy);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state  } = tableInstance;
   const isEven = (idx: number) => idx % 2 === 0;
 
@@ -207,13 +148,14 @@ const Employee = (props: Props) => {
           <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
               {/* table ▼▲ */}
-              <table {...getTableProps()}>
+              <table {...getTableProps()} className="min-w-full leading-normal">
                 <thead>
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
-                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())} className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{column.render('Header')}
                         {column.isSorted ? (column.isSortedDesc ? " ▼" : " ▲"):""}
+                        
                         </th>
                       ))}
 
@@ -224,12 +166,20 @@ const Employee = (props: Props) => {
                   {
                     // Loop over the table rows
                     rows.map((row, idx) => {
-                      // Prepare the row for display
+                      // Prepare the row for display statusStyle
+                      // red 
+                      // "relative inline-block px-3 py-1 font-semibold  leading-tight"
+                      // green 
+                      // "relative inline-block px-3 py-1 font-semibold  leading-tight"
                       prepareRow(row);
                       return (
                         <tr {...row.getRowProps()} className={isEven(idx) ? 'bg-green-400 bg-opacity-30' : ''}>
                           {row.cells.map((cell, idx) => (
-                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                            <td {...cell.getCellProps()} className="px-5 py-5 border-b border-gray-200  text-sm" >
+                              {/* {cell.column.Header === "Joined Date" ? cell.render(cell.value.substring(0, 10)): ""} */}
+                                             {cell.render("Cell")}
+                                             
+                            </td>
                           ))}
                         </tr>
                       );

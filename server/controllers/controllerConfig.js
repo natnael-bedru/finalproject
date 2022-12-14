@@ -195,10 +195,39 @@ exports.registerStaff = (request, response) => {
 //viewStaff
 exports.viewStaff = (request, response) => {
   const result = db.viewStaff();
-  result.then((data) => {
-    // response.send(JSON.stringify(data));
-    response.json(data);
-  });
+  result
+    .then(async (data) => {
+      // for (let x in data) {
+      //   var temp = JSON.stringify(data[x]).toString();
+      //   const retriveRole = db.retriveRole(data[x].roleid);
+
+      //   const re = await retriveRole;
+      //   // <== this function adds role value in litteral form
+      //   // removes the last part of the string json variable of data i.e( }] )
+      //   temp = temp.slice(0, -2);
+      //   temp += `,"roleName":"${re[0].rolename}"}]`;
+      //   data[x] = JSON.parse(temp);
+      // }
+      return data;
+    })
+    .then(async (data) => {
+      // response.send(JSON.stringify(data));
+      var jsonObj = [];
+      for (let x in data) {
+        const retriveRole = db.retriveRole(data[x].roleid);
+        const re = await retriveRole;
+        const view = {
+          id: data[x].id,
+          name: `${data[x].firstName} ${data[x].middleName} ${data[x].lastName}`,
+          roleName: re[0].rolename,
+          accountStatus: data[x].accountStatus,
+          joinedDate: data[x].joinedDate,
+        };
+        jsonObj.push(view);
+      }
+      // console.log(jsonObj);
+      response.json(jsonObj);
+    });
 };
 
 /*

@@ -19,7 +19,6 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     type: '',
     message: '',
   });
-
   const initialValues = {
     roleid: '',
     assignedBy: user.id,
@@ -28,11 +27,13 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     lastName: '',
     username: '',
     password: '',
+    accountStatus: "Active",
     email: '',
     phoneNumber: '',
     sex: '',
     birthday: '',
     residentAddress: '',
+    joinedDate: new Date().toISOString()
   };
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('*required'),

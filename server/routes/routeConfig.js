@@ -14,6 +14,8 @@ router
   .get(_controllers.verifyJWT, _controllers.loginStatus);
 
 // add staff members
+// .route("/register/:id")
+//console.log(`Parameter: ${request.params.id}`);
 router
   .route("/register")
   .post(_controllers.verifyJWT, _controllers.registerStaff);

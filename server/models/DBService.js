@@ -55,6 +55,7 @@ class DbService {
         if (err) {
           // ER_DUP_ENTRY only handled ..
           // The following code manipulates the error code for the front end
+          console.log(`DB ERROR: ${err}`);
           var errMessage = err.sqlMessage
             .replace(new RegExp(".*" + "key"), "")
             .slice(2, -1)
