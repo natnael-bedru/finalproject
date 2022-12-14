@@ -86,6 +86,8 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     }
   }, [_msg]);
 
+ 
+
   return (
     <>
       <Transition appear show={Empreg} as={Fragment}>
@@ -178,6 +180,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                                   name="file-upload"
                                                   type="file"
                                                   className="sr-only"
+                                                
                                                 />
                                               </label>
                                               <p className="pl-1">or drag and drop</p>
