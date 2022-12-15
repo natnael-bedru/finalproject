@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAsyncDebounce } from 'react-table';
-import { CellProps, Hooks, useSortBy, Row, useGlobalFilter, useTable } from 'react-table';
 
 export function StaffSearch({
   preGlobalFilteredRows,
