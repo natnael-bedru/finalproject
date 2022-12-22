@@ -2,6 +2,7 @@ import React, { useState, Dispatch } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 
 import Graph from "../../assets/Graph.png";
+
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
 type Props = {};
@@ -18,6 +19,7 @@ const HomePage = (props: Props) => {
    */
   const [user, setUser] = useState({
     id: 0,
+    img: "",
     username: "",
     role: "",
     status: false,

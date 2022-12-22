@@ -47,7 +47,10 @@ CREATE TABLE `carta` (
   KEY `woredaId_idx` (`woredaId`),
   KEY `citizenId_idx` (`citizenId`),
   KEY `staffId_fk` (`staffId`),
+  KEY `coordinateId_idx` (`coordinateId`),
   CONSTRAINT `citizenId` FOREIGN KEY (`citizenId`) REFERENCES `citizen` (`id`),
+  CONSTRAINT `coordinateId` FOREIGN KEY (`coordinateId`) REFERENCES `coordinateland` (`id`),
+  CONSTRAINT `FK_WoredaCarta` FOREIGN KEY (`woredaId`) REFERENCES `woreda` (`id`),
   CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) REFERENCES `staff` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -70,18 +73,18 @@ DROP TABLE IF EXISTS `citizen`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `citizen` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `img` varchar(45) DEFAULT NULL,
   `firstName` varchar(45) DEFAULT NULL,
   `middleName` varchar(45) DEFAULT NULL,
   `lastName` varchar(45) DEFAULT NULL,
   `sex` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
   `phonenumber` varchar(45) DEFAULT NULL,
-  `residentAddress` varchar(45) DEFAULT NULL,
+  `dateofbirth` date DEFAULT NULL,
   `woredaId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `woredaId_idx` (`woredaId`),
   CONSTRAINT `woredaId` FOREIGN KEY (`woredaId`) REFERENCES `woreda` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,31 +93,40 @@ CREATE TABLE `citizen` (
 
 LOCK TABLES `citizen` WRITE;
 /*!40000 ALTER TABLE `citizen` DISABLE KEYS */;
+INSERT INTO `citizen` VALUES (1,'Male/1.jpg','Hailu','Tesfai','Nataye','Male','0911223344','1987-10-31',1),(2,'Male/2.jpg','Abera','Misgina','Noab','Male','0955667788','1984-01-29',2),(3,'Male/3.jpg','Gizaw','Barnabas','Gorfu','Male','0912121212','1997-03-03',3),(4,'Male/4.jpg','Aregawi','Iskinder','Siyoum','Male','0913131313','1991-07-07',1),(5,'Male/5.jpg','Eyoab','Beyne','Taye','Male','0914141414','1991-11-04',2),(6,'Male/6.jpg','Zewedu','Feleke','Caleb','Male','0915151515','2001-11-10',3),(7,'Male/7.jpg','Abera','Misgina','Noab','Male','0955667788','1984-01-29',2),(8,'Male/8.jpg','Gizaw','Barnabas','Gorfu','Male','0912121212','1997-03-03',3),(9,'Male/9.jpg','Aregawi','Iskinder','Siyoum','Male','0913131313','1991-07-07',1),(10,'Male/10.jpg','Eyoab','Beyne','Taye','Male','0914141414','1991-11-04',2),(11,'Male/11.jpg','Zewedu','Feleke','Caleb','Male','0915151515','2001-11-10',3),(12,'Female/1.jpg','Mahdere','Negasi','Getahun','Female','0916161616','1994-12-10',1),(13,'Female/2.jpg','Gadesse','Tamru','Wagaye','Female','0917171717','1996-05-12',2),(14,'Female/3.jpg','Tesfaye','Goliad','Keya','Female','0918181818','1993-08-22',3),(15,'Female/4.jpg','Melat','Legesse','Meba','Female','0921212121','1989-11-09',1),(16,'Female/5.jpg','Habte','Amare','Galawdeyos','Female','0923232323','1993-04-25',2),(17,'Female/6.jpg','Dagem','Tiruneh','Tewolde','Female','0924242424','1987-12-18',3);
 /*!40000 ALTER TABLE `citizen` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `city`
+-- Table structure for table `coordinateland`
 --
 
-DROP TABLE IF EXISTS `city`;
+DROP TABLE IF EXISTS `coordinateland`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `city` (
+CREATE TABLE `coordinateland` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `cityName` varchar(45) DEFAULT NULL,
-  `acronym` varchar(45) DEFAULT NULL,
+  `X1` varchar(45) DEFAULT NULL,
+  `Y1` varchar(45) DEFAULT NULL,
+  `X2` varchar(45) DEFAULT NULL,
+  `Y2` varchar(45) DEFAULT NULL,
+  `X3` varchar(45) DEFAULT NULL,
+  `Y3` varchar(45) DEFAULT NULL,
+  `X4` varchar(45) DEFAULT NULL,
+  `Y4` varchar(45) DEFAULT NULL,
+  `X5` varchar(45) DEFAULT NULL,
+  `Y5` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `city`
+-- Dumping data for table `coordinateland`
 --
 
-LOCK TABLES `city` WRITE;
-/*!40000 ALTER TABLE `city` DISABLE KEYS */;
-/*!40000 ALTER TABLE `city` ENABLE KEYS */;
+LOCK TABLES `coordinateland` WRITE;
+/*!40000 ALTER TABLE `coordinateland` DISABLE KEYS */;
+/*!40000 ALTER TABLE `coordinateland` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -151,6 +163,7 @@ DROP TABLE IF EXISTS `staff`;
 CREATE TABLE `staff` (
   `id` int NOT NULL AUTO_INCREMENT,
   `roleid` int NOT NULL,
+  `img` varchar(200) DEFAULT NULL,
   `assignedBy` int DEFAULT NULL,
   `firstName` varchar(100) DEFAULT NULL,
   `middleName` varchar(100) DEFAULT NULL,
@@ -174,7 +187,7 @@ CREATE TABLE `staff` (
   KEY `id_idx` (`assignedBy`) /*!80000 INVISIBLE */,
   CONSTRAINT `id` FOREIGN KEY (`assignedBy`) REFERENCES `staff` (`id`),
   CONSTRAINT `roleid` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +196,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (12,1,NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09',NULL,'2022-12-16'),(14,2,12,'Kebede','Abe','Shemsu','Kebede','$2b$10$neNJICTR0/FDRiU.kCrjNe5Li/uuERjHDNMbOLeSpVzTMTUP9Svli','Active','kebe@gmail.com','0922334455','Female','1911-03-15',NULL,'2022-12-16'),(15,2,NULL,'Sami','Shemsu','Hopa','Sami','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','sami@gmail.com','1122334455','Male','1955-06-10',NULL,'2022-12-16'),(129,1,12,'Natnael','Bedru','qwerq','daveqwer','$2b$10$zU/0W5TNypgDtNGa8UTTuOBJJWA39XnoN4VVFeHQDjIOOWSC9X6ky','Active','qwqw@gmail.com','091122334432324','Male','2022-12-16','qwerqwe','2022-06-17');
+INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16'),(142,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$pXmnnK9p14roLrAQ5mrvf.YInI8FmwFxshW8vKH4P6tXolyWWYmw2','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-19'),(145,2,'Employee/Alemu Shemsu Kebede-26.png',142,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-19');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,12 +209,9 @@ DROP TABLE IF EXISTS `subcity`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `subcity` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `cityId` int DEFAULT NULL,
   `subCityName` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `cityId_idx` (`cityId`),
-  CONSTRAINT `cityId` FOREIGN KEY (`cityId`) REFERENCES `city` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,6 +220,7 @@ CREATE TABLE `subcity` (
 
 LOCK TABLES `subcity` WRITE;
 /*!40000 ALTER TABLE `subcity` DISABLE KEYS */;
+INSERT INTO `subcity` VALUES (1,'Addis Ketema'),(2,'Akaky Kaliti'),(3,'Arada'),(4,'Bole'),(5,'Gullele'),(6,'Kirkos'),(7,'Kolfe Keranio'),(8,'Lideta'),(9,'Nifas Silk-Lafto'),(10,'Yeka');
 /*!40000 ALTER TABLE `subcity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,7 +239,7 @@ CREATE TABLE `woreda` (
   PRIMARY KEY (`id`),
   KEY `subCityId_idx` (`subCityId`),
   CONSTRAINT `subCityId` FOREIGN KEY (`subCityId`) REFERENCES `subcity` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,6 +248,7 @@ CREATE TABLE `woreda` (
 
 LOCK TABLES `woreda` WRITE;
 /*!40000 ALTER TABLE `woreda` DISABLE KEYS */;
+INSERT INTO `woreda` VALUES (1,10,12,9),(2,10,11,5),(3,10,6,14);
 /*!40000 ALTER TABLE `woreda` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -249,4 +261,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-15  3:25:25
+-- Dump completed on 2022-12-21 11:28:40

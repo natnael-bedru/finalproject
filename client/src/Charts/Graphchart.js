@@ -5,7 +5,7 @@ function Graphcharts() {
   const [state, usestate] = useState({
     series: [
       {
-        name: "Land Rgestrations",
+        name: "Land Regstrations",
         data: [31, 40, 28, 51, 42, 109, 100],
       },
       {

@@ -38,7 +38,7 @@ const AdminPage = (props: Props) => {
                       className="flex-shrink-0"
                     >
                       <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
-                        {user.username}
+                        {/* {user.username} */}
                         <p>13,345</p>
                       </span>
                       <h3
@@ -47,7 +47,7 @@ const AdminPage = (props: Props) => {
                         //data-aos="fade-up"
                         className="text-base font-normal text-gray-500"
                       >
-                        Sales this week
+                        Registration this week
                       </h3>
                     </div>
                     <div
@@ -246,7 +246,7 @@ const AdminPage = (props: Props) => {
                         2,340
                       </span>
                       <h3 className="text-base font-normal text-gray-500">
-                        New products this week
+                        New Registration this week
                       </h3>
                     </div>
                     <div className="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
@@ -300,7 +300,7 @@ const AdminPage = (props: Props) => {
                         385
                       </span>
                       <h3 className="text-base font-normal text-gray-500">
-                        User signups this week
+                        User authentication this week
                       </h3>
                     </div>
                     <div className="ml-5 w-0 flex items-center justify-end flex-1 text-red-500 text-base font-bold">

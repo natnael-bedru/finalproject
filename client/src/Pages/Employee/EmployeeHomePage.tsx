@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+
 import Navbar from "../../Componets/Navbar/Navbar";
 import IdContext from "../../Context/Context";
 type Props = {};
@@ -16,6 +17,7 @@ const HomePage = (props: Props) => {
    */
   const [user, setUser] = useState({
     id: 0,
+    img: "",
     username: "",
     role: "",
     status: false,

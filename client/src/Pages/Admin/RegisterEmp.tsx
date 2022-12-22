@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, SetStateAction, useContext, useState, useEffect } from 'react';
+import React, { Dispatch, Fragment, SetStateAction, useContext, useState, useEffect} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +7,7 @@ import IdContext from '../../Context/Context';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Avatar from 'react-avatar-edit';
 
 type Props = {
   Empreg: boolean;
@@ -14,6 +15,17 @@ type Props = {
 };
 
 const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
+
+  const [imgBase64, setImgBase64] = useState('');
+  
+  const onClose = () => {
+    setImgBase64("");
+  };
+  const onCrop =(view:string) => {
+    console.log(`onCrop [data: string]`);
+    setImgBase64(view);
+  };
+
   const { user } = useContext(IdContext);
   const [_msg, setMsg] = useState({
     type: '',
@@ -21,19 +33,20 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
   });
   const initialValues = {
     roleid: '',
+    img:"",
     assignedBy: user.id,
     firstName: '',
     middleName: '',
     lastName: '',
     username: '',
     password: '',
-    accountStatus: "Active",
+    accountStatus: 'Active',
     email: '',
     phoneNumber: '',
     sex: '',
     birthday: '',
     residentAddress: '',
-    joinedDate: new Date().toISOString()
+    joinedDate: new Date().toISOString().substring(0, 10),
   };
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('*required'),
@@ -48,11 +61,16 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     residentAddress: Yup.string().required('*required'),
     roleid: Yup.string().required('*required'),
   });
-  const onSubmit = (data: object) => {
-    console.log(`DATA ${JSON.stringify(data)}`);
+  const onSubmit = (data: any) => {
+    console.log(`FILE HERE: ${data.img}`);
+   // const file = dataURLtoFile(imgBase64,"test");
+    data.img = imgBase64;
+    //data.file = imgBase64;
+    //imgBase64
+    console.log(`FILE HERE2: ${data.img}`);
     Axios.post('http://localhost:3001/AALHRIA/register', data, {
       headers: {
-        'x-access-token': localStorage.getItem('token'),
+        'x-access-token': localStorage.getItem('token'),  
       },
     }).then((response) => {
       console.log(`Response: ${JSON.stringify(response.data)}`);
@@ -87,7 +105,6 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     }
   }, [_msg]);
 
- 
 
   return (
     <>
@@ -141,11 +158,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                       <div className=" mx- flex flex-col w-full justify-end">
                         <div className="w-full h-s ">
                           <section className=" w-full h-full items-start justify-center p-3 rounded-md   text-black">
-                            <Formik
-                              initialValues={initialValues}
-                              onSubmit={onSubmit}
-                              validationSchema={validationSchema}
-                            >
+                            <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
                               <Form>
                                 <div className="flex justify-between my-4  ">
                                   {/* IMAGE */}
@@ -154,41 +167,51 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                     <div className="">
                                       <div>
                                         <label className="block text-sm  font-medium">Staff Image</label>
-                                        <div className="mt-1 flex justify-center  items-center px-6 pt-5 pb-6 border-2 h-96 border-gray-300 border-dashed rounded-md">
-                                          <div className="space-y-1 text-center">
-                                            <svg
-                                              className="mx-auto h-12 w-12"
-                                              stroke="currentColor"
-                                              fill="none"
-                                              viewBox="0 0 48 48"
-                                              aria-hidden="true"
-                                            >
-                                              <path
-                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                              />
-                                            </svg>
-                                            <div className="flex text-sm text-gray-600">
-                                              <label
-                                                htmlFor="file-upload"
-                                                className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                                              >
-                                                <span className="">Upload a file</span>
-                                                <input
-                                                  id="file-upload"
-                                                  name="file-upload"
-                                                  type="file"
-                                                  className="sr-only"
-                                                
-                                                />
-                                              </label>
-                                              <p className="pl-1">or drag and drop</p>
-                                            </div>
-                                            <p className="text-xs">PNG, JPG, GIF up to 10MB</p>
-                                          </div>
-                                        </div>
+                                        <Avatar
+                                          width={400}
+                                          height={400}
+                                          imageWidth={400}
+                                          imageHeight={400}
+                                          exportAsSquare={true}
+                                          onCrop={onCrop}
+                                          onClose={onClose}
+                                         // onFileLoad={onFileLoad}
+                                         // onImageLoad={onImageLoad}
+                                         // onBeforeFileLoad={onBeforeFileLoad}
+                                          label={
+                                            <>
+                                              <div className="mt-1 flex justify-center  items-center px-6 pt-5 pb-6 h-96 ">
+                                                <div className="space-y-1 text-center">
+                                                  <svg
+                                                    className="mx-auto h-12 w-12"
+                                                    stroke="currentColor"
+                                                    fill="none"
+                                                    viewBox="0 0 48 48"
+                                                    aria-hidden="true"
+                                                  >
+                                                    <path
+                                                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                      stroke-width="2"
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                    />
+                                                  </svg>
+                                                  <div className="flex text-sm text-gray-600">
+                                                    <label
+                                                      htmlFor="file-upload"
+                                                      className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                                    >
+                                                      <span className="">Upload a file</span>
+                                                      <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                                                    </label>
+                                                    <p className="pl-1">or drag and drop</p>
+                                                  </div>
+                                                  <p className="text-xs">PNG, JPG, GIF up to 10MB</p>
+                                                </div>
+                                              </div>
+                                            </>
+                                          }
+                                        />     
                                       </div>
                                     </div>
                                   </div>
@@ -201,11 +224,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="firstName">
                                             First Name
                                           </label>
-                                          <ErrorMessage
-                                            name="firstName"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="firstName" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="firstName"
                                             name="firstName"
@@ -217,11 +236,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="middleName">
                                             Middle Name
                                           </label>
-                                          <ErrorMessage
-                                            name="middleName"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="middleName" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="middleName"
                                             name="middleName"
@@ -233,11 +248,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="lastName">
                                             Last Name
                                           </label>
-                                          <ErrorMessage
-                                            name="lastName"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="lastName" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="lastName"
                                             name="lastName"
@@ -252,11 +263,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className=" dark:text-gray-900" htmlFor="sex">
                                             Sex
                                           </label>
-                                          <ErrorMessage
-                                            name="sex"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="sex" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             name="sex"
                                             as="select"
@@ -273,11 +280,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className=" dark:text-gray-900" htmlFor="roleid">
                                             Role
                                           </label>
-                                          <ErrorMessage
-                                            name="roleid"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="roleid" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             name="roleid"
                                             as="select"
@@ -294,11 +297,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="birthday">
                                             Date of Birth
                                           </label>
-                                          <ErrorMessage
-                                            name="birthday"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="birthday" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="birthday"
                                             name="birthday"
@@ -312,11 +311,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="phoneNumber">
                                             Phone number
                                           </label>
-                                          <ErrorMessage
-                                            name="phoneNumber"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="phoneNumber" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="phoneNumber"
                                             name="phoneNumber"
@@ -327,13 +322,9 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                         </div>
                                         <div className="w-full">
                                           <label className="" htmlFor=" currentAddress">
-                                          Resident Address
+                                            Resident Address
                                           </label>
-                                          <ErrorMessage
-                                            name="residentAddress"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="residentAddress" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="residentAddress"
                                             name="residentAddress"
@@ -348,11 +339,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="email">
                                             Email
                                           </label>
-                                          <ErrorMessage
-                                            name="email"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="email" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="email"
                                             name="email"
@@ -365,11 +352,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="username">
                                             Username
                                           </label>
-                                          <ErrorMessage
-                                            name="username"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="username" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="username"
                                             name="username"
@@ -382,11 +365,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                           <label className="" htmlFor="password">
                                             Password
                                           </label>
-                                          <ErrorMessage
-                                            name="password"
-                                            component="span"
-                                            className="ml-2 p-2 mb-2 text-sm text-red-700 "
-                                          />
+                                          <ErrorMessage name="password" component="span" className="ml-2 p-2 mb-2 text-sm text-red-700 " />
                                           <Field
                                             id="password"
                                             type="password"
@@ -409,7 +388,6 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                     Canel
                                   </button>
                                   <button
-                                 
                                     type="submit"
                                     className=" dissabled hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                                   >

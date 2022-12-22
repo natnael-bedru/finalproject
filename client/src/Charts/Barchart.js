@@ -4,8 +4,8 @@ function Barchart() {
   const [Barstate, setBarstate] = useState({
     series: [
       {
-        name: "Inflation",
-        data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
+        name: "Acitve employees",
+        data: [2.3, 3.1, 4.0, 6.1, 4.0, 3.6, 3.2, 2.3, 4.4, 7.8, 8.5, 9.2],
       },
     ],
     options: {
@@ -88,7 +88,7 @@ function Barchart() {
         },
       },
       title: {
-        text: "Monthly Inflation in Argentina, 2002",
+        text: "Monthly Employee Active Status, 2020",
         floating: true,
         offsetY: 330,
         align: "center",
