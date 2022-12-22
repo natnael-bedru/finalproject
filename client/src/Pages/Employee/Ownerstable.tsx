@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo, useLayoutEffect } from "react";
-import { HiDotsHorizontal } from "react-icons/hi";
-import { Dialog, Transition } from "@headlessui/react";
-import { Menu } from "@headlessui/react";
+import React, { useState, useMemo, useLayoutEffect } from "react";
+// import { HiDotsHorizontal } from "react-icons/hi";useEffect,
+// import { Dialog, Transition } from "@headlessui/react";
+// import { Menu } from "@headlessui/react";
 import QRcodePage from "../authentication/QRcodePage";
 import Ownerprofile from "../Employee/Ownerprofile";
 //
@@ -15,16 +15,18 @@ import {
   useSortBy,
   useGlobalFilter,
   useTable,
-  Column,
+  // Column,
 } from "react-table";
+import LandProfile from "./LandProfile";
 
 type Props = {};
 
 const Ownerstable = (props: Props) => {
   // this is for the  QR-CODE
   const [showOption, setShowOption] = useState(false);
-  // this is for the OWNER PAGE 
+  // this is for the OWNER PAGE
   const [isOpen, setIsOpen] = useState(false);
+  const [landshow, setLandshow] = useState(false);
 
   const [ownersList, setOwnersList] = useState([]); // array ??
 
@@ -38,7 +40,6 @@ const Ownerstable = (props: Props) => {
       setOwnersList(data.data);
     });
   }, []);
-  
 
   const columns = useMemo(
     () => [
@@ -47,9 +48,15 @@ const Ownerstable = (props: Props) => {
         accessor: "id",
       },
       {
-        Header: "Profile",
+        Header: "Picture",
         accessor: "img",
-        Cell: ({ value }: CellProps<any>) => <img src={`/uploads/citizenImages/${value}`} style={{ height:"100px"}}/>,
+        Cell: ({ value }: CellProps<any>) => (
+          // eslint-disable-next-line jsx-a11y/alt-text
+          <img
+            src={`/uploads/citizenImages/${value}`}
+            style={{ height: "100px" }}
+          />
+        ),
       },
       {
         Header: "FullName",
@@ -72,10 +79,10 @@ const Ownerstable = (props: Props) => {
         Header: "Woreda",
         accessor: "woredaNumber",
       },
-      // {
-      //   Header: "Kebele",
-      //   accessor: "kebeleNumber",
-      // },
+      {
+        Header: "Kebele",
+        accessor: "kebeleNumber",
+      },
       {
         Header: "Subcity",
         accessor: "subCityName",
@@ -85,28 +92,27 @@ const Ownerstable = (props: Props) => {
   );
 
   const ownerData = useMemo(() => [...ownersList], [ownersList]);
-  
 
   const QRCodeHooks = (hooks: Hooks) => {
     hooks.visibleColumns.push((columns: any) => [
       ...columns,
       {
-         // Header: "Genate QR code",
+        // Header: "Genate QR code",
         id: "Genate-QR-code",
         Cell: ({ row }: CellProps<any>) => (
           <button
-          onClick={() => {
-            setShowOption(
-              // status: true,
-              // rowid: row.values.id,
-              true
-            );
-            //setSid(row.values.id);
-          }}
-          className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
-        >
-         Genate QR code
-        </button>
+            onClick={() => {
+              setShowOption(
+                // status: true,
+                // rowid: row.values.id,
+                true
+              );
+              //setSid(row.values.id);
+            }}
+            className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+          >
+            Genate QR code
+          </button>
         ),
       },
     ]);
@@ -115,16 +121,26 @@ const Ownerstable = (props: Props) => {
     hooks.visibleColumns.push((columns: any) => [
       ...columns,
       {
-        // Header: "Register Land",
+        Header: "MORE",
         id: "Register-Land",
         Cell: ({ row }: CellProps<any>) => (
           <>
-          <Link to={{pathname: `/employeehomepage/landregistration/${row.values.id}` }}>
-              <button className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out">Register Land</button>
+            <Link
+              to={{
+                pathname: `/employeehomepage/landregistration/${row.values.id}`,
+              }}
+            >
+              <button className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out">
+                Register Land
+              </button>
             </Link>
-          <button onClick={() => alert("Editing: " + row.values.id)} className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out">
-            View Land
-          </button>
+            <button
+              onClick={() => setLandshow(true)}
+              // onClick={() => alert("Editing: " + row.values.id)}
+              className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+            >
+              View Land
+            </button>
           </>
         ),
       },
@@ -244,7 +260,7 @@ const Ownerstable = (props: Props) => {
                               className="px-5 py-5 border-b border-gray-200  text-sm"
                             >
                               {/* {cell.column.Header === "Joined Date" ? cell.render(cell.value.substring(0, 10)): ""} */}
-                             
+
                               {cell.render("Cell")}
                             </td>
                           ))}
@@ -274,6 +290,7 @@ const Ownerstable = (props: Props) => {
       </div>
       <QRcodePage QRcode={showOption} setQRcode={setShowOption} />
       {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
+      {<LandProfile showland={landshow} setShowland={setLandshow} />}
     </>
   );
 };

@@ -1,5 +1,5 @@
 import  Axios  from "axios";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 type Props = {};
@@ -29,19 +29,6 @@ const Landreg = (props: Props) => {
       //setStaff(response.data[0]);
     });
   }, []);
-  useEffect(()=>{
-    Axios.post(`http://localhost:3001/AALHRIA/registerLand`, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((response) => {
-      console.log(response.data[0]);
-      setCurrCitizen(response.data[0]);
-      //console.log(`Response ${JSON.stringify(response.data[0].roleid)}`);
-      //setStaff(response.data[0]);
-    });
-
-  },[]);
 
   return (
     <>

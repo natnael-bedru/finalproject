@@ -27,6 +27,7 @@ import Landregistrated from "./Pages/Employee/Landregistrated";
 import Ownerstable from "./Pages/Employee/Ownerstable";
 import NotFound from "./Componets/Error/notFound";
 import ViewActivity from "./Pages/Admin/ViewActivity";
+import Updatestaff from "./Pages/Profile/Updatestaff";
 function App() {
   // const [userid, setuserid] = useState([]);
   Axios.defaults.withCredentials = true;
@@ -37,6 +38,7 @@ function App() {
   const [view, setView] = useState(false);
   const [sid, setSid] = useState(0);
   const [landshow, setLandshow] = useState(false);
+  const [upd, setUpd] = useState(false);
   return (
     <>
       <div className="">
@@ -107,6 +109,10 @@ function App() {
                   setempProfile={setShowOption}
                 />
               }
+            />
+            <Route
+              path="updateprofile"
+              element={<Updatestaff updEmp={upd} setUpdEmp={setUpd} />}
             />
             <Route path="employees" element={<Employee />} />
             <Route path="employees " element={<Employee />} />

@@ -4,8 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Graphcharts from "../../Charts/Graphchart";
-import Piechart from "../../Charts/Piechart";
-import Colchart from "../../Charts/Colchart";
+
 import Barchart from "../../Charts/Barchart";
 import IdContext from "../../Context/Context";
 

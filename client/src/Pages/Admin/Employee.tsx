@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import RegisterEmp from "./RegisterEmp";
 import Axios from "axios";
 import { StaffSearch } from "./StaffSearch";
-
+// contrl f3 for search
 import {
   CellProps,
   Hooks,
@@ -26,6 +26,7 @@ const Employee = (props: Props) => {
     // rowid: 0,
     false
   );
+  // used to pass id of the selected employee
   const [sid, setSid] = useState(0);
 
   const [staffList, setStaffList] = useState([]); // array ??
@@ -46,9 +47,15 @@ const Employee = (props: Props) => {
         accessor: "id",
       },
       {
-        Header: 'Picture',
-        accessor: 'img',
-        Cell: ({ value }: CellProps<any>) => <img src={`/uploads/staffImages/${value}`} style={{ height:"100px"}}/>,
+        Header: "Picture",
+        accessor: "img",
+        // eslint-disable-next-line jsx-a11y/alt-text
+        Cell: ({ value }: CellProps<any>) => (
+          <img
+            src={`/uploads/staffImages/${value}`}
+            style={{ height: "100px" }}
+          />
+        ),
       },
       {
         Header: "Name",
@@ -132,25 +139,28 @@ const Employee = (props: Props) => {
       {
         id: "profile",
         Header: "PROFILE",
-        Cell: ({ row }: CellProps<any>) =>
+        Cell: ({ row }: CellProps<any>) => (
           //onClick={() => alert("Editing: " + row.values.id)}
-      //    row.values.roleName === "Admin" ? (
-        // to={{
-   // pathname: `/dashboard/${device.device_id}`,
-  //  state: { device },
-  //}}
+          //    row.values.roleName === "Admin" ? (
+          // to={{
+          // pathname: `/dashboard/${device.device_id}`,
+          //  state: { device },
+          //}}
           // your link creation
-            <Link to={{pathname: `/adminhomepage/staffprofile/${row.values.id}` }}>
+          <Link
+            to={{ pathname: `/adminhomepage/staffprofile/${row.values.id}` }}
+          >
             {/* // <Link to={`/adminhomepage/staffprofile/${row.values.id}`}> */}
-              <button>Profile</button>
-            </Link>
-       //   ) : row.values.roleName === "Employee" ? (
-       //     <Link to="/employeehomepage/staffprofile">
-       //       <button>Profile</button>
-      //      </Link>
-       //   ) : (
-      //      <></>
-       //   ),
+            <button>Profile</button>
+          </Link>
+        ),
+        //   ) : row.values.roleName === "Employee" ? (
+        //     <Link to="/employeehomepage/staffprofile">
+        //       <button>Profile</button>
+        //      </Link>
+        //   ) : (
+        //      <></>
+        //   ),
       },
     ]);
   };
@@ -160,23 +170,25 @@ const Employee = (props: Props) => {
       {
         id: "Activity",
         Header: "Recent Activity",
-        Cell: ({ row }: CellProps<any>) => (
+        Cell: ({ row }: CellProps<any>) =>
           //onClick={() => alert("Activity: " + row.values.id)}
-          row.values.roleName !== "Admin" ? 
-          <button
-            onClick={() => {
-              setView(
-                // status: true,
-                // rowid: row.values.id,
-                true
-              );
-              setSid(row.values.id);
-            }}
-            className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
-          >
-            View Activity
-          </button> : <></>
-        ),
+          row.values.roleName !== "Admin" ? (
+            <button
+              onClick={() => {
+                setView(
+                  // status: true,
+                  // rowid: row.values.id,
+                  true
+                );
+                setSid(row.values.id);
+              }}
+              className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+            >
+              View Activity
+            </button>
+          ) : (
+            <></>
+          ),
       },
     ]);
   };
@@ -290,7 +302,7 @@ const Employee = (props: Props) => {
                               className="px-5 py-5 border-b border-gray-200  text-sm"
                             >
                               {/* {cell.column.Header === "Joined Date" ? cell.render(cell.value.substring(0, 10)): ""} */}
-                             
+
                               {cell.render("Cell")}
                             </td>
                           ))}

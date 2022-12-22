@@ -1,4 +1,5 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+// eslint-disable-next-line
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 type Props = {};
@@ -35,7 +36,7 @@ const NotFound = (props: Props) => {
             console.log(`data ${JSON.stringify(response)}`);
             setPath("/employeehomepage");
           }
-        } 
+        }
       },
       (error) => {
         //console.log(`data :${JSON.stringify(error)}`);
