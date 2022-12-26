@@ -11,6 +11,8 @@ import LandProfile from "./LandProfile";
 type Props = {};
 
 const Landregistrated = (props: Props) => {
+  //TODO: CHECK IF THIS PAGE IS NEEDED ESP LANDPROFILE 
+  const [citizenId, setCitizenId]= useState(0);
   const [showOption, setShowOption] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [landshow, setLandshow] = useState(false);
@@ -259,7 +261,7 @@ const Landregistrated = (props: Props) => {
       </div>
       {<QRcodePage QRcode={showOption} setQRcode={setShowOption} />}
       {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
-      {<LandProfile showland={landshow} setShowland={setLandshow} />}
+      {<LandProfile showland={landshow} setShowland={setLandshow} citizenId={citizenId} />}
     </>
   );
 };

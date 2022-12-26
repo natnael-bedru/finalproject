@@ -12,6 +12,17 @@ const fs = require("fs");
 const path = require("path");
 const { json } = require("body-parser");
 
+// This is Used for generating random id for when storing the file in server
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 exports.verifyJWT = (request, response, next) => {
   const token = request.headers["x-access-token"];
   if (!token) {
@@ -170,6 +181,7 @@ exports.registerStaff = (request, response) => {
   //TODO:
   // the image is handled inthis
   var string = request.body.img;
+  console.log(request.body.img);
   var imageName = "Unspecified/defaultPicture.png";
   if (string) {
     var regex = /^data:.+\/(.+);base64,(.*)$/;
@@ -181,7 +193,9 @@ exports.registerStaff = (request, response) => {
     imageName =
       `${role[request.body.roleid]}/${request.body.firstName} ${
         request.body.middleName
-      } ${request.body.lastName}-${new Date().getUTCSeconds()}.` + ext;
+      } ${request.body.lastName}-[${new Date()
+        .toISOString()
+        .substring(0, 10)}][${makeid(5)}].` + ext;
 
     fs.writeFileSync(`./uploads/staffImages/${imageName}`, buffer);
   }
@@ -342,10 +356,263 @@ exports.viewOwner = (request, response) => {
     await response.json(jsonObj);
   });
 };
-
+//retriveWoredaInfo
+exports.retriveAllWoredaInfo = (request, response) => {
+  const retrieveSubCity = db.retriveAllWoredaInfo();
+  retrieveSubCity.then((data) => {
+    response.json(data);
+  });
+};
 //registerLand
 exports.registerLand = (request, response) => {
-  console.log(request.body);
+  var duplicate = false;
+  // Retriving the Woreda Foreign-Key BEGINING
+  /*
+      console.log(`Woreda ${request.body.currentWoreda}`);
+      console.log(`Kebele ${request.body.formerKebele}`);
+    */
+  const result = db.getWoredaKebeleId(
+    request.body.currentWoreda,
+    request.body.formerKebele
+  );
+  result.then((woredaId) => {
+    /* console.log(woredaId); */
+    // Retriving the Woreda Foreign-Key END
+
+    // Checking For Duplicate Carta Information BEGINING
+    const checkParameter = {
+      citizenId: request.body.citizenId,
+      woredaId: woredaId,
+      blockNumber: request.body.blockNumber,
+      parcelNumber: request.body.parcelNumber,
+      houseNumber: request.body.houseNumber,
+      plotArea: request.body.plotArea,
+      builtUpArea: request.body.builtUpArea,
+      basemapNo: request.body.basemapNo,
+    };
+
+    const chk = db.checkExistingLand(checkParameter);
+    chk
+      .then((check) => {
+        if (check.length !== 0) {
+          response.json({
+            status: "fail",
+            //errorcode: err.code,
+            message: `Duplicate Carta Information! Please check your form!`,
+          });
+          duplicate = true;
+          return duplicate;
+        }
+      })
+      .then((duplicate) => {
+        if (!duplicate) {
+          // Checking For Duplicate Carta Information END
+          // Registering the Coodrinate Data BEGINING
+          const coodrinateData = {
+            x1: parseFloat(request.body.x1),
+            y1: parseFloat(request.body.y1),
+            x2: parseFloat(request.body.x2),
+            y2: parseFloat(request.body.y2),
+            x3: parseFloat(request.body.x3),
+            y3: parseFloat(request.body.y3),
+            x4: parseFloat(request.body.x4),
+            y4: parseFloat(request.body.y4),
+            x5: parseFloat(request.body.x5),
+            y5: parseFloat(request.body.y5),
+          };
+          //console.log(coodrinateData);
+          const result1 = db.registerCoordinate(coodrinateData);
+          result1.then((res) => {
+            var coordinateId = null;
+            var citizenFirstName = null;
+            var citizenMiddleName = null;
+            var citizenLastName = null;
+            var imageName = null;
+            if (res.affectedRows === 1) {
+              coordinateId = res.insertId;
+              // Registering the Coodrinate Data END
+              // Fetching Citizen Name For Naming Carta Image BEGINING
+              const result2 = db.viewOwner(request.body.citizenId);
+              result2.then((citizen) => {
+                citizenFirstName = citizen[0].firstName;
+                citizenMiddleName = citizen[0].middleName;
+                citizenLastName = citizen[0].lastName;
+                // Fetching Citizen Name For Naming Carta Image END
+                // Storing Image On Server BEGINING
+                var string = request.body.img;
+                var regex = /^data:.+\/(.+);base64,(.*)$/;
+                var matches = string.match(regex);
+                var ext = matches[1];
+                var data = matches[2];
+                var buffer = Buffer.from(data, "base64");
+                imageName =
+                  `${citizenFirstName} ${citizenMiddleName} ${citizenLastName}-[${
+                    request.body.cartaIssuedDate
+                  }][${makeid(5)}].` + ext;
+
+                fs.writeFileSync(`./uploads/cartaImages/${imageName}`, buffer);
+                // Storing Image On Server END
+                // REGISTERING CARTA BEGINING
+                const carta = {
+                  citizenId: request.body.citizenId,
+                  woredaId: woredaId,
+                  img: imageName,
+                  blockNumber: request.body.blockNumber,
+                  parcelNumber: request.body.parcelNumber,
+                  houseNumber: request.body.houseNumber,
+                  plotArea: request.body.plotArea,
+                  builtUpArea: request.body.builtUpArea,
+                  landGrade: request.body.landGrade,
+                  titleDeedNo: request.body.titleDeedNo,
+                  cartaIssuedDate: request.body.cartaIssuedDate,
+                  basemapNo: request.body.basemapNo,
+                  registrationNo: request.body.registrationNo,
+                  typeOfHolding: request.body.typeOfHolding,
+                  coordinateId: coordinateId,
+                  plannedLandUse: request.body.plannedLandUse,
+                  permittedUse: request.body.permittedUse,
+                  staffId: request.body.staffId,
+                };
+                const result3 = db.registerLand(carta);
+                // console.log("Carta Registerd Successfully!");
+                result3
+                  .then((data) => {
+                    // data = "fieldCount":0,"affectedRows":1,"insertId":32,"info":"","serverStatus":2,"warningStatus":0
+                    response.json({
+                      status: "success",
+                      affectedRows: data.affectedRows,
+                      message: `Carta registered successfuly!`,
+                    });
+                  })
+                  .catch((err) => {
+                    //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
+                    //
+                    // HTTP errors say something about the HTTP protocol.
+                    // This specific error indicates a server is trying to relay the HTTP request,
+                    // but the upstream server did not respond correctly.
+
+                    // Your web application communicating with a database server is outside the realm of HTTP
+                    // and any errors should be wrapped in the generic HTTP 500 Internal server error response code.
+                    response.json({
+                      status: "fail",
+                      errorcode: err.code,
+                      message: `${err.message} Unable to register Carta!`,
+                    });
+                  });
+                // REGISTERING CARTA END
+              });
+            } else {
+              console.log("Error when inserting Co-ordinate for land!");
+            }
+          });
+        }
+      });
+  });
+};
+//viewAllLand
+exports.viewAllLand = (request, response) => {
+  console.log(`Parameter: ${request.params.id}`);
+  const citizenId = request.params.id;
+  var jsonOut = {
+    citizenInfo: [],
+    // fullName: null,
+    // img: null,
+    // sex: null,
+    // phoneNumber: null,
+    // dateOfBirth: null,
+    // woredaNumber: null,
+    // kebeleNumber: null,
+    // subCityName: null,
+    carta: [],
+  };
+  // GET CITIZEN INFORMATION BEGINING
+  const result = db.viewOwner(citizenId);
+  result.then((citizenData) => {
+    var fullName = `${citizenData[0].firstName} ${citizenData[0].middleName} ${citizenData[0].lastName}`;
+    var img = citizenData[0].img;
+    var sex = citizenData[0].sex;
+    var phoneNumber = citizenData[0].phonenumber;
+    var dateOfBirth = citizenData[0].dateofbirth;
+
+    // GET CITIZEN INFORMATION END
+    // GET WOREDA INFORMATION BEGINING
+    const result1 = db.retriveWoredaInfo(citizenData[0].woredaId);
+    result1.then((woreda) => {
+      // console.log("Woreda Information");
+      var woredaNumber = woreda.woredaNumber;
+      var kebeleNumber = woreda.kebeleNumber;
+      var subCityName = woreda.subCityName;
+
+      const citizenData = {
+        fullName: fullName,
+        img: img,
+        sex: sex,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+        woredaNumber: woredaNumber,
+        kebeleNumber: kebeleNumber,
+        subCityName: subCityName,
+      };
+      jsonOut.citizenInfo.push(citizenData);
+      // GET WOREDA INFORMATION END
+      // GET CARTA INFORMATION BEGINING
+      const result3 = db.viewCarta(citizenId);
+      result3
+        .then(async (carta) => {
+          //console.log("CARTA INFORMATION");
+          if (carta) {
+            for (let x in carta) {
+              var result4 = db.retriveWoredaInfo(carta[x].woredaId);
+              var woreda = await result4;
+              var result5 = db.viewStaff(carta[x].staffId);
+              var staff = await result5;
+              var result6 = db.getCoordinate(carta[x].coordinateId);
+              var coordinateData = await result6;
+
+              var cartaData = {
+                cartaId: carta[x].id,
+                currentWoredaNumber: woreda.woredaNumber,
+                formerKebeleNumber: woreda.kebeleNumber,
+                cartaSubCityName: woreda.subCityName,
+                cartaImage: carta[x].img,
+                cartaBlockNumber: carta[x].blockNumber,
+                cartaParcelNumber: carta[x].parcelNumber,
+                cartaHouseNumber: carta[x].houseNumber,
+                cartaPlotArea: carta[x].plotArea,
+                cartaBuiltUpArea: carta[x].builtUpArea,
+                cartaLandGrade: carta[x].landGrade,
+                cartaTitleDeedNo: carta[x].titleDeedNo,
+                cartaIssuedDate: carta[x].cartaIssuedDate,
+                cartaBasemapNo: carta[x].basemapNo,
+                cartaRegistrationNo: carta[x].registrationNo,
+                cartaTypeOfHolding: carta[x].typeOfHolding,
+                cartaCoordinateData: [
+                  {
+                    X1: coordinateData[0].X1,
+                    Y1: coordinateData[0].Y1,
+                    X2: coordinateData[0].X2,
+                    Y2: coordinateData[0].Y2,
+                    X3: coordinateData[0].X3,
+                    Y3: coordinateData[0].Y3,
+                    X4: coordinateData[0].X4,
+                    Y4: coordinateData[0].Y4,
+                    X5: coordinateData[0].X5,
+                    Y5: coordinateData[0].Y5,
+                  },
+                ],
+                cartaPlannedLandUse: carta[x].plannedLandUse,
+                cartaPermittedUse: carta[x].permittedUse,
+                issuerStaffName: `${staff[0].firstName} ${staff[0].middleName}`,
+              };
+              jsonOut.carta.push(cartaData);
+            }
+          }
+        })
+        .then(() => {
+          response.json(jsonOut);
+        });
+    });
+  });
 };
 
 /*

@@ -28,6 +28,9 @@ const Ownerstable = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [landshow, setLandshow] = useState(false);
 
+  //data for view land 
+  const [citizenId, setCitizenId]= useState(0);
+
   const [ownersList, setOwnersList] = useState([]); // array ??
 
   useLayoutEffect(() => {
@@ -79,10 +82,10 @@ const Ownerstable = (props: Props) => {
         Header: "Woreda",
         accessor: "woredaNumber",
       },
-      {
-        Header: "Kebele",
-        accessor: "kebeleNumber",
-      },
+      // {
+      //   Header: "Kebele",
+      //   accessor: "kebeleNumber",
+      // },
       {
         Header: "Subcity",
         accessor: "subCityName",
@@ -135,7 +138,8 @@ const Ownerstable = (props: Props) => {
               </button>
             </Link>
             <button
-              onClick={() => setLandshow(true)}
+            //TODO:
+              onClick={() => {setLandshow(true); setCitizenId(row.values.id);}}
               // onClick={() => alert("Editing: " + row.values.id)}
               className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
             >
@@ -290,7 +294,8 @@ const Ownerstable = (props: Props) => {
       </div>
       <QRcodePage QRcode={showOption} setQRcode={setShowOption} />
       {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
-      {<LandProfile showland={landshow} setShowland={setLandshow} />}
+      {/*  const [citizenId, setCitizenId]= useState(0); */}
+      {<LandProfile showland={landshow} setShowland={setLandshow} citizenId={citizenId} />}
     </>
   );
 };

@@ -39,6 +39,10 @@ function App() {
   const [sid, setSid] = useState(0);
   const [landshow, setLandshow] = useState(false);
   const [upd, setUpd] = useState(false);
+  // used in Ownerstable ViewLand
+  const [citizenId, setCitizenId]= useState(0);
+  // used in StaffProfile
+  const [staffId, setStaffId]= useState(0);
   return (
     <>
       <div className="">
@@ -69,7 +73,7 @@ function App() {
           <Route
             path="/landPorfile"
             element={
-              <LandProfile showland={landshow} setShowland={setLandshow} />
+              <LandProfile showland={landshow} setShowland={setLandshow} citizenId={citizenId} />
             }
           />
           <Route path="/navbar" element={<Navbar />} />
@@ -112,7 +116,7 @@ function App() {
             />
             <Route
               path="updateprofile"
-              element={<Updatestaff updEmp={upd} setUpdEmp={setUpd} />}
+              element={<Updatestaff updEmp={upd} setUpdEmp={setUpd} staffId={staffId} />}
             />
             <Route path="employees" element={<Employee />} />
             <Route path="employees " element={<Employee />} />
@@ -139,7 +143,7 @@ function App() {
             <Route
               path="landProfile"
               element={
-                <LandProfile showland={landshow} setShowland={setLandshow} />
+                <LandProfile showland={landshow} setShowland={setLandshow} citizenId={citizenId}  />
               }
             />
             <Route

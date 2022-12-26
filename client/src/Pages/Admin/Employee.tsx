@@ -180,6 +180,7 @@ const Employee = (props: Props) => {
                   // rowid: row.values.id,
                   true
                 );
+                //TODO:
                 setSid(row.values.id);
               }}
               className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
@@ -332,6 +333,7 @@ const Employee = (props: Props) => {
         </div>
       </div>
       {<RegisterEmp Empreg={reg} setEmpreg={setreg} />}
+      {/* const [sid, setSid] = useState(0); */}
       {<ViewActivity viewactvity={view} setViewactvity={setView} setid={sid} />}
     </>
   );

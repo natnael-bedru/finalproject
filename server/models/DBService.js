@@ -101,6 +101,8 @@ class DbService {
       dbConn.query(query, id, (err, result) => {
         if (err) reject(new Error("Unable to retrive database information!"));
         if (result.length > 0) {
+          // console.log("Here");
+          // console.log(result);
           resolve(result);
         }
       });
@@ -162,14 +164,16 @@ class DbService {
           kebeleNumber: result[0].kebeleNumber,
           subCityName: data[0].subCityName,
         };
+        // { woredaNumber: 11, kebeleNumber: 5, subCityName: 'Yeka' }
         return out;
       });
     });
   }
   //viewOwner
+  //TODO: FIX NAME TO CITIZEN
   async viewOwner(id) {
     return new Promise((resolve, reject) => {
-      // This adds staff members into the database
+      //This retrives Citizen information by using the id
       const query = `SELECT * FROM citizen WHERE id = ?;`;
       dbConn.query(query, id, (err, result) => {
         //console.log(result);
@@ -177,11 +181,171 @@ class DbService {
         if (result.length > 0) {
           //console.log(result[0].woredaId);
           resolve(result);
+          // OUTPUTS
+          /*
+            id: 1,
+            img: 'Male/1.jpg',
+            firstName: 'Hailu',
+            middleName: 'Tesfai',
+            lastName: 'Nataye',
+            sex: 'Male',
+            phonenumber: '0911223344',
+            dateofbirth: 1987-10-30T21:00:00.000Z,
+            woredaId: 1
+          */
         }
       });
     });
   }
 
+  async retriveAllWoredaInfo() {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM woreda ;`;
+      dbConn.query(query, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
+        if (result.length > 0) {
+          resolve(result);
+        }
+      });
+    }).then((result) => {
+      return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM subcity WHERE id = ? ;`;
+        dbConn.query(query, result[0].subCityId, (err, result) => {
+          if (err) reject(new Error("Unable to retrive database information!"));
+          if (result.length > 0) {
+            //console.log(result[0].subCityName);
+            resolve(result);
+          }
+        });
+      }).then((data) => {
+        // RESULT: [ { id: 1, subCityId: 10, woredaNumber: 12, kebeleNumber: 9 } ]
+        // DATA: [ { id: 10, subCityName: 'Yeka' } ]
+        var jsonObj = [];
+        for (let x in result) {
+          const out = {
+            woredaNumber: result[x].woredaNumber,
+            kebeleNumber: result[x].kebeleNumber,
+            subCityName: data[0].subCityName,
+          };
+          jsonObj.push(out);
+        }
+
+        //console.log(jsonObj);
+        return jsonObj;
+      });
+    });
+  }
+  //registerCoordinate
+  async registerCoordinate(coodrinateData) {
+    //const data = Object.values(coodrinateData);
+    //console.log(`Data :${Object.values(coodrinateData)}`);
+    return new Promise((resolve, reject) => {
+      const query = `INSERT INTO coordinateland VALUES (0,?);`;
+      //console.log(query);
+      dbConn.query(query, [Object.values(coodrinateData)], (err, result) => {
+        if (err) reject({ code: err.code, message: err.sqlMessage });
+        resolve(result);
+      });
+    });
+  }
+  //getCoordinate
+  async getCoordinate(coodrinateid) {
+    //console.log(`Coordinate Id ${coodrinateid}`);
+    //const data = Object.values(coodrinateData);
+    //console.log(`Data :${Object.values(coodrinateData)}`);
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM coordinateland WHERE id = ? ;`;
+      //console.log(query);
+      dbConn.query(query, coodrinateid, (err, result) => {
+        if (err) reject({ code: err.code, message: err.sqlMessage });
+        //console.log(result);
+        resolve(result);
+      });
+    });
+  }
+  //getWoredaKebeleId
+  async getWoredaKebeleId(currentWoreda, formerKebele) {
+    // console.log(`Woreda ${currentWoreda}`);
+    // console.log(`Kebele ${formerKebele}`);
+    return new Promise((resolve, reject) => {
+      const query = `SELECT id FROM woreda WHERE woredaNumber = ${currentWoreda} && kebeleNumber = ${formerKebele};`;
+      dbConn.query(query, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
+        if (result.length > 0) {
+          // returns the id for that particular pair of woredaNumber and kebeleNumber
+          resolve(result[0].id);
+        }
+      });
+    });
+  }
+  //registerLand
+  async registerLand(carta) {
+    //console.log(`Data :${Object.values(carta)}`);
+    return new Promise((resolve, reject) => {
+      const query = `INSERT INTO carta  VALUES (0,?);`;
+      dbConn.query(query, [Object.values(carta)], (err, result) => {
+        if (err) {
+          /*
+          Handling error caused by context value of the staffId becoming 0
+          ERROR:
+          Cannot add or update a child row: 
+          a foreign key constraint fails (`login_system`.`carta`, 
+          CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) 
+          REFERENCES `staff` (`id`))
+           // parsing for "staffId_fk"
+          */
+          var errMessage = err.sqlMessage;
+          errMessage = errMessage.slice(102, -52);
+          //console.log(errMessage.slice(102, -52));
+          //console.log(err.sqlMessage);
+          if (errMessage === "staffId_fk") {
+            errMessage = "Please Relogin or Refresh your page!";
+          }
+          reject({ code: err.code, message: errMessage });
+        }
+        resolve(result);
+      });
+    });
+  }
+  //checkExistingLand
+  async checkExistingLand(checkParameter) {
+    // console.log(checkParameter);
+    // console.log(`Woreda ${currentWoreda}`);
+    // console.log(`Kebele ${formerKebele}`);
+    return new Promise((resolve, reject) => {
+      const query = `SELECT id FROM carta WHERE 
+      citizenId = ${checkParameter.citizenId} && 
+      woredaId = ${checkParameter.woredaId} && 
+      blockNumber = ${checkParameter.blockNumber} && 
+      parcelNumber = ${checkParameter.parcelNumber} && 
+      houseNumber = ${checkParameter.houseNumber} && 
+      plotArea = ${checkParameter.plotArea} && 
+      builtUpArea = ${checkParameter.builtUpArea} && 
+      basemapNo = ${checkParameter.basemapNo};`;
+      dbConn.query(query, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
+        //if (result.length > 0) {
+        //console.log("here");
+        //console.log(result);
+        // returns the id for that particular pair of woredaNumber and kebeleNumber
+        resolve(result);
+        //  }
+      });
+    });
+  }
+  // viewCarta
+  async viewCarta(citizenId) {
+    return new Promise((resolve, reject) => {
+      // This adds staff members into the database
+      const query = `SELECT * FROM carta WHERE citizenId = ?;`;
+      dbConn.query(query, citizenId, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
+        //if (result.length > 0) {
+        resolve(result);
+        // }
+      });
+    });
+  }
   /*
   async getAllData() {
     try {

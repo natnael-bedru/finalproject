@@ -41,9 +41,18 @@ router
   .get(_controllers.verifyJWT, _controllers.viewOwner);
 
 // registerLand
+//TODO:
+router.route("/registerLand").post(_controllers.registerLand);
+
+//retriveWoredaInfo
 router
-  .route("/registerLand")
-  .post(_controllers.verifyJWT, _controllers.registerLand);
+  .route("/retriveAllWoredaInfo")
+  .get(_controllers.verifyJWT, _controllers.retriveAllWoredaInfo);
+
+//viewAllLand
+router
+  .route("/viewAllLand/:id")
+  .get(_controllers.verifyJWT, _controllers.viewAllLand);
 
 //.get(_controllers.viewStaff);
 

@@ -52,7 +52,7 @@ const ViewActivity = ({ viewactvity, setViewactvity, setid }: Props) => {
                   <div className=" flex justify-between items-center p-3">
                     <div className="flex flex-col">
                       <h2 className="text-2xl font-semibold my-0">
-                        Recent Activity
+                        Recent Activity {setid}
                       </h2>
                     </div>
                     <button

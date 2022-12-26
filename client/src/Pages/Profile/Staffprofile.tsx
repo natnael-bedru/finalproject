@@ -20,6 +20,8 @@ type Props = {
 const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
   const [upd, setUpd] = useState(false);
   const { user } = useContext(IdContext);
+  // staffId is used to hold and pass id
+  const [staffId, setStaffId]= useState(0);
   const [staff, setStaff] = useState({
     img: "",
     assignedBy: 0,
@@ -44,7 +46,9 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
         "x-access-token": localStorage.getItem("token"),
       },
     }).then((response) => {
-      //console.log(`Response ${JSON.stringify(response.data[0].roleid)}`);
+      if(param.id){
+      setStaffId(parseInt(param.id.toString()));
+      }
       setStaff(response.data[0]);
     });
   }, []);
@@ -347,7 +351,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
           </div>
         </div>
       </div>
-      {<Updatestaff updEmp={upd} setUpdEmp={setUpd} />}
+      {<Updatestaff updEmp={upd} setUpdEmp={setUpd} staffId={staffId}/>}
     </>
   );
 };
