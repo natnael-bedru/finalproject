@@ -75,12 +75,12 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
       ],
     },
   ]);
-  const [selectedCarta, setSelectedCarta]=useState(0);
+  const [selectedCarta, setSelectedCarta] = useState(0);
   const onChangeDeedNo = (e: {
     target: { selectedIndex: React.SetStateAction<number> };
   }) => {
     setSelectedCarta(e.target.selectedIndex);
-  }
+  };
   useLayoutEffect(() => {
     Axios.get(`http://localhost:3001/AALHRIA/viewAllLand/${citizenId}`, {
       headers: {
@@ -134,29 +134,6 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                     </button>
                   </div>
                   <div ref={componentRef}>
-                    <div className="w-1/2 h-auto flex items-center ">
-                      <label
-                        className="font-bold text-xl font-poppins w-1/4 ml-3"
-                        htmlFor="Landid"
-                      >
-                        Title Deed No:
-                      </label>
-
-                      <select
-                        className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        aria-label=".form-select-sm example"
-                        onChange={onChangeDeedNo}
-                      >
-                        {(() => {
-                          const options = [];
-                          for (let x in cartaInfo){
-                            //TitleDeedNo
-                            options.push(<option value={parseInt(x)}>{cartaInfo[parseInt(x)].cartaTitleDeedNo}</option>);
-                          }
-                          return options;
-                        })()}
-                      </select>
-                    </div>
                     <Dialog.Title
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex text-center justify-center items-center"
@@ -172,7 +149,35 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                       you an email with all of the details of your order.
                     </p>
                   </div> */}
+                  {cartaInfo[selectedCarta] ? (
+                    <div className="w-1/2 h-auto flex items-center ">
+                      <label
+                        className="font-bold text-xl font-poppins w-1/4 ml-3"
+                        htmlFor="Landid"
+                      >
+                        Title Deed No:
+                      </label>
 
+                      <select
+                        className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        aria-label=".form-select-sm example"
+                        onChange={onChangeDeedNo}
+                      >
+                        {(() => {
+                          const options = [];
+                          for (let x in cartaInfo) {
+                            //TitleDeedNo
+                            options.push(
+                              <option value={parseInt(x)}>
+                                {cartaInfo[parseInt(x)].cartaTitleDeedNo}
+                              </option>
+                            );
+                          }
+                          return options;
+                        })()}
+                      </select>
+                    </div>
+                  ):<></>}
                     <div className="mt- px-3">
                       {/* <div className="w-full  flex justify-end font-semibold text-base">
                       <p>Date: current date</p>
@@ -224,21 +229,28 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                             <div className="flex flex-col space-y-3 px-4 font-semibold text-base">
                               {/* <h1>Date: current date</h1> */}
                               <h1>
-                                House Number:{cartaInfo[selectedCarta].cartaHouseNumber}
+                                House Number:
+                                {cartaInfo[selectedCarta].cartaHouseNumber}
                               </h1>
                               <h1>
                                 Registration Number:
                                 {cartaInfo[selectedCarta].cartaRegistrationNo}
                               </h1>
                               <h1>
-                                Permmit Use:{cartaInfo[selectedCarta].cartaPlannedLandUse}
+                                Permmit Use:
+                                {cartaInfo[selectedCarta].cartaPlannedLandUse}
                               </h1>
                               <h1>
                                 Carta Issue date:
                                 {cartaInfo[selectedCarta].cartaIssuedDate &&
-                                  cartaInfo[selectedCarta].cartaIssuedDate.substring(0, 10)}
+                                  cartaInfo[
+                                    selectedCarta
+                                  ].cartaIssuedDate.substring(0, 10)}
                               </h1>
-                              <h1>Issued By:{cartaInfo[selectedCarta].issuerStaffName}</h1>
+                              <h1>
+                                Issued By:
+                                {cartaInfo[selectedCarta].issuerStaffName}
+                              </h1>
                             </div>
                           </>
                         ) : (
@@ -458,43 +470,82 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                     <tbody>
                                       <tr className="bg-white border-b">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          {cartaInfo[selectedCarta].currentWoredaNumber}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .currentWoredaNumber
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].formerKebeleNumber}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .formerKebeleNumber
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaSubCityName}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaSubCityName
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaBlockNumber}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaBlockNumber
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaParcelNumber}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaParcelNumber
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaPlotArea}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaPlotArea
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaBuiltUpArea}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaBuiltUpArea
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaLandGrade}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaLandGrade
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaTitleDeedNo}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaTitleDeedNo
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaBasemapNo}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaBasemapNo
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaTypeOfHolding}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaTypeOfHolding
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaPlannedLandUse}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaPlannedLandUse
+                                          }
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                          {cartaInfo[selectedCarta].cartaPermittedUse}
+                                          {
+                                            cartaInfo[selectedCarta]
+                                              .cartaPermittedUse
+                                          }
                                         </td>
                                       </tr>
                                     </tbody>
