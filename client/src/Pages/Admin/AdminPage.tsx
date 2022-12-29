@@ -26,14 +26,14 @@ const AdminPage = (props: Props) => {
             <div className="pt-9 px-4">
               <div className="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
                 <div
-                  data-aos-delay="500"
-                  data-aos="fade-up"
+                  // data-aos-delay="500"
+                  // data-aos="fade-up"
                   className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8  2xl:col-span-2"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div
-                      data-aos-delay="800"
-                      data-aos="fade-up"
+                      // data-aos-delay="800"
+                      // data-aos="fade-up"
                       className="flex-shrink-0"
                     >
                       <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
@@ -82,8 +82,8 @@ const AdminPage = (props: Props) => {
                   </div>
                 </div>
                 <div
-                  data-aos-delay="500"
-                  data-aos="fade-up"
+                  // data-aos-delay="500"
+                  // data-aos="fade-up"
                   className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 "
                 >
                   <div className="mb-4 flex items-center justify-between">

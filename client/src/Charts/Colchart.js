@@ -34,7 +34,7 @@ function Colchart() {
           "Japan",
           "United States",
           "China",
-          "Germany",
+          "Addis Ababa",
         ],
       },
     },

@@ -45,7 +45,9 @@ const Signup = (props: Props) => {
             "x-access-token": response,
           },
         }).then((response) => {
-          console.log(`fetch data login :${response.data.userId}`);
+          // account status block
+          console.log(response.data.accountStatus);
+          //console.log(`fetch data login :${response.data.userId}`);
           if (response.data.loggedIn === true) {
             console.log(`Authentication Message: ${response.data.message}`);
             console.log(`Authentication User Id: ${response.data.userId}`);
@@ -86,7 +88,7 @@ const Signup = (props: Props) => {
                 <div className="flex-1">
                   <div className="text-center">
                     <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-white">
-                      Brand
+                      LRAS
                     </h2>
 
                     <p className="mt-3 text-gray-500 dark:text-gray-300">
@@ -174,12 +176,13 @@ const Signup = (props: Props) => {
             <div className="hidden bg-cover lg:block lg:w-2/3 bg-meetimg">
               <div className="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
                 <div>
-                  <h2 className="text-4xl font-bold text-white">Brand</h2>
+                  <h2 className="text-4xl font-bold text-white">LRAS</h2>
 
                   <p className="max-w-xl mt-3 text-gray-300">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
-                    autem ipsa, nulla laboriosam dolores, repellendus
-                    perferendis libero suscipit nam temporibus molestiae
+                    The LRAS platform is the first to prioritize security,
+                    accessibility, and authentication for all system users. Our
+                    objective is to develop future technology and knowledge for
+                    everyone.
                   </p>
                 </div>
               </div>

@@ -11,15 +11,14 @@ import LandProfile from "./LandProfile";
 type Props = {};
 
 const Landregistrated = (props: Props) => {
-  //TODO: CHECK IF THIS PAGE IS NEEDED ESP LANDPROFILE 
-  const [citizenId, setCitizenId]= useState(0);
   const [showOption, setShowOption] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [landshow, setLandshow] = useState(false);
+  const [citizenId, setCitizenId] = useState(0);
 
   return (
     <>
-      <div className="bg-white p-8 rounded-md w-full">
+      <div className="bg-white p-8 rounded-md w-full font-poppins">
         <div className=" flex items-center justify-between pb-6">
           <div>
             <h2 className="text-gray-600 font-semibold md:text-4xl text-2xl ">
@@ -55,22 +54,14 @@ const Landregistrated = (props: Props) => {
                   placeholder="search for employee..."
                 />
               </div>
-              <button
+              {/* <button
                 // onClick={() => setShowOption(true)}
                 type="button"
                 className="ml-4 inline-block px-4 py-2.5 bg-transparent text-black font-medium text-sm leading-tight border  rounded hover:text-black hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
               >
                 Recent
-              </button>
+              </button> */}
             </div>
-            <Link to="/employeehomepage/landregistration">
-              <button
-                type="button"
-                className="hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-normal text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-              >
-                Register land
-              </button>
-            </Link>
           </div>
           <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -261,7 +252,13 @@ const Landregistrated = (props: Props) => {
       </div>
       {<QRcodePage QRcode={showOption} setQRcode={setShowOption} />}
       {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
-      {<LandProfile showland={landshow} setShowland={setLandshow} citizenId={citizenId} />}
+      {
+        <LandProfile
+          showland={landshow}
+          setShowland={setLandshow}
+          citizenId={citizenId}
+        />
+      }
     </>
   );
 };

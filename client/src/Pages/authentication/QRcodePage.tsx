@@ -1,12 +1,24 @@
-import React, { Dispatch, Fragment, SetStateAction } from "react";
+import React, { Dispatch, Fragment, SetStateAction, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import ReactDOM from "react-dom";
 
+import ReactToPrint, {
+  PrintContextConsumer,
+  useReactToPrint,
+} from "react-to-print";
+import QRCode from "react-qr-code";
 type Props = {
   QRcode: boolean;
   setQRcode: Dispatch<SetStateAction<boolean>>;
 };
 
 const QRcodePage = ({ QRcode, setQRcode }: Props) => {
+  // used to to print the QRcode
+  const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "QR-data",
+  });
   return (
     <div>
       <Transition appear show={QRcode} as={Fragment}>
@@ -34,7 +46,10 @@ const QRcodePage = ({ QRcode, setQRcode }: Props) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <div
+                  ref={componentRef}
+                  className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                >
                   <div className=" flex justify-between items-center p-3">
                     <h1 className="">Generate QR Code </h1>
                     <button
@@ -46,7 +61,6 @@ const QRcodePage = ({ QRcode, setQRcode }: Props) => {
                       Close
                     </button>
                   </div>
-
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 flex justify-center"
@@ -64,8 +78,38 @@ const QRcodePage = ({ QRcode, setQRcode }: Props) => {
                       <h1>Scan the following QR to access full information</h1>
                     </div>
                   </div>
-
-                  <div className="mt-4"></div>
+                  <div className="mt-4">
+                    <div
+                      // style={{
+                      //   height: "auto",
+                      //   margin: "0 auto",
+                      //   maxWidth: 680,
+                      //   width: "100%",
+                      // }}
+                      className="w-full h-full"
+                    >
+                      <QRCode
+                        className="w-full h-full p-20"
+                        size={256}
+                        // style={{
+                        //   height: "auto",
+                        //   maxWidth: "100%",
+                        //   width: "100%",
+                        // }}
+                        value="https://laras123.netlify.app/signup"
+                        viewBox={`0 0 256 256`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <button
+                      type="button"
+                      className="inline-flex  text-lg justify-center rounded-md border border-transparent bg-blue-100 w-44 px-4 py-2  font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={handlePrint}
+                    >
+                      Print as PDF
+                    </button>
+                  </div>
                 </div>
               </Transition.Child>
             </div>

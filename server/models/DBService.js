@@ -97,7 +97,7 @@ class DbService {
   async viewStaff(id) {
     return new Promise((resolve, reject) => {
       // This adds staff members into the database
-      const query = `SELECT roleid, img, assignedBy, firstName, middleName, lastName, username, accountStatus, email, phoneNumber, sex, birthday, residentAddress, joinedDate FROM staff WHERE id = ?;`;
+      const query = `SELECT roleid, img, assignedBy, firstName, middleName, lastName, username, accountStatus, email, phoneNumber, sex, birthday, residentAddress, lastChanged, joinedDate FROM staff WHERE id = ?;`;
       dbConn.query(query, id, (err, result) => {
         if (err) reject(new Error("Unable to retrive database information!"));
         if (result.length > 0) {
@@ -346,98 +346,85 @@ class DbService {
       });
     });
   }
-  /*
-  async getAllData() {
-    try {
-      const response = await new Promise((resolve, reject) => {
-        const query = "SELECT * FROM names";
-        dbConn.query(query, (err, results) => {
-          if (err) reject(new Error(err.message));
-          resolve(results);
-        });
-      });
-      console.log("[getAllData]");
-      console.log(response);
-      return response;
-    } catch (err) {
-      console.log(err);
+  //updateStaff
+  async updateStaff(upStaff, staffId) {
+    //  console.log(upStaff);
+    var imageSet = false;
+    if (upStaff[1][0] === "img" && upStaff[1][1] === "removed") {
+      upStaff[1][1] = "Unspecified/defaultPicture.png";
+      imageSet = true;
     }
-  }
+    if (upStaff[1][0] !== "img") {
+      // this condition handles when there is no image passed
+      // through the upStaff therefore there is no image to be updated
+      imageSet = true;
+    }
+    var upQuery = "";
+    var header = null;
+    var value = null;
+    for (let row in upStaff) {
+      for (let col in upStaff[0]) {
+        if (parseInt(col) === 0) {
+          header = upStaff[parseInt(row)][parseInt(col)];
+          if (header === "img" && !imageSet) break;
+        } else if (parseInt(col) === 1) {
+          value = upStaff[parseInt(row)][parseInt(col)];
+          upQuery += `${header}=\'${value}\',`;
+        }
+      }
+    }
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE staff SET ${upQuery.slice(
+        0,
+        -1
+      )} WHERE (id = ${staffId})`;
+      console.log(query);
 
-  async insertNewName(name) {
-    try {
-      const dateAdded = new Date();
-      const insertId = await new Promise((resolve, reject) => {
-        const query = "INSERT INTO names (name,date_added) VALUES (?, ?);";
-        dbConn.query(query, [name, dateAdded], (err, result) => {
-          if (err) reject(new Error(err.message));
-          resolve(result.insertId);
-        });
+      dbConn.query(query, async (err, result) => {
+        if (result.affectedRows === 1) {
+          var resultOut = {
+            affectedRows: result.affectedRows,
+          };
+          if (!imageSet) {
+            //  console.log("HERE!");
+            const result1 = this.viewStaff(staffId);
+            const staffInfo = await result1;
+            resultOut = {
+              affectedRows: result.affectedRows,
+              staffFullName: `${staffInfo[0].firstName} ${staffInfo[0].middleName} ${staffInfo[0].lastName}`,
+              staffRoleId: staffInfo[0].roleid,
+              staffImg: staffInfo[0].img,
+            };
+          }
+          resolve(resultOut);
+        }
       });
-      //console.log(response);
-      //return response;
-      // console.log(insertId);
-      return {
-        id: insertId,
-        name: name,
-        dateAdded: dateAdded,
-      };
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  async deleteRowById(id) {
-    try {
-      id = parseInt(id, 10);
-      const response = await new Promise((resolve, reject) => {
-        const query = "DELETE FROM names WHERE id = ?";
-        dbConn.query(query, [id], (err, result) => {
-          if (err) reject(new Error(err.message));
-          resolve(result.affectedRows);
-        });
-      });
-      // console.log(response);
-      return response === 1 ? true : false;
-    } catch (err) {
-      console.log(err);
-      return false;
-    }
-  }
+    });
 
-  async updateNameById(id, name) {
-    try {
-      id = parseInt(id, 10);
-      const response = await new Promise((resolve, reject) => {
-        const query = "UPDATE names SET name = ? WHERE id = ?";
-        dbConn.query(query, [name, id], (err, result) => {
-          if (err) reject(new Error(err.message));
-          resolve(result.affectedRows);
-        });
-      });
-      //console.log(response);
-      return response === 1 ? true : false;
-    } catch (err) {
-      console.log(err);
-      return false;
-    }
-  }
+    // if (err) reject(new Error("Unable to retrive database information!"));
+    //if (result.length > 0) {
+    // resolve(result);
+    // }
 
-  async searchByName(name) {
-    try {
-      const response = await new Promise((resolve, reject) => {
-        const query = "SELECT * FROM names WHERE name = ?";
-        dbConn.query(query, [name], (err, results) => {
-          if (err) reject(new Error(err.message));
-          resolve(results);
-        });
-      });
-      console.log(response);
-      return response;
-    } catch (err) {
-      console.log(err);
-    }
+    //console.log(query);
+    //UPDATE `login_system`.`staff` SET `roleid` = '5' WHERE (`id` = '2');
   }
-  */
+  async updateStaffImg(imgPath, staffId) {
+    //console.log(`${imgPath}`);
+    // console.log(staffId);
+    return new Promise((resolve, reject) => {
+      // This updates the image with the appropriate image path name
+      const query = `UPDATE staff SET img = \'${imgPath}\' WHERE (id = ${staffId} ) ;`;
+      dbConn.query(query, (err, result) => {
+        console.log(err);
+        if (err) reject(new Error("Unable to retrive database information!"));
+        //if (result.length > 0) {
+        // console.log(result);
+        resolve(result);
+        // }
+      });
+    });
+  }
 }
 
 module.exports = DbService;

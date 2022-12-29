@@ -41,8 +41,8 @@ const WellcomePage = (props: Props) => {
                 data-aos="fade-up"
                 className="text-sm md:text-base text-white mb-4"
               >
-                Explore your favourite events and register now to showcase your
-                talent and win exciting prizes.
+                LRAS provides simple and dependable software that can be easily
+                managed and controlled for greater comprehension.
               </p>
               <Link to="/signup">
                 <a
@@ -86,9 +86,8 @@ const WellcomePage = (props: Props) => {
                     Your story starts with us.
                   </h1>
                   <p className="mt-4 text-lg text-blueGray-200 text-white">
-                    This is a simple example of a Landing Page you can build
-                    using Notus JS. It features multiple CSS components based on
-                    the Tailwind CSS design system.
+                    LRAS is the first system that prioritizes security,
+                    accessibility, and authentication for all system users.
                   </p>
                 </div>
               </div>
@@ -130,8 +129,8 @@ const WellcomePage = (props: Props) => {
                     </div>
                     <h6 className="text-xl font-semibold">Awarded Agency</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      Divide details about your product or agency work into
-                      parts. A paragraph describing a feature will be enough.
+                      Customers and end-users alike rated us as a better choice
+                      for accuracy and simplicity of use.
                     </p>
                   </div>
                 </div>
@@ -149,8 +148,9 @@ const WellcomePage = (props: Props) => {
                     </div>
                     <h6 className="text-xl font-semibold">Free Revisions</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      Keep you user engaged by providing meaningful information.
-                      Remember that by this time, the user is curious.
+                      Advances in technology have resulted in abundant
+                      information and statistics in the ongoing development of
+                      accessibility and comprehension.
                     </p>
                   </div>
                 </div>
@@ -168,8 +168,8 @@ const WellcomePage = (props: Props) => {
                     </div>
                     <h6 className="text-xl font-semibold">Verified Company</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      Write a few lines about each one. A paragraph describing a
-                      feature will be enough. Keep you user engaged!
+                      Our vision is to ensure the advancement of future
+                      technologies and information for everybody.
                     </p>
                   </div>
                 </div>
@@ -216,12 +216,13 @@ const WellcomePage = (props: Props) => {
             <div className="w-full flex flex-col p-5  h-full  jsu">
               <h1 className="text-6xl py-6">LRAS</h1>
               <p className="py-4 ">
-                ext ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen
+                Our mission is to ensure that future technologies and knowledge
+                improve for everyone.
               </p>
               <p className="py-4 ">
-                ext ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen
+                Technological advancements have resulted in an abundance of
+                information and data in the continual growth of accessibility
+                and comprehension.
               </p>
               <div className="my-12">
                 <Link to="/signup">
@@ -247,7 +248,7 @@ const WellcomePage = (props: Props) => {
                     {" "}
                     Guaranteed 100% satisfaction
                   </h1>
-                  <h2>Don't settle for sub-par.</h2>
+                  <h2>Insure the happiness for our client</h2>
                 </div>
                 <div className="">
                   <AiOutlineCheckCircle style={style} />
@@ -260,9 +261,11 @@ const WellcomePage = (props: Props) => {
               >
                 <div>
                   <h1 className="text-2xl font-semibold text-black">
-                    Guaranteed 100% satisfaction
+                    Guaranteed 100% Flexablity
                   </h1>
-                  <h2>Don't settle for sub-par.</h2>
+                  <h2>
+                    Easy Communication and suppout to our client and users
+                  </h2>
                 </div>
                 <div>
                   <AiOutlineCheckCircle style={style} />
@@ -276,9 +279,9 @@ const WellcomePage = (props: Props) => {
                 <div>
                   <h1 className="text-2xl  font-semibold text-black">
                     {" "}
-                    Guaranteed 100% satisfaction
+                    Guaranteed 100% Acccesablity
                   </h1>
-                  <h2>Lorem Ipsum is simply dummy text of t</h2>
+                  <h2>Giving full needed information </h2>
                 </div>
                 <div>
                   <AiOutlineCheckCircle style={style} />
@@ -309,11 +312,11 @@ const WellcomePage = (props: Props) => {
       <section className="mt-20">
         <footer className="bg-gray-50 text-gray-600 px-6 lg:px-8 py-12">
           <div className="max-w-screen-xl mx-auto mb-12 lg:mb-16  ">
-            <img
+            {/* <img
               className="h-8"
               src="/images/pathway-logo.svg"
               alt="UptimeMate logo"
-            />
+            /> */}
           </div>
           <div className="max-w-screen-xl mx-auto ">
             <div className="grid grid-cols-8 md:grid-cols-9  lg:grid-cols-8  divide-gray-200 divide-y-2 md:divide-x-2 md:divide-y-0 md:-mx-8">
@@ -375,7 +378,7 @@ const WellcomePage = (props: Props) => {
                         href="/"
                         className="font-normal text-base hover:text-gray-400"
                       >
-                        Childcare
+                        Support
                       </a>
                     </li>
                     <li className="mb-2">

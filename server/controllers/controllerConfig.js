@@ -44,6 +44,7 @@ exports.verifyJWT = (request, response, next) => {
         request.middleName = decoded.middleName;
         request.lastName = decoded.lastName;
         request.username = decoded.username;
+        request.accountStatus = decoded.accountStatus;
         request.email = decoded.email;
         request.phoneNumber = decoded.phoneNumber;
         request.sex = decoded.sex;
@@ -113,6 +114,7 @@ exports.login = (request, response) => {
         firstName,
         middleName,
         lastName,
+        accountStatus,
         email,
         phoneNumber,
         sex,
@@ -129,6 +131,7 @@ exports.login = (request, response) => {
           firstName,
           middleName,
           lastName,
+          accountStatus,
           email,
           phoneNumber,
           sex,
@@ -169,6 +172,7 @@ exports.loginStatus = (request, response) => {
     firstName: request.firstName,
     middleName: request.middleName,
     lastName: request.lastName,
+    accountStatus: request.accountStatus,
     email: request.email,
     phoneNumber: request.phoneNumber,
     sex: request.sex,
@@ -201,7 +205,7 @@ exports.registerStaff = (request, response) => {
   }
 
   request.body.img = imageName;
-  console.log(`Request Body: ${JSON.stringify(request.body)}`);
+  //console.log(`Request Body: ${JSON.stringify(request.body)}`);
   bcrypt.hash(request.body.password, saltRounds, (err, hashedPassword) => {
     if (err) {
       console.log(err);
@@ -253,6 +257,7 @@ exports.viewAllStaff = (request, response) => {
           name: `${data[x].firstName} ${data[x].middleName} ${data[x].lastName}`,
           roleName: re[0].rolename,
           accountStatus: data[x].accountStatus,
+          lastChanged: data[x].lastChanged,
           joinedDate: data[x].joinedDate,
         };
         jsonObj.push(view);
@@ -515,14 +520,6 @@ exports.viewAllLand = (request, response) => {
   const citizenId = request.params.id;
   var jsonOut = {
     citizenInfo: [],
-    // fullName: null,
-    // img: null,
-    // sex: null,
-    // phoneNumber: null,
-    // dateOfBirth: null,
-    // woredaNumber: null,
-    // kebeleNumber: null,
-    // subCityName: null,
     carta: [],
   };
   // GET CITIZEN INFORMATION BEGINING
@@ -609,10 +606,98 @@ exports.viewAllLand = (request, response) => {
           }
         })
         .then(() => {
+          // console.log(jsonOut);
           response.json(jsonOut);
         });
     });
   });
+};
+exports.updateStaff = async (request, response) => {
+  // converting the JSON OBJECT TO ARRAY
+  const objectToArray = (obj = {}) => {
+    const res = [];
+    const keys = Object.keys(obj);
+    for (key of keys) {
+      res.push([key, obj[key]]);
+    }
+    return res;
+  };
+  const requestArray2D = objectToArray(request.body);
+  //requestArray2D[2][1] = "cope";
+  //console.log(requestArray2D[2][1]);
+
+  var header = null;
+  var value = null;
+  var update = [];
+  for (let row in requestArray2D) {
+    for (let col in requestArray2D[0]) {
+      if (parseInt(col) === 0) {
+        header = requestArray2D[parseInt(row)][parseInt(col)];
+      }
+      if (parseInt(col) === 1) {
+        value = requestArray2D[parseInt(row)][parseInt(col)];
+        if (value !== "") {
+          if (
+            parseInt(row) !== 0 // id
+          ) {
+            if (header === "password") {
+              const resPassword = bcrypt.hash(value, saltRounds);
+              const hashedPassword = await resPassword;
+              update.push([header, hashedPassword]);
+            } else {
+              update.push([header, value]);
+            }
+          }
+        }
+      }
+    }
+  }
+  const staffId = requestArray2D[0][1];
+  if (update.length >= 4) {
+    const result = db.updateStaff(update, staffId);
+    //const data = await result;
+    //var imageName = null;
+    result.then(async (imgData) => {
+      //Object.values(data).length
+      // if length is 4 it means there is external data
+      // for the meta data of the new image
+
+      // if it is just 1 it means the image that is used is default
+      // and there is no need to store any image
+      console.log(imgData);
+      //var successImageChange = null;
+      if (Object.values(imgData).length === 4) {
+        // STORING THE IMAGE
+        var string = requestArray2D[2][1];
+        var regex = /^data:.+\/(.+);base64,(.*)$/;
+        var matches = string.match(regex);
+        var ext = matches[1];
+        var data = matches[2];
+        var buffer = Buffer.from(data, "base64");
+        const role = ["Unspecified", "Admin", "Employee"];
+        var imageName =
+          `${
+            role[await imgData.staffRoleId]
+          }/${await imgData.staffFullName}-[${new Date()
+            .toISOString()
+            .substring(0, 10)}][${makeid(5)}].` + ext;
+        //console.log(imageName);
+        fs.writeFileSync(`./uploads/staffImages/${imageName}`, buffer);
+        const result1 = db.updateStaffImg(imageName, staffId);
+        //TODO: the result of the image being inserted hasn't been checked!
+        //successImageChange = await result1;
+      }
+      if (Object.values(imgData).length > 0) {
+        console.log("HERE");
+        //console.log(successImageChange && successImageChange.affectedRows);
+        response.json({
+          status: "success",
+          //affectedRows: data.affectedRows,
+          message: `Staff Information Updated successfuly!`,
+        });
+      }
+    });
+  }
 };
 
 /*

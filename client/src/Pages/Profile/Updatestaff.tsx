@@ -20,20 +20,25 @@ import Avatar from "react-avatar-edit";
 type Props = {
   updEmp: boolean;
   setUpdEmp: Dispatch<SetStateAction<boolean>>;
-  staffId:number;
+  staffId: number;
 };
 
 const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
   const [imgBase64, setImgBase64] = useState("");
-
+  const [imgUpdated, setImgUpdated]=useState(false);
   const onClose = () => {
-    setImgBase64("");
+    setImgBase64("removed");
+    setImgUpdated(true);
   };
   const onCrop = (view: string) => {
-    console.log(`onCrop [data: string]`);
+    if(imgBase64 !== ""){
+      setImgUpdated(true);
+    }
     setImgBase64(view);
   };
-
+  const onFileLoad = () => {
+    setImgUpdated(true);
+  } 
   const { user } = useContext(IdContext);
   const [_msg, setMsg] = useState({
     type: "",
@@ -52,22 +57,29 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
     sex: "",
     birthday: "",
     residentAddress: "",
-    joinedDate: "",
+    lastChanged: "",
     adminName: "",
     roleName: "",
     roleid: 0,
   });
+  // The string value for status 'Active' 'Inactive'
+  const [status, setStatus]=useState("");
+  //true: Active, false: Suspended
+  const [accountStatus, setAccountStatus] = useState(false);
   useLayoutEffect(() => {
+    // console.log(`Parameter: ${staffId}`)
     Axios.get(`http://localhost:3001/AALHRIA/viewstaff/${staffId}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
-    }).then((response) => {
+    }).then((response) => {     
+      setAccountStatus(response.data[0].accountStatus === "Active" ? true: response.data[0].accountStatus === "Suspended" ? false:false);
       setStaff(response.data[0]);
-     //console.log(response.data[0]);
+      console.log(response.data[0])
     });
-  }, []);
+  }, [staffId]);
   const initialValues = {
+    id:staffId,
     roleid: staff.roleid,
     img: "",
     assignedBy: user.id,
@@ -76,39 +88,41 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
     lastName: "",
     username: "",
     password: "",
-    accountStatus: "Active",
+    accountStatus: "",
     email: "",
     phoneNumber: "",
     sex: "",
     birthday: "",
     residentAddress: "",
-    joinedDate: new Date().toISOString().substring(0, 10),
+    lastChanged: new Date().toISOString().substring(0, 10),
   };
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("*required"),
-    middleName: Yup.string().required("*required"),
-    lastName: Yup.string().required("*required"),
-    username: Yup.string().required("*required"),
-    password: Yup.string().required("*required"),
-    sex: Yup.string().required("*required"),
-    birthday: Yup.string().required("*required"),
-    phoneNumber: Yup.string().required("*required"),
-    email: Yup.string().required("*required"),
-    residentAddress: Yup.string().required("*required"),
-    roleid: Yup.string().required("*required"),
+    firstName: Yup.string(),
+    middleName: Yup.string(),
+    lastName: Yup.string(),
+    username: Yup.string(),
+    password: Yup.string(),
+    sex: Yup.string(),
+    birthday: Yup.string(),
+    phoneNumber: Yup.number().min(10),
+    email: Yup.string(),
+    residentAddress: Yup.string(),
+    roleid: Yup.string(),
   });
+  // UPDATE HANDLER BEGINNING
   const onSubmit = (data: any) => {
-    console.log(`FILE HERE: ${data.img}`);
+    //console.log(`FILE HERE: ${data.img}`);
     // const file = dataURLtoFile(imgBase64,"test");
-    data.img = imgBase64;
-    //data.file = imgBase64;
-    //imgBase64
-    console.log(`FILE HERE2: ${data.img}`);
-    Axios.post("http://localhost:3001/AALHRIA/register", data, {
+    console.log(`onFileLoad [After]:${imgUpdated}`);
+    data.img = imgUpdated ? imgBase64 : "";
+    data.accountStatus = status;
+   
+    Axios.post("http://localhost:3001/AALHRIA/updateStaff", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
     }).then((response) => {
+      console.log(response.data);
       console.log(`Response: ${JSON.stringify(response.data)}`);
       if (response.data.status === "fail") {
         //errorcode
@@ -127,12 +141,15 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
       }
     });
   };
+  // UPDATE HANDLER END
+  // TOAST HANDLER BEGINNING
   useEffect(() => {
     if (_msg.type) {
       if (_msg.type === "error") {
         toast.error(_msg.message);
       } else if (_msg.type === "success") {
         toast.success(_msg.message);
+        toast.success("Changes will take effect on the next login");
       }
       setMsg({
         type: "",
@@ -140,9 +157,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
       });
     }
   }, [_msg]);
-
-  
-
+  // TOAST HANDLER END
   return (
     <>
       <Transition appear show={updEmp} as={Fragment}>
@@ -185,7 +200,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       // onClick={}
-                      onClick={() => setUpdEmp(false)}
+                      onClick={() => {setImgBase64(""); setStatus(""); setImgUpdated(false); setUpdEmp(false); }}
                     >
                       Close
                     </button>
@@ -204,7 +219,9 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                               onSubmit={onSubmit}
                               validationSchema={validationSchema}
                             >
+                            
                               <Form>
+                              {/* <img src={`/uploads/staffImages/${staff.img}`} /> */}
                                 <div className="flex justify-between my-4  ">
                                   {/* IMAGE */}
                                   <div className="w-5/6  h- flex flex-col    px-2">
@@ -212,7 +229,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                     <div className="">
                                       <div>
                                         <label className="block text-sm  font-medium">
-                                          Staff Image 
+                                          Staff Image
                                         </label>
                                         <Avatar
                                           width={400}
@@ -222,9 +239,11 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                           exportAsSquare={true}
                                           onCrop={onCrop}
                                           onClose={onClose}
-                                          // onFileLoad={onFileLoad}
-                                          // onImageLoad={onImageLoad}
-                                          // onBeforeFileLoad={onBeforeFileLoad}
+                                          //cropRadius={1000}
+                                          src={`/uploads/staffImages/${staff.img}`}
+                                          onFileLoad={onFileLoad}
+                                           //onImageLoad={onImageLoad}
+                                           //onBeforeFileLoad={onBeforeFileLoad}
                                           label={
                                             <>
                                               <div className="mt-1 flex justify-center  items-center px-6 pt-5 pb-6 h-96 ">
@@ -276,7 +295,6 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
 
                                   <div className="w-full  h-full  px-2 ">
                                     <div className="col-span-1 w-full space-y-5">
-                                      {" "}
                                       <div className="flex space-x-4 ">
                                         <div className="w-full">
                                           <label
@@ -359,7 +377,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                             className="block w-full px-4 py-2 mt-2 text-gray-700  bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-800 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           >
                                             <option value="" disabled selected>
-                                           -[{staff.sex}]-
+                                              -[{staff.sex}]-
                                             </option>
                                             <option value="Male">Male</option>
                                             <option value="Female">
@@ -510,6 +528,33 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                             name="password"
                                             className="block w-full px-4 py-2 mt-2 text-gray-800 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-900 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
+                                        </div>
+                                      </div>
+                                      <div className="flex w-full space-x-4">
+                                          <label>Account Status: </label>
+                                        <div className="relative flex flex-col items-center justify-center overflow-hidden">
+                                          <div className="flex">
+                                            <label className="inline-flex relative items-center mr-5 cursor-pointer">
+                                              <input
+                                                type="checkbox"
+                                                className="sr-only peer"
+                                                checked={accountStatus}
+                                                readOnly
+                                              />
+                                              <div
+                                                onClick={() => {
+                                                  setAccountStatus(!accountStatus);
+                                                  // The string value for status 'Active' 'Inactive'
+                                                  setStatus(accountStatus ? "Inactive" : "Active" );
+                                                }}
+                                                className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+                                              ></div>
+                                              <span className="ml-2 text-sm font-medium text-gray-900">
+                                              {accountStatus && 'Active'}
+                                              {!accountStatus && 'Inactive'}
+                                              </span>
+                                            </label>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>

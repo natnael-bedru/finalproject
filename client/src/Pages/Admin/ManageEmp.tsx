@@ -6,10 +6,12 @@ type Props = {};
 const ManageEmp = (props: Props) => {
   return (
     <>
-      <div className="w-full h-full bg-white flex flex-col px-8 py-4">
+      <div className="w-full h-full bg-white flex flex-col px-8 py-4 font-poppins">
         <div className="flex  items-center max-h-min justify-between w-full ">
           <div className="flex flex-col">
-            <h2 className=" text-2xl font-semibold my-0">Employee Details</h2>
+            <h2 className=" text-2xl font-semibold my-0 font">
+              Employee Details
+            </h2>
             <p className="text-sm font-light">
               Employee infromation and current activities
             </p>

@@ -79,7 +79,7 @@ const Employee = (props: Props) => {
                 <span className="relative">{value}</span>
               </span>
             </>
-          ) : value === "Suspended" ? (
+          ) : value === "Inactive" ? (
             <>
               <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
                 <span

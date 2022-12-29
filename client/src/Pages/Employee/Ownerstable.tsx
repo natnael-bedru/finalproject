@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useLayoutEffect } from "react";
-// import { HiDotsHorizontal } from "react-icons/hi";useEffect,
+// import { HiDotsHorizontal } from "react-icons/hi";
 // import { Dialog, Transition } from "@headlessui/react";
-// import { Menu } from "@headlessui/react";
+import { Menu } from "@headlessui/react";
 import QRcodePage from "../authentication/QRcodePage";
 import Ownerprofile from "../Employee/Ownerprofile";
 //
@@ -28,10 +28,9 @@ const Ownerstable = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [landshow, setLandshow] = useState(false);
 
-  //data for view land 
-  const [citizenId, setCitizenId]= useState(0);
-
   const [ownersList, setOwnersList] = useState([]); // array ??
+
+  const [citizenId, setCitizenId] = useState(0);
 
   useLayoutEffect(() => {
     Axios.get("http://localhost:3001/AALHRIA/viewallowner", {
@@ -100,7 +99,7 @@ const Ownerstable = (props: Props) => {
     hooks.visibleColumns.push((columns: any) => [
       ...columns,
       {
-        // Header: "Genate QR code",
+        Header: " QR code",
         id: "Genate-QR-code",
         Cell: ({ row }: CellProps<any>) => (
           <button
@@ -112,7 +111,7 @@ const Ownerstable = (props: Props) => {
               );
               //setSid(row.values.id);
             }}
-            className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+            className="font-poppins inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
           >
             Genate QR code
           </button>
@@ -128,7 +127,47 @@ const Ownerstable = (props: Props) => {
         id: "Register-Land",
         Cell: ({ row }: CellProps<any>) => (
           <>
-            <Link
+            <Menu>
+              <div>
+                <Menu.Button
+                  // onClick={() => setShowOption(!showOption)}
+                  className="  "
+                >
+                  <button
+                    type="button"
+                    className=" font-poppins text-center inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+                  >
+                    Actions
+                  </button>
+                  <Menu.Items
+                    className="font-poppins absolute right-20 z-20 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="menu-button"
+                  >
+                    <Link
+                      to={{
+                        pathname: `/employeehomepage/landregistration/${row.values.id}`,
+                      }}
+                    >
+                      <button className="inline-block px-4 py-2.5 bg-transparent w-full text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out">
+                        Register Land
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setLandshow(true);
+                        setCitizenId(row.values.id);
+                      }}
+                      // onClick={() => alert("Editing: " + row.values.id)}
+                      className="inline-block px-4 py-2.5 w-full bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
+                    >
+                      View Land
+                    </button>
+                  </Menu.Items>
+                </Menu.Button>{" "}
+              </div>
+              {/* <Link
               to={{
                 pathname: `/employeehomepage/landregistration/${row.values.id}`,
               }}
@@ -138,13 +177,13 @@ const Ownerstable = (props: Props) => {
               </button>
             </Link>
             <button
-            //TODO:
-              onClick={() => {setLandshow(true); setCitizenId(row.values.id);}}
+              onClick={() => setLandshow(true)}
               // onClick={() => alert("Editing: " + row.values.id)}
               className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
             >
               View Land
-            </button>
+            </button> */}
+            </Menu>
           </>
         ),
       },
@@ -191,7 +230,7 @@ const Ownerstable = (props: Props) => {
   const isEven = (idx: number) => idx % 2 === 0;
   return (
     <>
-      <div className="bg-white p-8 rounded-md w-full">
+      <div className="bg-white p-8 rounded-md w-full font-poppins">
         <div className=" flex items-center justify-between pb-6">
           <div>
             <h2 className="text-gray-600 font-semibold md:text-4xl text-2xl ">
@@ -219,10 +258,13 @@ const Ownerstable = (props: Props) => {
             />
           </div>
           <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-            <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+            <div className="inline-block min-w-full  shadow rounded-lg overflow-hidden">
               {/* table ▼▲ */}
-              <table {...getTableProps()} className="min-w-full leading-normal">
-                <thead>
+              <table
+                {...getTableProps()}
+                className="min-w-full  leading-normal"
+              >
+                <thead className="">
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
@@ -230,7 +272,7 @@ const Ownerstable = (props: Props) => {
                           {...column.getHeaderProps(
                             column.getSortByToggleProps()
                           )}
-                          className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          className="px-5  py-3 border-b-2  border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                         >
                           {column.render("Header")}
                           {column.isSorted
@@ -256,7 +298,7 @@ const Ownerstable = (props: Props) => {
                       return (
                         <tr
                           {...row.getRowProps()}
-                          className={isEven(idx) ? "bg-slate-100/25 " : ""}
+                          className={isEven(idx) ? "bg-slate-100/25  " : ""}
                         >
                           {row.cells.map((cell, idx) => (
                             <td
@@ -294,8 +336,13 @@ const Ownerstable = (props: Props) => {
       </div>
       <QRcodePage QRcode={showOption} setQRcode={setShowOption} />
       {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
-      {/*  const [citizenId, setCitizenId]= useState(0); */}
-      {<LandProfile showland={landshow} setShowland={setLandshow} citizenId={citizenId} />}
+      {
+        <LandProfile
+          showland={landshow}
+          setShowland={setLandshow}
+          citizenId={citizenId}
+        />
+      }
     </>
   );
 };

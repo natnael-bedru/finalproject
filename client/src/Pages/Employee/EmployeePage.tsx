@@ -38,19 +38,20 @@ const EmployeePage = (Props: Props) => {
             ></div> */}
             <div
               id="main-content"
-              className="h-full w-full bg-gray- relative  "
+              className="h-full w-full bg-gray- relative font-poppins  "
             >
               <main>
-                <div className="pt-9 px-4">
+                <div className="pt-9 px-4 font-poppins">
                   <div className="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
                     <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8  2xl:col-span-2">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex-shrink-0">
                           <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
-                            $45,385 {user.username}
+                            {/* {user.username} */}
+                            5,385
                           </span>
                           <h3 className="text-base font-normal text-gray-500">
-                            Sales this week
+                            Authication this week
                           </h3>
                         </div>
                         <div className="flex items-center justify-end flex-1 text-green-500 text-base font-bold">
@@ -78,10 +79,10 @@ const EmployeePage = (Props: Props) => {
                       <div className="mb-4 flex items-center justify-between">
                         <div>
                           <h3 className="text-xl font-bold text-gray-900 mb-2">
-                            Latest Transactions
+                            Latest Registration
                           </h3>
                           <span className="text-base font-normal text-gray-500">
-                            This is a list of latest transactions
+                            This is a list of latest Registration
                           </span>
                         </div>
                         <Link to="/employeehomepage/lands">
@@ -106,19 +107,19 @@ const EmployeePage = (Props: Props) => {
                                       scope="col"
                                       className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                      Transaction
+                                      Owners Name
                                     </th>
                                     <th
                                       scope="col"
                                       className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                      Date & Time
+                                      Registration date
                                     </th>
                                     <th
                                       scope="col"
                                       className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                      Amount
+                                      Registered by
                                     </th>
                                   </tr>
                                 </thead>
@@ -238,7 +239,7 @@ const EmployeePage = (Props: Props) => {
                             2,340
                           </span>
                           <h3 className="text-base font-normal text-gray-500">
-                            New products this week
+                            New Registration this week
                           </h3>
                         </div>
                         <div className="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
@@ -292,7 +293,7 @@ const EmployeePage = (Props: Props) => {
                             385
                           </span>
                           <h3 className="text-base font-normal text-gray-500">
-                            User signups this week
+                            Authication this week
                           </h3>
                         </div>
                         <div className="ml-5 w-0 flex items-center justify-end flex-1 text-red-500 text-base font-bold">
@@ -325,16 +326,16 @@ const EmployeePage = (Props: Props) => {
                 <div className="lg:w-1/2 w-full bg te">
                   <div className=" ">
                     {/* this should go to the welcome page */}
-                    <section className=" dark:text-gray-100">
+                    <section className=" dark:text-gray-100 font-poppins">
                       <div className="container max-w-5xl px-4 py-12 mx-auto">
                         <div className="grid gap-4 mx-4 sm:grid-cols-12">
                           <div className="col-span-12 sm:col-span-3">
                             <div className="text-center sm:text-left mb-14 before:block before:w-24 before:h-3 before:mb-5 before:rounded-md before:mx-auto sm:before:mx-0 before:dark:bg-blue-400">
                               <h3 className="text-3xl font-semibold text-black">
-                                Morbi tempor
+                                LRAS
                               </h3>
                               <span className="text-sm font-bold tracking-wider uppercase dark:text-black">
-                                Vestibulum diam nunc
+                                Fast,Secure and Relaiable
                               </span>
                             </div>
                           </div>
@@ -402,7 +403,7 @@ const EmployeePage = (Props: Props) => {
                   open modal
                 </button>
               </div> */}
-              <div className="md:w-full    bg-white   lg:flex-col flex-row pb-20 overflow-hidden ">
+              <div className="md:w-full    bg-white   lg:flex-col flex-row pb-20 overflow-hidden  font-poppins">
                 <div className=" mt-10 md:ml- ml- flex flex-col  px-4  mb-6">
                   <h1 className=" py-4 font-semibold text-2xl  ">News Feed</h1>
 

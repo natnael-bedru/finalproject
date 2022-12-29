@@ -54,6 +54,11 @@ router
   .route("/viewAllLand/:id")
   .get(_controllers.verifyJWT, _controllers.viewAllLand);
 
+//updateStaff
+router
+  .route("/updateStaff")
+  .post(_controllers.verifyJWT, _controllers.updateStaff);
+
 //.get(_controllers.viewStaff);
 
 /*

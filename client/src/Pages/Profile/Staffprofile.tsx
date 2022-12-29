@@ -21,7 +21,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
   const [upd, setUpd] = useState(false);
   const { user } = useContext(IdContext);
   // staffId is used to hold and pass id
-  const [staffId, setStaffId]= useState(0);
+  const [staffId, setStaffId] = useState(0);
   const [staff, setStaff] = useState({
     img: "",
     assignedBy: 0,
@@ -36,22 +36,26 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
     birthday: "",
     residentAddress: "",
     joinedDate: "",
+    lastChanged: "",
     adminName: "",
     roleName: "",
   });
   const param = useParams();
+  
   useLayoutEffect(() => {
+    
     Axios.get(`http://localhost:3001/AALHRIA/viewstaff/${param.id}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
     }).then((response) => {
-      if(param.id){
-      setStaffId(parseInt(param.id.toString()));
+      if (param.id) {
+        setStaffId(parseInt(param.id.toString()));
       }
+      console.log(response.data[0]);
       setStaff(response.data[0]);
     });
-  }, []);
+  }, [param.id]);
 
   return (
     <>
@@ -101,7 +105,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                           <span className="bg-green-500 py-1 px-2 rounded text-white text-sm">
                             {staff.accountStatus}
                           </span>
-                        ) : staff.accountStatus === "Suspended" ? (
+                        ) : staff.accountStatus === "Inactive" ? (
                           <span className="bg-red-500 py-1 px-2 rounded text-white text-sm">
                             {staff.accountStatus}
                           </span>
@@ -119,9 +123,15 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                       <></>
                     )}
                     <li className="flex items-center py-3">
-                      <span>Member since</span>
+                      <span>Member Since</span>
                       <span className="ml-auto">
                         {staff.joinedDate.substring(0, 10)}
+                      </span>
+                    </li>
+                    <li className="flex items-center py-3">
+                      <span>Last Modified</span>
+                      <span className="ml-auto">
+                        {staff.lastChanged.substring(0, 10)}
                       </span>
                     </li>
                   </ul>
@@ -351,7 +361,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
           </div>
         </div>
       </div>
-      {<Updatestaff updEmp={upd} setUpdEmp={setUpd} staffId={staffId}/>}
+      {<Updatestaff updEmp={upd} setUpdEmp={setUpd} staffId={staffId} />}
     </>
   );
 };

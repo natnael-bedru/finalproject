@@ -48,7 +48,7 @@ const Navbar = (props: Props) => {
   const logout = () => {
     localStorage.removeItem("token");
     //navigate("/signup");
-    setUser({ ...defaultLogout});
+    setUser({ ...defaultLogout });
     navigate("/");
     //setAuthState({ ...authState });
   };
@@ -69,7 +69,7 @@ const Navbar = (props: Props) => {
       },
     }).then(
       (response) => {
-        console.log(`Output ${JSON.stringify(response)}`);
+       // console.log(`Output ${JSON.stringify(response)}`);
         /**
          * [response.data]
          * @param  {[boolean]} loggedIn [description]
@@ -118,7 +118,7 @@ const Navbar = (props: Props) => {
 
   return (
     <>
-      <nav className="bg-gray-100 text-black ">
+      <nav className="bg-gray-100 text-black font-poppins ">
         <div className=" px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -139,16 +139,12 @@ const Navbar = (props: Props) => {
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <img
-                  className=" h-8 w-auto lg:block"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  alt="Your Company"
-                />
+                <h1 className="font-bold text-3xl">LRAS</h1>
 
                 {/* logo */}
               </div>
 
-              <div className="hidden sm:ml-6 sm:block">
+              <div className="hidden sm:ml-6 sm:block font-poppins">
                 <div className="flex space-x-4">
                   {user.role === "Admin" ? (
                     <>
@@ -191,13 +187,13 @@ const Navbar = (props: Props) => {
                       >
                         Registered Lands
                       </Link>
-                      <Link
+                      {/* <Link
                         to="/employeehomepage/landregistration"
                         className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                         aria-current="page"
                       >
                         Register Land
-                      </Link>
+                      </Link> */}
                       <Link
                         to="/employeehomepage/owners"
                         className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -241,7 +237,7 @@ const Navbar = (props: Props) => {
                 </svg>
               </button>
 
-              <Menu as="div" className="relative ml-3">
+              <Menu as="div" className="relative ml-3 font-poppins">
                 <div className="flex justify-center items-center">
                   <Menu.Button
                     type="button"
