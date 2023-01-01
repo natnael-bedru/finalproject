@@ -44,16 +44,19 @@ CREATE TABLE `carta` (
   `plannedLandUse` varchar(45) DEFAULT NULL,
   `permittedUse` varchar(45) DEFAULT NULL,
   `staffId` int DEFAULT NULL,
+  `lastModifiedBy` int DEFAULT NULL,
+  `lastModifiedDate` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `woredaId_idx` (`woredaId`),
   KEY `citizenId_idx` (`citizenId`),
   KEY `staffId_fk` (`staffId`),
   KEY `coordinateId_idx` (`coordinateId`),
+  KEY `lastModifiedBy_fk_idx` (`lastModifiedBy`),
   CONSTRAINT `citizenId` FOREIGN KEY (`citizenId`) REFERENCES `citizen` (`id`),
   CONSTRAINT `coordinateId` FOREIGN KEY (`coordinateId`) REFERENCES `coordinateland` (`id`),
   CONSTRAINT `FK_WoredaCarta` FOREIGN KEY (`woredaId`) REFERENCES `woreda` (`id`),
   CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) REFERENCES `staff` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,7 +65,7 @@ CREATE TABLE `carta` (
 
 LOCK TABLES `carta` WRITE;
 /*!40000 ALTER TABLE `carta` DISABLE KEYS */;
-INSERT INTO `carta` VALUES (7,1,1,'Hailu Tesfai Nataye-[2022-12-29][GO7jJ].jpeg',23232323,3434343,5678,4545,45433,'45457676','1234','2022-12-29','54545454','343','Permits hold',7,'Mixed','Residence',3);
+INSERT INTO `carta` VALUES (1,17,1,'Dagem Tiruneh Tewolde-[2023-01-01][4JOme].jpeg',3333,44444,2222,77777,8888,'66666','1111','2023-01-01','55555','9999','Permits hold',1,'Mixed','Residence',7,7,'2023-01-01');
 /*!40000 ALTER TABLE `carta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -95,7 +98,7 @@ CREATE TABLE `citizen` (
 
 LOCK TABLES `citizen` WRITE;
 /*!40000 ALTER TABLE `citizen` DISABLE KEYS */;
-INSERT INTO `citizen` VALUES (1,'Male/1.jpg','Hailu','Tesfai','Nataye','Male','0911223344','1987-10-31',1),(2,'Male/2.jpg','Abera','Misgina','Noab','Male','0955667788','1984-01-29',2),(3,'Male/3.jpg','Gizaw','Barnabas','Gorfu','Male','0912121212','1997-03-03',3),(4,'Male/4.jpg','Aregawi','Iskinder','Siyoum','Male','0913131313','1991-07-07',1),(5,'Male/5.jpg','Eyoab','Beyne','Taye','Male','0914141414','1991-11-04',2),(6,'Male/6.jpg','Zewedu','Feleke','Caleb','Male','0915151515','2001-11-10',3),(7,'Male/7.jpg','Abera','Misgina','Noab','Male','0955667788','1984-01-29',2),(8,'Male/8.jpg','Gizaw','Barnabas','Gorfu','Male','0912121212','1997-03-03',3),(9,'Male/9.jpg','Aregawi','Iskinder','Siyoum','Male','0913131313','1991-07-07',1),(10,'Male/10.jpg','Eyoab','Beyne','Taye','Male','0914141414','1991-11-04',2),(11,'Male/11.jpg','Zewedu','Feleke','Caleb','Male','0915151515','2001-11-10',3),(12,'Female/1.jpg','Mahdere','Negasi','Getahun','Female','0916161616','1994-12-10',1),(13,'Female/2.jpg','Gadesse','Tamru','Wagaye','Female','0917171717','1996-05-12',2),(14,'Female/3.jpg','Tesfaye','Goliad','Keya','Female','0918181818','1993-08-22',3),(15,'Female/4.jpg','Melat','Legesse','Meba','Female','0921212121','1989-11-09',1),(16,'Female/5.jpg','Habte','Amare','Galawdeyos','Female','0923232323','1993-04-25',2),(17,'Female/6.jpg','Dagem','Tiruneh','Tewolde','Female','0924242424','1987-12-18',3);
+INSERT INTO `citizen` VALUES (1,'Male/1.jpg','Hailu','Tesfai','Nataye','Male','0911223344','1987-10-31',1),(2,'Male/2.jpg','Abera','Misgina','Noab','Male','0955667788','1984-01-29',2),(3,'Male/3.jpg','Gizaw','Barnabas','Gorfu','Male','0912121212','1997-03-03',3),(4,'Male/4.jpg','Aregawi','Iskinder','Siyoum','Male','0913131313','1991-07-07',1),(5,'Male/5.jpg','Eyoab','Beyne','Taye','Male','0914141414','1991-11-04',2),(6,'Male/6.jpg','Zewedu','Feleke','Caleb','Male','0915151515','2001-11-10',3),(7,'Male/7.jpg','Eyasu','Duri','Bessufekad','Male','0955667788','1984-01-29',2),(8,'Male/8.jpg','Ephraim','Aklilu','Abdellahi','Male','0912121212','1997-03-03',3),(9,'Male/9.jpg','Benyam','Basliel','Ketema','Male','0913131313','1991-07-07',1),(10,'Male/10.jpg','Adamu','Teka','Belayneh','Male','0914141414','1991-11-04',2),(11,'Male/11.jpg','Iyasu','Hagos','Atikem','Male','0915151515','2001-11-10',3),(12,'Female/1.jpg','Mahdere','Negasi','Getahun','Female','0916161616','1994-12-10',1),(13,'Female/2.jpg','Gadesse','Tamru','Wagaye','Female','0917171717','1996-05-12',2),(14,'Female/3.jpg','Tesfaye','Goliad','Keya','Female','0918181818','1993-08-22',3),(15,'Female/4.jpg','Melat','Legesse','Meba','Female','0921212121','1989-11-09',1),(16,'Female/5.jpg','Habte','Amare','Galawdeyos','Female','0923232323','1993-04-25',2),(17,'Female/6.jpg','Dagem','Tiruneh','Tewolde','Female','0924242424','1987-12-18',3);
 /*!40000 ALTER TABLE `citizen` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +122,7 @@ CREATE TABLE `coordinateland` (
   `X5` double DEFAULT NULL,
   `Y5` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +131,7 @@ CREATE TABLE `coordinateland` (
 
 LOCK TABLES `coordinateland` WRITE;
 /*!40000 ALTER TABLE `coordinateland` DISABLE KEYS */;
-INSERT INTO `coordinateland` VALUES (7,232.34,34232.34,45232.54,4522,34354.565,343.656,344545.45,656,342.4,423.54);
+INSERT INTO `coordinateland` VALUES (1,1212.43,4545.644,6453.534,53432.435,23434.55,3453.53,443.544,543.45,6645.65,345.65);
 /*!40000 ALTER TABLE `coordinateland` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -191,7 +194,7 @@ CREATE TABLE `staff` (
   KEY `id_idx` (`assignedBy`) /*!80000 INVISIBLE */,
   CONSTRAINT `id` FOREIGN KEY (`assignedBy`) REFERENCES `staff` (`id`),
   CONSTRAINT `roleid` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +203,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16','2022-12-10'),(2,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$pXmnnK9p14roLrAQ5mrvf.YInI8FmwFxshW8vKH4P6tXolyWWYmw2','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-29','2022-12-11'),(3,2,'Employee/Alemu Shemsu Kebede-26.png',1,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-29','2022-12-12');
+INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16','2022-12-10'),(2,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$afUFUZ2PP7aYeqqWVaya1OPYNhvKlG8p04V8q2Jqo4..KiEY1KoNC','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-31','2022-12-11'),(3,2,'Employee/Alemu Shemsu Kebede-26.png',1,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-29','2022-12-12'),(7,2,'Employee/Dave Hailu Kasahun-[2022-12-30][uc7G4].png',1,'Dave','Hailu','Kasahun','dave','$2b$10$Gg/LlhhjXCEuIO19IyfXc.OSwY3nX2blhzoQMRdlP6Zc7daoxt44O','Active','dave@gmail.com','098475457','Male','1994-06-07','Saris','2022-12-30','2022-12-30');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,4 +268,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-29 12:02:33
+-- Dump completed on 2023-01-01 17:17:38

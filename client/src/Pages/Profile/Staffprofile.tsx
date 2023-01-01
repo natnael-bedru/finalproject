@@ -41,9 +41,8 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
     roleName: "",
   });
   const param = useParams();
-  
+
   useLayoutEffect(() => {
-    
     Axios.get(`http://localhost:3001/AALHRIA/viewstaff/${param.id}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),

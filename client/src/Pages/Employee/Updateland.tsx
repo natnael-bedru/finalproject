@@ -7,152 +7,199 @@ import React, {
   useContext,
 } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import IdContext from "../../Context/Context";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// import arrow from "../../assets/arrow-right.png";
+import arrow from "../../assets/arrow-left.png";
+//arrow-left.png
 
 type Props = {};
-
 const Updateland = (props: Props) => {
   // *fetching the employee id
   const { user } = useContext(IdContext);
 
-  const param = useParams();
-  // Citizen preload BEGGINING
-  const [currCitizen, setCurrCitizen] = useState({
-    id: 0,
-    img: "",
-    fullName: "",
-    dateofbirth: "",
-    sex: "",
-    phonenumber: "",
-    woredaNumber: "",
-    kebeleNumber: "",
-    subCityName: "",
+  // Value passed by this variable
+  // Variables : >  location.state.citizenId
+  const location = useLocation();
+  //  Citizen & Carta preload BEGGINING
+  const [currCitizen, setCurrCitizen] = useState<any>({
+   // id:null,
+    fullName: null,
+    img: null,
+    sex: null,
+    phoneNumber: null,
+    dateOfBirth: null,
+    woredaNumber: null,
+    kebeleNumber: null,
+    subCityName: null,
   });
+  const [cartaInfo, setCartaInfo] = useState<any[]>([
+    {
+      cartaId: null,
+      currentWoredaNumber: null,
+      formerKebeleNumber: null,
+      cartaSubCityName: null,
+      cartaImage: null,
+      cartaBlockNumber: null,
+      cartaParcelNumber: null,
+      cartaHouseNumber: null,
+      cartaPlotArea: null,
+      cartaBuiltUpArea: null,
+      cartaLandGrade: null,
+      cartaTitleDeedNo: null,
+      cartaIssuedDate: null,
+      cartaBasemapNo: null,
+      cartaRegistrationNo: null,
+      cartaTypeOfHolding: null,
+      cartaPlannedLandUse: null,
+      cartaPermittedUse: null,
+      issuerStaffName: null,
+      lastChanged: null,
+      cartaCoordinateData: [
+        {
+          X1: null,
+          Y1: null,
+          X2: null,
+          X3: null,
+          Y3: null,
+          X4: null,
+          Y4: null,
+          X5: null,
+          Y5: null,
+        },
+      ],
+    },
+  ]);
   useLayoutEffect(() => {
-    Axios.get(`http://localhost:3001/AALHRIA/viewowneri/${param.id}`, {
+    Axios.get(
+      `http://localhost:3001/AALHRIA/viewAllLand/${parseInt(
+        location.state.citizenId
+      )}`,
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    ).then((response) => {
+      setCurrCitizen(response.data.citizenInfo[0]);
+      setCartaInfo(response.data.carta);
+    });
+  }, [location.state.citizenId]);
+  // Citizen & Carta preload END
+  const [ownersList, setOwnersList] = useState<any>([
+    {
+      id: null,
+      fullName: null,
+      img: null,
+      sex: null,
+      phoneNumber: null,
+      dateOfBirth: null,
+      woredaNumber: null,
+      kebeleNumber: null,
+      subCityName: null,
+    },
+  ]); 
+  const [ownersName, setOwnersName] = useState<string[]>([]);
+  useLayoutEffect(() => {
+    var ownersName: string[] = [];
+    // /viewallowner
+    Axios.get(`http://localhost:3001/AALHRIA/viewallowner`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
     }).then((response) => {
-      console.log(response.data[0]);
-      setCurrCitizen(response.data[0]);
+      for (let x in response.data) {
+        // this removes the current owner from the search list
+        var result = response.data[x].fullName
+          .toString()
+          .localeCompare(currCitizen.fullName);
+        if (parseInt(result) !== 0) {
+          ownersName.push(response.data[x].fullName);
+        }
+      }
+      setOwnersName(ownersName);
+      setOwnersList(response.data);
     });
-  }, []);
-  // Citizen preload END
-  // Woreda Kebele preload dropdown fetch and map BEGINING
-  const [woredaInfo, setWoredaInfo] = useState<any[]>([
-    {
-      woredaNumber: 0,
-      kebeleNumber: 0,
-      subCityName: "",
-    },
-  ]);
-  useLayoutEffect(() => {
-    Axios.get(`http://localhost:3001/AALHRIA/retriveAllWoredaInfoi`, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((data) => {
-      setWoredaInfo(data.data);
-    });
-  }, []);
-  // MAPING DROPDOWN TO EACHOTHER BEGGINING
-  const dropdownWoreda = useRef<HTMLSelectElement>(null);
-  const dropdownKebele = useRef<HTMLSelectElement>(null);
-  const onChangeWoreda = (e: {
+  }, [currCitizen]);
+
+ 
+  // The dropdown to change the carta information BEGINNING
+  const [selectedCarta, setSelectedCarta] = useState(0);
+  const onChangeDeedNo = (e: {
     target: { selectedIndex: React.SetStateAction<number> };
   }) => {
-    if (dropdownKebele && dropdownKebele.current) {
-      dropdownKebele.current.selectedIndex = parseInt(
-        e.target.selectedIndex.toString()
-      );
-    }
+    setSelectedCarta(e.target.selectedIndex);
   };
-  const onChangeKebele = (e: {
-    target: { selectedIndex: React.SetStateAction<number> };
-  }) => {
-    if (dropdownWoreda && dropdownWoreda.current) {
-      dropdownWoreda.current.selectedIndex = parseInt(
-        e.target.selectedIndex.toString()
-      );
-    }
+  // The dropdown to change the carta information END
+  // Search Dropdown BEGINNING
+  const [options, setOptions] = useState<string[]>([]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onInputChange = (event: any) => {
+    setOptions(
+      ownersName
+        .filter((option) => option.includes(event.target.value))
+        .slice(0, 5)
+    );
   };
-  // MAPING DROPDOWN TO EACHOTHER END
-  // Woreda Kebele preload dropdown fetch and map END
-
-  // Image preview BEGINING
-  var imgRef = useRef<HTMLInputElement | null>(null);
-  const imageFieldReference = document.getElementById(
-    "file-upload"
-  ) as HTMLInputElement;
-  imgRef.current = imageFieldReference!;
-  const [image, setImage] = useState<File>();
-  const [preview, setPreview] = useState<string>();
-
+  const ulRef = useRef<HTMLUListElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (image) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(image);
-    } else {
-      setPreview(undefined);
-    }
-  }, [image]);
-  // Image preview END
-
-  // *Setting Toast message Handler
-  const [_msg, setMsg] = useState({
-    type: "",
-    message: "",
+    inputRef.current?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      ulRef.current!.style.display = "flex";
+      onInputChange(event);
+    });
+    document.addEventListener("click", (event) => {
+      ulRef.current!.style.display = "none";
+    });
+  }, [onInputChange]);
+  //Search Dropdown END
+  // The new Citizen Filler BEGINNING
+  const [newCitizen, setNewCitizen] = useState<any>({
+    id: null,
+    fullName: null,
+    img: null,
+    sex: null,
+    phoneNumber: null,
+    dateOfBirth: null,
+    woredaNumber: null,
+    kebeleNumber: null,
+    subCityName: null,
   });
-
+  const updateCitizen = (citizenFullName: string) => {
+    for (let x in ownersList) {
+      var result = ownersList[x]
+        .fullName.toString()
+        .localeCompare(citizenFullName);
+      // [0 if equal]
+      if (parseInt(result) === 0) {
+       // console.log(ownersList[x]);
+        setNewCitizen(ownersList[x]);
+      }
+    }
+    console.log(newCitizen);
+  };
+  // The new Citizen Filler END
   // Register Land Form Submit BEGINING
   const initialValues = {
-    citizenId: 0,
-    img: null,
-    currentWoreda: null,
-    formerKebele: null,
-    blockNumber: null,
-    parcelNumber: null,
-    houseNumber: null,
-    plotArea: null,
-    builtUpArea: null,
-    landGrade: "",
-    titleDeedNo: "",
-    cartaIssuedDate: new Date().toISOString().substring(0, 10),
-    basemapNo: null,
-    registrationNo: null,
-    typeOfHolding: "",
-    plannedLandUse: "",
-    permittedUse: "",
-    staffId: user.id,
-    x1: null,
-    x2: null,
-    x3: null,
-    x4: null,
-    x5: null,
-    y1: null,
-    y2: null,
-    y3: null,
-    y4: null,
-    y5: null,
+    currentOwner: location.state.citizenId,
+    newOwnerName:null,
+    newOwner: null,
+    issuedBy:user.id, // state variable here 
+    cartaTitleDeedNo: null,
+    lastModifiedDate: new Date().toISOString().substring(0, 10)
   };
   const onSubmit = (data: any) => {
-    data.img = preview;
-    data.citizenId = currCitizen.id;
-    data.currentWoreda = dropdownWoreda.current
-      ? dropdownWoreda.current.value
-      : 0;
-    data.formerKebele = dropdownKebele.current
-      ? dropdownKebele.current.value
-      : 0;
-    Axios.post("http://localhost:3001/AALHRIA/registerLandi", data, {
+    data.currentOwner= location.state.citizenId;
+    data.newOwnerName=newCitizen.fullName;
+    data.newOwner= newCitizen.id;
+    data.issuedBy=user.id;
+    data.cartaTitleDeedNo= cartaInfo[selectedCarta].cartaTitleDeedNo;
+    data.lastModifiedDate= new Date().toISOString().substring(0, 10);
+     Axios.post("http://localhost:3001/AALHRIA/updateLandOwnership", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -174,13 +221,50 @@ const Updateland = (props: Props) => {
         });
       }
     });
+   // console.log("Data Here [Update Land]");
+   // console.log(data);
+    // data.img = preview;
+    // data.citizenId = currCitizen.id;
+    // data.currentWoreda = dropdownWoreda.current
+    //   ? dropdownWoreda.current.value
+    //   : 0;
+    // data.formerKebele = dropdownKebele.current
+    //   ? dropdownKebele.current.value
+    //   : 0;
+    // Axios.post("http://localhost:3001/AALHRIA/registerLand", data, {
+    //   headers: {
+    //     "x-access-token": localStorage.getItem("token"),
+    //   },
+    // }).then((response) => {
+    //   console.log(`Response: ${JSON.stringify(response.data)}`);
+    //   if (response.data.status === "fail") {
+    //     //errorcode
+    //     //message
+    //     setMsg({
+    //       type: "error",
+    //       message: response.data.message,
+    //     });
+    //   } else if (response.data.status === "success") {
+    //     //affectedRows
+    //     //message
+    //     setMsg({
+    //       type: "success",
+    //       message: response.data.message,
+    //     });
+    //   }
+    // });
   };
   // Register Land Form Submit END
+
+  // *Setting Toast message Handler
+   const [_msg, setMsg] = useState({
+    type: "",
+    message: "",
+  });
   // *TOAST MESSAGE
   useEffect(() => {
     if (_msg.type) {
       if (_msg.type === "error") {
-        // dangerouslySetInnerHTML={{__html: _msg.message}}
         toast.error(_msg.message);
       } else if (_msg.type === "success") {
         toast.success(_msg.message);
@@ -191,10 +275,9 @@ const Updateland = (props: Props) => {
       });
     }
   }, [_msg]);
-
   return (
     <>
-      <div className="w-full h-screen ">
+      <div className="w-full h-screen font-poppins ">
         {<ToastContainer />}
         <div className="w-full h-full bg-white flex flex-col px-8 py-4">
           <div className="flex items-center max-h-min justify-between w-full">
@@ -208,46 +291,196 @@ const Updateland = (props: Props) => {
             </div>
             <div className="flex"></div>
           </div>
-
-          <div className="mt-10 mx-auto flex flex-col w-full jsu">
-            <div className="grid grid-cols-3 divide-x">
-              <div>
-                <label className="block text-sm  font-medium">
-                  Citizen Image
-                </label>
-                <div className="mt-1 flex justify-center items-center px-1 pt-1 pb-1 border-2 h-[200px] w-[200px] border-gray-300 border-dashed rounded-md">
-                  <img src={`/uploads/citizenImages/${currCitizen.img}`} />
+          <Formik initialValues={initialValues} onSubmit={onSubmit}>
+            <Form>
+              <div className="mt-10 mx-auto flex flex-col w-full jsu">
+                <div className="flex w-full justify-between items-center">
+                  <div className="w-full flex items-center justify-start ">
+                    <div className="flex relative bg-gray-50 items-center p-2 rounded-md  w-1/3  border-2 mb-4 ">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-gray-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      <input
+                        id="search-bar"
+                        type="text"
+                        className="bg-gray-50 outline-none ml-1 block w-full "
+                        placeholder="Search here . . ."
+                        autoComplete="off"
+                        ref={inputRef}
+                        onChange={onInputChange}
+                      />
+                      <ul
+                        id="results"
+                        className="absolute w-full top-10 left-0 flex-col py-1 text-sm text-gray-700 bg-gray-50 dark:text-gray-200"
+                        ref={ulRef}
+                      >
+                        {options.map(
+                          (
+                            option:
+                              | string
+                              | number
+                              | boolean
+                              | React.ReactElement<
+                                  any,
+                                  string | React.JSXElementConstructor<any>
+                                >
+                              | React.ReactFragment
+                              | React.ReactPortal
+                              | null
+                              | undefined,
+                            index: React.Key | null | undefined
+                          ) => {
+                            return (
+                              <button
+                                className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                type="button"
+                                key={index}
+                                onClick={(e) => {
+                                  inputRef.current!.value = option as string;
+                                  updateCitizen(option as string);
+                                }}
+                              >
+                                {option}
+                              </button>
+                            );
+                          }
+                        )}
+                      </ul>
+                    </div>
+                    {/* <SearchbarDropdown
+                      options={options}
+                      onInputChange={onInputChange}
+                    />  */}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm  font-medium">
-                  Citizen Detail
-                </label>
-                <p className=" dark:text-black">
-                  Full Name: {currCitizen.fullName}
-                </p>
-                <p className=" dark:text-black">
-                  Date of Birth:{currCitizen.dateofbirth.substring(0, 10)}
-                </p>
-                <p className=" dark:text-black">Sex:{currCitizen.sex}</p>
-                <p className=" dark:text-black">
-                  Phone Number:{currCitizen.phonenumber}
-                </p>
-                <p className=" dark:text-black">
-                  Former Kebele:{currCitizen.kebeleNumber}
-                </p>
-                <p className=" dark:text-black">
-                  Current Woreda:{currCitizen.woredaNumber}
-                </p>
-                <p className=" dark:text-black">
-                  Subcity:{currCitizen.subCityName}
-                </p>
-              </div>
-            </div>
-            <div className="w-full ">
-              <section className="p-3 rounded-md shadow-md  text-black">
-                <Formik initialValues={initialValues} onSubmit={onSubmit}>
-                  <Form>
+                <div className="w-full grid grid-cols-5 gap-4">
+                  <div className="flex items-center w-full justify-between col-span-2 p-3 rounded-lg shadow-xl">
+                    <div>
+                      <label className="block text-sm  font-medium">
+                        Citizen Image
+                      </label>
+                      <div className="mt-1 flex justify-center items-center px-1 pt-1 pb-1 border-2 h-[200px] w-[200px] border-gray-300 border-dashed rounded-md">
+                        <img
+                          src={`/uploads/citizenImages/${
+                            newCitizen && newCitizen.img
+                          }`}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-sm  font-medium">
+                        Citizen Detail
+                      </label>
+                      <p className=" dark:text-black">
+                        Full Name: {newCitizen && newCitizen.fullName}
+                      </p>
+                      <p className=" dark:text-black">
+                        Date of Birth:
+                        {newCitizen.dateofbirth &&
+                          newCitizen.dateofbirth.substring(0, 10)}
+                      </p>
+                      <p className=" dark:text-black">
+                        Sex:{newCitizen && newCitizen.sex}
+                      </p>
+                      <p className=" dark:text-black">
+                        Phone Number:{newCitizen && newCitizen.phonenumber}
+                      </p>
+                      <p className=" dark:text-black">
+                        Former Kebele:{newCitizen && newCitizen.kebeleNumber}
+                      </p>
+                      <p className=" dark:text-black">
+                        Current Woreda:{newCitizen && newCitizen.woredaNumber}
+                      </p>
+                      <p className=" dark:text-black">
+                        Subcity:{newCitizen && newCitizen.subCityName}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="w-full flex flex-col justify-center items-center">
+                    Ownership Transfer to
+                    <img src={arrow} alt="" />
+                  </div>
+
+                  <div className="flex items-center w-full justify-between col-span-2 p-3 rounded-lg shadow-xl">
+                    <div>
+                      <label className="block text-sm  font-medium font-poppins">
+                        Citizen Image
+                      </label>
+                      <div className="mt-1 flex justify-center items-center px-1 pt-1 pb-1 border-2 h-[200px] w-[200px] border-gray-300 border-dashed rounded-md">
+                        <img
+                          src={`/uploads/citizenImages/${
+                            currCitizen && currCitizen.img
+                          }`}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-sm  font-medium">
+                        Citizen Detail
+                      </label>
+                      <p className=" dark:text-black">
+                        Full Name: {currCitizen && currCitizen.fullName}
+                      </p>
+                      <p className=" dark:text-black">
+                        Date of Birth:
+                        {currCitizen.dateOfBirth &&
+                          currCitizen.dateOfBirth.substring(0, 10)}
+                      </p>
+                      <p className=" dark:text-black">Sex:{currCitizen.sex}</p>
+                      <p className=" dark:text-black">
+                        Phone Number:{currCitizen.phoneNumber}
+                      </p>
+                      <p className=" dark:text-black">
+                        Former Kebele:{currCitizen.kebeleNumber}
+                      </p>
+                      <p className=" dark:text-black">
+                        Current Woreda:{currCitizen.woredaNumber}
+                      </p>
+                      <p className=" dark:text-black">
+                        Subcity:{currCitizen.subCityName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-full ">
+                  <section className="p-3 mt-7  text-black">
+                    {/* <div className="w-1/2 h-auto flex items-center ">
+                      <label
+                        className="font-bold text-xl font-poppins w-1/4 ml-3"
+                        htmlFor="Landid"
+                      >
+                        Title Deed No:
+                      </label>
+
+                      <select
+                        className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        aria-label=".form-select-sm example"
+                        onChange={onChangeDeedNo}
+                      >
+                        {(() => {
+                          const options = [];
+                          for (let x in cartaInfo) {
+                            //TitleDeedNo
+                            options.push(
+                              <option value={parseInt(x)}>
+                                {cartaInfo[parseInt(x)].cartaTitleDeedNo}
+                              </option>
+                            );
+                          }
+                          return options;
+                        })()}
+                      </select>
+                    </div> */}
                     <div className="flex justify-between my-4  ">
                       <div className="w-full  h-full flex flex-col justify-center items-center px-2 space-y-4">
                         <div className="flex w-full space-x-4">
@@ -255,12 +488,27 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="username">
                               Title Deed Number
                             </label>
-                            <Field
-                              required
+                            <select
+                              //disabled //was input
                               name="titleDeedNo"
-                              type="text"
+                              //value={cartaInfo[selectedCarta].cartaTitleDeedNo}
+                              //type="text"
+                              onChange={onChangeDeedNo}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-900 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                            />
+                            >
+                              {(() => {
+                                const options = [];
+                                for (let x in cartaInfo) {
+                                  //TitleDeedNo
+                                  options.push(
+                                    <option value={parseInt(x)}>
+                                      {cartaInfo[parseInt(x)].cartaTitleDeedNo}
+                                    </option>
+                                  );
+                                }
+                                return options;
+                              })()}
+                            </select>
                           </div>
 
                           <div className="w-full">
@@ -271,24 +519,13 @@ const Updateland = (props: Props) => {
                               Current Woreda
                             </label>
                             <select
-                              required
+                              disabled
                               name="currentWoreda"
-                              //as="select"
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                              ref={dropdownWoreda}
-                              onChange={onChangeWoreda}
                             >
                               <option value="" disabled selected>
-                                Unspecified
+                              {cartaInfo[selectedCarta].currentWoredaNumber}{" | "}{cartaInfo[selectedCarta].cartaSubCityName}
                               </option>
-                              {woredaInfo.map((item, key) => {
-                                return (
-                                  <option
-                                    key={key}
-                                    value={item.woredaNumber}
-                                  >{`${item.woredaNumber} | ${item.subCityName}`}</option>
-                                );
-                              })}
                             </select>
                           </div>
                           <div className="w-full">
@@ -299,36 +536,25 @@ const Updateland = (props: Props) => {
                               Former Kebele
                             </label>
                             <select
-                              required
+                              disabled
                               name="formerKebele"
-                              //as="select"
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                              ref={dropdownKebele}
-                              onChange={onChangeKebele}
                             >
                               <option value="" disabled selected>
-                                Unspecified
+                                {cartaInfo[selectedCarta].formerKebeleNumber}{" | "}{cartaInfo[selectedCarta].cartaSubCityName}
                               </option>
-                              {woredaInfo.map((item, key) => {
-                                return (
-                                  <option
-                                    key={key}
-                                    value={item.kebeleNumber}
-                                  >{`${item.kebeleNumber} | ${item.subCityName}`}</option>
-                                );
-                              })}
                             </select>
                           </div>
                           <div className="w-full">
                             <label className="" htmlFor="username">
                               House Number
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               id="houseNumber"
                               name="houseNumber"
                               type="numeric"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaHouseNumber}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-900 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -339,12 +565,12 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="username">
                               Block Number
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="blockNumber"
                               id="blockNumber"
                               type="numeric"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaBlockNumber}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -352,12 +578,12 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="parcelNumber">
                               Parcel Number
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="parcelNumber"
                               id="parcelNumber"
                               type="numeric"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaParcelNumber}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -365,12 +591,12 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="basemapNo">
                               Base-Map Number
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="basemapNo"
                               id="basemapNo"
                               type="numeric"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaBuiltUpArea}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-900 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -380,12 +606,12 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="landGrade">
                               Land Grade
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="landGrade"
                               id="landGrade"
                               type="text"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaLandGrade}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -393,12 +619,12 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="plotArea">
                               Plot Area <small>(&#x33A1;)</small>
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="plotArea"
                               id="plotArea"
                               type="numeric"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaPlotArea}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -406,12 +632,12 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="builtUpArea">
                               Built Up Area <small>(&#x33A1;)</small>
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="builtUpArea"
                               id="builtUpArea"
                               type="numeric"
-                              placeholder=""
+                              value={cartaInfo[selectedCarta].cartaBuiltUpArea}
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -419,12 +645,14 @@ const Updateland = (props: Props) => {
                             <label className="" htmlFor="registrationNo">
                               Registration Number
                             </label>
-                            <Field
-                              required
+                            <input
+                              disabled
                               name="registrationNo"
                               id="registrationNo"
                               type="numeric"
-                              placeholder=""
+                              value={
+                                cartaInfo[selectedCarta].cartaRegistrationNo
+                              }
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             />
                           </div>
@@ -437,9 +665,11 @@ const Updateland = (props: Props) => {
                             >
                               Type of holding
                             </label>
-                            <Field
-                              required
-                              as="select"
+                            <select
+                              disabled
+                              value={
+                                cartaInfo[selectedCarta].cartaTypeOfHolding
+                              }
                               name="typeOfHolding"
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             >
@@ -451,7 +681,7 @@ const Updateland = (props: Props) => {
                               </option>
                               <option value={"Permits new"}>Permits new</option>
                               {/* <option value={'Bandung'}>Bandung</option> */}
-                            </Field>
+                            </select>
                           </div>
                           <div className="w-full">
                             <label
@@ -460,9 +690,11 @@ const Updateland = (props: Props) => {
                             >
                               Planned Land use
                             </label>
-                            <Field
-                              required
-                              as="select"
+                            <select
+                              disabled
+                              value={
+                                cartaInfo[selectedCarta].cartaPlannedLandUse
+                              }
                               name="plannedLandUse"
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             >
@@ -472,7 +704,7 @@ const Updateland = (props: Props) => {
                               <option value={"Mixed"}>Mixed</option>
                               <option value={"Residence"}>Residence</option>
                               <option value={"Business"}>Business</option>
-                            </Field>
+                            </select>
                           </div>
                           <div className="w-full">
                             <label
@@ -481,9 +713,9 @@ const Updateland = (props: Props) => {
                             >
                               Permmited use
                             </label>
-                            <Field
-                              required
-                              as="select"
+                            <select
+                              disabled
+                              value={cartaInfo[selectedCarta].cartaPermittedUse}
                               name="permittedUse"
                               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                             >
@@ -493,7 +725,7 @@ const Updateland = (props: Props) => {
                               <option value={"Mixed"}>Mixed</option>
                               <option value={"Residence"}>Residence</option>
                               <option value={"Business"}>Business</option>
-                            </Field>
+                            </select>
                           </div>
                         </div>
                         <div className="flex w-full space-x-4"></div>
@@ -507,8 +739,8 @@ const Updateland = (props: Props) => {
                                 <div className=" relative w-full h-full">
                                   {" "}
                                   <div className="absolute bottom-3 right-3">
-                                    {" "}
-                                    <div
+                                    {/* the button for fetching the image from the user */}
+                                    {/* <div
                                       className=" bg-gray-50 drop-shadow-xl rounded-md p-2"
                                       color="gray"
                                       onClick={(event) => {
@@ -517,11 +749,12 @@ const Updateland = (props: Props) => {
                                       }}
                                     >
                                       Click To Change
-                                    </div>
+                                    </div> */}
                                   </div>{" "}
                                   <img
-                                    className="w-full h-full object-cover rounded-lg mt-3"
-                                    src={preview}
+                                    className="p-2 w-full h-full object-cover rounded-lg mt-3"
+                                    // value={cartaInfo[0].cartaHouseNumber}
+                                    src={`/uploads/cartaImages/${cartaInfo[selectedCarta].cartaImage}`}
                                     alt="cartaImage"
                                   />
                                   {/* <img
@@ -531,33 +764,17 @@ const Updateland = (props: Props) => {
                                   /> */}
                                 </div>
                                 :
-                                <Field
-                                  required
-                                  ref={imgRef}
+                                <input
+                                  disabled
                                   id="file-upload"
                                   value={undefined}
                                   name="img"
                                   type="file"
                                   className="hidden"
                                   accept="image/*"
-                                  onChange={(event: {
-                                    target: { files: any[] };
-                                  }) => {
-                                    const file = event.target.files[0];
-                                    if (
-                                      file &&
-                                      file.type.substr(0, 5) === "image"
-                                    ) {
-                                      //setFieldValue('img', event.target.files[0]);
-                                      setImage(file);
-                                    } else {
-                                      setImage(undefined);
-                                    }
-                                  }}
                                 />
                               </label>
                             </div>
-                            {/* <input value="Certificate Image" /> */}
                           </div>
                           <div className=" border-2 rounded-md  border-black">
                             <h1 className="pl-3 pb-3 font-semibold text-lg">
@@ -586,98 +803,130 @@ const Updateland = (props: Props) => {
                                     <tbody>
                                       <tr className="border-b">
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="x1"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].X1
+                                            }
                                             name="x1"
                                           />
                                         </td>
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="y1"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].Y1
+                                            }
                                             name="y1"
                                           />
                                         </td>
                                       </tr>
                                       <tr className="bg-white border-b">
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="x2"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].X2
+                                            }
                                             name="x2"
                                           />
                                         </td>
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="y2"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].Y2
+                                            }
                                             name="y2"
                                           />
                                         </td>
                                       </tr>
                                       <tr className="bg-white border-b">
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="x3"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].X3
+                                            }
                                             name="x3"
                                           />
                                         </td>
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="y3"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].Y3
+                                            }
                                             name="y3"
                                           />
                                         </td>
                                       </tr>
                                       <tr className="border-b">
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="x4"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].X4
+                                            }
                                             name="x4"
                                           />
                                         </td>
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
-                                            required
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="y4"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].Y4
+                                            }
                                             name="y4"
                                           />
                                         </td>
                                       </tr>
                                       <tr className="bg-white border-b">
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="x5"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].X5
+                                            }
                                             name="x5"
                                           />
                                         </td>
                                         <td className="  w-1/2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                          <Field
+                                          <input
+                                            disabled
                                             className="w-full h-full p-4"
                                             type="numeric"
-                                            placeholder="y5"
+                                            value={
+                                              cartaInfo[selectedCarta]
+                                                .cartaCoordinateData[0].Y5
+                                            }
                                             name="y5"
                                           />
                                         </td>
@@ -692,25 +941,26 @@ const Updateland = (props: Props) => {
                       </div>
                     </div>
 
-                    <div className="flex justify-end   space-x-4">
+                    <div className="flex justify-end space-x-4">
                       <button
                         type="button"
-                        className="hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                        className="hidden md:flex px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                       >
                         Canel
                       </button>
                       <button
+                        disabled={!newCitizen.id}
                         type="submit"
-                        className="  hidden md:flex   px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                        className=" hidden md:flex px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                       >
-                        Register
+                        Transfer
                       </button>
                     </div>
-                  </Form>
-                </Formik>
-              </section>
-            </div>
-          </div>
+                  </section>
+                </div>
+              </div>
+            </Form>
+          </Formik>
         </div>
       </div>
     </>

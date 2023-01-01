@@ -179,7 +179,7 @@ const DetailsPage = (props: Props) => {
             <div className="w-full flex md:flex-row flex-col-reverse   justify-between">
               <div className="w-full">
                 <div className="flex flex-col my- ">
-                  <div className="grid grid-cols-2 gap-1 mx-4 ">
+                  <div className="grid grid-cols-2 gap-1 mx-4  mt-14">
                     <div className=" my-4">
                       <h1 className="font-semibold text-lg">First name</h1>
                       <p>jane doe</p>
@@ -211,8 +211,10 @@ const DetailsPage = (props: Props) => {
                   </div>
                 </div>
               </div>
-              <div className="w-2/3 p- h-auto ">
-                <div className=" w-full h-full bg-red-300"></div>
+              <div className="md:w-2/3 w-full h-[400px]  ">
+                <div className=" w-full h-full bg-red-300 flex justify-center items-center">
+                  heloo
+                </div>
               </div>
             </div>
           </div>

@@ -185,7 +185,7 @@ exports.registerStaff = (request, response) => {
   //TODO:
   // the image is handled inthis
   var string = request.body.img;
-  console.log(request.body.img);
+  //console.log(request.body.img);
   var imageName = "Unspecified/defaultPicture.png";
   if (string) {
     var regex = /^data:.+\/(.+);base64,(.*)$/;
@@ -222,6 +222,8 @@ exports.registerStaff = (request, response) => {
         });
       })
       .catch((err) => {
+        // console.log("error form controller line 255");
+        //console.log(err);
         //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
         //
         // HTTP errors say something about the HTTP protocol.
@@ -477,6 +479,8 @@ exports.registerLand = (request, response) => {
                   plannedLandUse: request.body.plannedLandUse,
                   permittedUse: request.body.permittedUse,
                   staffId: request.body.staffId,
+                  lastModifiedBy: request.body.lastModifiedBy,
+                  lastModifiedDate: request.body.lastModifiedDate,
                 };
                 const result3 = db.registerLand(carta);
                 // console.log("Carta Registerd Successfully!");
@@ -516,7 +520,7 @@ exports.registerLand = (request, response) => {
 };
 //viewAllLand
 exports.viewAllLand = (request, response) => {
-  console.log(`Parameter: ${request.params.id}`);
+  // console.log(`Parameter: ${request.params.id}`);
   const citizenId = request.params.id;
   var jsonOut = {
     citizenInfo: [],
@@ -563,8 +567,10 @@ exports.viewAllLand = (request, response) => {
               var woreda = await result4;
               var result5 = db.viewStaff(carta[x].staffId);
               var staff = await result5;
-              var result6 = db.getCoordinate(carta[x].coordinateId);
-              var coordinateData = await result6;
+              var result6 = db.viewStaff(carta[x].lastModifiedBy);
+              var staffLastModifiedBy = await result6;
+              var result7 = db.getCoordinate(carta[x].coordinateId);
+              var coordinateData = await result7;
 
               var cartaData = {
                 cartaId: carta[x].id,
@@ -600,6 +606,8 @@ exports.viewAllLand = (request, response) => {
                 cartaPlannedLandUse: carta[x].plannedLandUse,
                 cartaPermittedUse: carta[x].permittedUse,
                 issuerStaffName: `${staff[0].firstName} ${staff[0].middleName}`,
+                lastChanged: `${staffLastModifiedBy[0].firstName} ${staffLastModifiedBy[0].middleName}`,
+                lastModifiedDate: carta[x].lastModifiedDate,
               };
               jsonOut.carta.push(cartaData);
             }
@@ -657,57 +665,119 @@ exports.updateStaff = async (request, response) => {
     const result = db.updateStaff(update, staffId);
     //const data = await result;
     //var imageName = null;
-    result.then(async (imgData) => {
-      //Object.values(data).length
-      // if length is 4 it means there is external data
-      // for the meta data of the new image
+    result
+      .then(async (imgData) => {
+        //Object.values(data).length
+        // if length is 4 it means there is external data
+        // for the meta data of the new image
 
-      // if it is just 1 it means the image that is used is default
-      // and there is no need to store any image
-      console.log(imgData);
-      //var successImageChange = null;
-      if (Object.values(imgData).length === 4) {
-        // STORING THE IMAGE
-        var string = requestArray2D[2][1];
-        var regex = /^data:.+\/(.+);base64,(.*)$/;
-        var matches = string.match(regex);
-        var ext = matches[1];
-        var data = matches[2];
-        var buffer = Buffer.from(data, "base64");
-        const role = ["Unspecified", "Admin", "Employee"];
-        var imageName =
-          `${
-            role[await imgData.staffRoleId]
-          }/${await imgData.staffFullName}-[${new Date()
-            .toISOString()
-            .substring(0, 10)}][${makeid(5)}].` + ext;
-        //console.log(imageName);
-        fs.writeFileSync(`./uploads/staffImages/${imageName}`, buffer);
-        const result1 = db.updateStaffImg(imageName, staffId);
-        //TODO: the result of the image being inserted hasn't been checked!
-        //successImageChange = await result1;
-      }
-      if (Object.values(imgData).length > 0) {
-        console.log("HERE");
-        //console.log(successImageChange && successImageChange.affectedRows);
+        // if it is just 1 it means the image that is used is default
+        // and there is no need to store any image
+        //console.log(imgData);
+        //var successImageChange = null;
+        if (Object.values(imgData).length === 4) {
+          // STORING THE IMAGE
+          var string = requestArray2D[2][1];
+          var regex = /^data:.+\/(.+);base64,(.*)$/;
+          var matches = string.match(regex);
+          var ext = matches[1];
+          var data = matches[2];
+          var buffer = Buffer.from(data, "base64");
+          const role = ["Unspecified", "Admin", "Employee"];
+          var imageName =
+            `${
+              role[await imgData.staffRoleId]
+            }/${await imgData.staffFullName}-[${new Date()
+              .toISOString()
+              .substring(0, 10)}][${makeid(5)}].` + ext;
+          //console.log(imageName);
+          fs.writeFileSync(`./uploads/staffImages/${imageName}`, buffer);
+          const result1 = db.updateStaffImg(imageName, staffId);
+          //TODO: the result of the image being inserted hasn't been checked!
+          //successImageChange = await result1;
+        }
+        if (Object.values(imgData).length > 0) {
+          // console.log("HERE");
+          //console.log(successImageChange && successImageChange.affectedRows);
+          response.json({
+            status: "success",
+            //affectedRows: data.affectedRows,
+            message: `Staff Information Updated successfuly!`,
+          });
+        }
+      })
+      .catch((err) => {
+        //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
+        //
+        // HTTP errors say something about the HTTP protocol.
+        // This specific error indicates a server is trying to relay the HTTP request,
+        // but the upstream server did not respond correctly.
+
+        // Your web application communicating with a database server is outside the realm of HTTP
+        // and any errors should be wrapped in the generic HTTP 500 Internal server error response code.
         response.json({
-          status: "success",
-          //affectedRows: data.affectedRows,
-          message: `Staff Information Updated successfuly!`,
+          status: "fail",
+          errorcode: err.code,
+          message: `There is a staff with the same \'${err.message}\'`,
         });
-      }
-    });
+      });
   }
+};
+//updateLandOwnership
+exports.updateLandOwnership = async (request, response) => {
+  /*
+  currentOwner: 1,
+  newOwner: 8,
+  issuedBy: 3,
+  lastModifiedDate: '2022-12-31',
+  cartaTitleDeedNo: '111111'
+  newOwnerName: 'Gizaw Barnabas Gorfu'
+  */
+  const result = db.updateLandOwnership(request.body);
+  result.then((data) => {
+    // Getting the image name from the result
+    //console.log(data[0].img.toString().split(".").pop());
+    var imgExt = data[0].img.toString().split(".").pop();
+    var imageName =
+      `${request.body.newOwnerName}-[${request.body.lastModifiedDate}][${makeid(
+        5
+      )}].` + imgExt;
+    if (data) {
+      //Here the image is duplicated and renamed by the new owner name
+      fs.copyFile(
+        `./uploads/cartaImages/${data[0].img}`,
+        `./uploads/cartaImages/${imageName}`,
+        (err) => {
+          if (err) throw err;
+          if (!err) {
+            const result1 = db.updateLandImage(
+              imageName,
+              request.body.cartaTitleDeedNo
+            );
+            result1.then((data) => {
+              if (data) {
+                if (data.affectedRows === 1) {
+                  response.json({
+                    status: "success",
+                    //affectedRows: data.affectedRows,
+                    message: `Owner Information Updated successfuly!`,
+                  });
+                }
+              }
+            });
+          }
+        }
+      );
+    }
+  });
 };
 
 /*
-
 exports.insertNewName = (request, response) => {
   //console.log(request.body);
   const { name } = request.body;
   const db = dbService.getDbServiceInstance();
   const result = db.insertNewName(name);
-
   result
     .then((data) => response.json({ data: data }))
     .catch((err) => console.log(err));

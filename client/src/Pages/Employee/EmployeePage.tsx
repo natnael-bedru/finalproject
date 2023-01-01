@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Link } from "react-router-dom";
 import Graph from "../../assets/Graph.png";
-import Ownerprofile from "./Ownerprofile";
+//import Ownerprofile from "../Reports/Ownerprofile";
 import { Dialog, Transition } from "@headlessui/react";
 import Aos from "aos";
 import "aos/dist/aos.css";
@@ -85,7 +85,7 @@ const EmployeePage = (Props: Props) => {
                             This is a list of latest Registration
                           </span>
                         </div>
-                        <Link to="/employeehomepage/lands">
+                        <Link to="/employeehomepage/owners">
                           <div className="flex-shrink-0">
                             <a
                               href="/"
@@ -578,7 +578,7 @@ const EmployeePage = (Props: Props) => {
           </div>{" "}
         </div>
       </div>
-      {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
+      {/* {<Ownerprofile show={isOpen} setShow={setIsOpen} />} */}
     </>
   );
 };

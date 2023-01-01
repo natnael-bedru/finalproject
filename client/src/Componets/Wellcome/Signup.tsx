@@ -45,22 +45,26 @@ const Signup = (props: Props) => {
             "x-access-token": response,
           },
         }).then((response) => {
-          // account status block
           console.log(response.data.accountStatus);
-          //console.log(`fetch data login :${response.data.userId}`);
+          // console.log(`fetch data login :${response.data.userId}`);
           if (response.data.loggedIn === true) {
             console.log(`Authentication Message: ${response.data.message}`);
             console.log(`Authentication User Id: ${response.data.userId}`);
             console.log(`Authentication Role Name: ${response.data.roleName}`);
-            switch (response.data.roleName) {
-              case "Admin":
-                navigate("/adminhomepage");
-                break;
-              case "Employee":
-                navigate("/employeehomepage");
-                break;
-              default:
-                break;
+            if(response.data.accountStatus === "Active"){
+              switch (response.data.roleName) {
+                case "Admin":
+                  navigate("/adminhomepage");
+                  break;
+                case "Employee":
+                  navigate("/employeehomepage");
+                  break;
+                default:
+                  break;
+              }
+            }else if(response.data.accountStatus === "Inactive")
+            {
+              navigate("/suspended");
             }
           } else {
             console.log("something wrong!");

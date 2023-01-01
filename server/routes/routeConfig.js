@@ -58,25 +58,24 @@ router
 router
   .route("/updateStaff")
   .post(_controllers.verifyJWT, _controllers.updateStaff);
+//updateLandOwnership
+router
+  .route("/updateLandOwnership")
+  .post(_controllers.verifyJWT, _controllers.updateLandOwnership);
 
 //.get(_controllers.viewStaff);
 
 /*
 // create
 router.route("/insert").post(_controllers.insertNewName);
-
 // read
 router.route("/getAll").get(_controllers.getAllData);
-
 // update
 router.route("/update").patch(_controllers.updateNameById);
-
 // delete
 router.route("/delete/:id").delete(_controllers.deleteRowById);
-
 // search
 router.route("/search/:name").get(_controllers.searchByName);
-
 */
 
 module.exports = router;

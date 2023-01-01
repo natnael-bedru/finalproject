@@ -60,12 +60,17 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     firstName: Yup.string().required("*required"),
     middleName: Yup.string().required("*required"),
     lastName: Yup.string().required("*required"),
-    username: Yup.string().required("*required"),
-    password: Yup.string().required("*required"),
+    username: Yup.string()
+      .required("*required")
+      .min(6, "username is too short"),
+    password: Yup.string()
+      .required("*required")
+      .min(5, "password is too short")
+      .max(8),
     sex: Yup.string().required("*required"),
     birthday: Yup.string().required("*required"),
     phoneNumber: Yup.string().required("*required"),
-    email: Yup.string().required("*required"),
+    email: Yup.string().required("*required").email("Invalid email address"),
     residentAddress: Yup.string().required("*required"),
     roleid: Yup.string().required("*required"),
   });
@@ -402,7 +407,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             name="phoneNumber"
                                             placeholder="+251"
                                             type="tel"
-                                            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                                            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                         <div className="w-full">
@@ -422,7 +427,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             name="residentAddress"
                                             placeholder="Bole"
                                             type="text"
-                                            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                                            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                       </div>
@@ -441,7 +446,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             name="email"
                                             type="email"
                                             placeholder="johndoe@gmail.com"
-                                            className="block w-full px-4 py-2 mt-2  text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                                            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                         <div className="w-full">
@@ -461,7 +466,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             name="username"
                                             type="text"
                                             placeholder="johndoe"
-                                            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                                            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                         <div className="w-full">
@@ -481,7 +486,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                             type="password"
                                             name="password"
                                             placeholder="********"
-                                            className="block w-full px-4 py-2 mt-2 text-gray-800 bg-white border border-gray-300 rounded-md dark:bg-white dark:text-gray-900 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                                            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder:text-black bg-white border border-gray-300 rounded-md dark:bg-white dark:text-black dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                                           />
                                         </div>
                                       </div>
@@ -505,8 +510,8 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
                                                 className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
                                               ></div>
                                               <span className="ml-2 text-sm font-medium text-gray-900">
-                                                {accountStatus && 'Active'}
-                                                {!accountStatus && 'Inactive'}
+                                                {accountStatus && "Active"}
+                                                {!accountStatus && "Inactive"}
                                               </span>
                                             </label>
                                           </div>

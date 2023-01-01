@@ -132,6 +132,8 @@ const Landreg = (props: Props) => {
     plannedLandUse: "",
     permittedUse: "",
     staffId: user.id,
+    lastModifiedBy: user.id,
+    lastModifiedDate: new Date().toISOString().substring(0, 10),
     x1: null,
     x2: null,
     x3: null,
@@ -157,7 +159,7 @@ const Landreg = (props: Props) => {
         "x-access-token": localStorage.getItem("token"),
       },
     }).then((response) => {
-      console.log(`Response: ${JSON.stringify(response.data)}`);
+    //  console.log(`Response: ${JSON.stringify(response.data)}`);
       if (response.data.status === "fail") {
         //errorcode
         //message
@@ -520,7 +522,7 @@ const Landreg = (props: Props) => {
                                     </div>
                                   </div>{" "}
                                   <img
-                                    className="w-full h-full object-cover rounded-lg mt-3"
+                                    className="p-2 w-full h-full object-cover rounded-lg mt-3"
                                     src={preview}
                                     // alt="cartaImage"
                                   />

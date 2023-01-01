@@ -20,7 +20,7 @@ const AdminPage = (props: Props) => {
   return (
     <>
       {/* <!-- This is an example component --> */}
-      <div className="flex w-full h-screen   ">
+      <div className="flex w-full h-screen  font-poppins ">
         <div id="main-content" className="h-full w-full bg-gray-50 relative  ">
           <main>
             <div className="pt-9 px-4">
@@ -95,7 +95,7 @@ const AdminPage = (props: Props) => {
                         This is a list of latest Registration
                       </span>
                     </div>
-                    <Link to="/adminhomepage/lands">
+                    <Link to="">
                       <div className="flex-shrink-0">
                         <a
                           href="/"
@@ -322,14 +322,17 @@ const AdminPage = (props: Props) => {
               </div>{" "}
             </div>
             {/* Eployee stats */}
-            <div className="flex flex-col mt-10 bg-gray-50">
-              <h1 className="mx-4 py-4">Emplyee status</h1>
+            <div className="flex flex-col mt-10 bg-gray-50 font-poppins">
+              <h1 className=" py-4 mx-4"> Recent Employees Actvities</h1>
+              <p className="mx-4">
+                Here is the list of Recent Staff Employees actvities
+              </p>
 
-              <div className=" bg-gray-50  flex md:flex-row flex-col px-4 justify-between w-full h-full">
+              <div className=" bg-gray-50 mt-2 flex md:flex-row flex-col px-4 justify-between w-full h-full">
                 <div className="flex flex-col justify-center md:w-2/3 w-full h-full ">
                   <div className="w-full max-w-6xl  bg-white shadow-lg rounded-md border border-gray-200">
                     <header className="px-5 py-4 border-b border-gray-100 flex justify-between ">
-                      <h2 className="font-semibold text-gray-800">Customers</h2>
+                      <h2 className="font-semibold text-gray-800">Staff</h2>
                       <Link to="/adminhomepage/employees">
                         <div className="flex-shrink-0 pr-10">
                           <a

@@ -25,20 +25,20 @@ type Props = {
 
 const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
   const [imgBase64, setImgBase64] = useState("");
-  const [imgUpdated, setImgUpdated]=useState(false);
+  const [imgUpdated, setImgUpdated] = useState(false);
   const onClose = () => {
     setImgBase64("removed");
     setImgUpdated(true);
   };
   const onCrop = (view: string) => {
-    if(imgBase64 !== ""){
+    if (imgBase64 !== "") {
       setImgUpdated(true);
     }
     setImgBase64(view);
   };
   const onFileLoad = () => {
     setImgUpdated(true);
-  } 
+  };
   const { user } = useContext(IdContext);
   const [_msg, setMsg] = useState({
     type: "",
@@ -63,7 +63,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
     roleid: 0,
   });
   // The string value for status 'Active' 'Inactive'
-  const [status, setStatus]=useState("");
+  const [status, setStatus] = useState("");
   //true: Active, false: Suspended
   const [accountStatus, setAccountStatus] = useState(false);
   useLayoutEffect(() => {
@@ -72,14 +72,20 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
-    }).then((response) => {     
-      setAccountStatus(response.data[0].accountStatus === "Active" ? true: response.data[0].accountStatus === "Suspended" ? false:false);
+    }).then((response) => {
+      setAccountStatus(
+        response.data[0].accountStatus === "Active"
+          ? true
+          : response.data[0].accountStatus === "Suspended"
+          ? false
+          : false
+      );
       setStaff(response.data[0]);
-      console.log(response.data[0])
+      console.log(response.data[0]);
     });
   }, [staffId]);
   const initialValues = {
-    id:staffId,
+    id: staffId,
     roleid: staff.roleid,
     img: "",
     assignedBy: user.id,
@@ -116,7 +122,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
     console.log(`onFileLoad [After]:${imgUpdated}`);
     data.img = imgUpdated ? imgBase64 : "";
     data.accountStatus = status;
-   
+
     Axios.post("http://localhost:3001/AALHRIA/updateStaff", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
@@ -139,6 +145,8 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
           message: response.data.message,
         });
       }
+    }).catch((err)=>{
+      console.log(err);
     });
   };
   // UPDATE HANDLER END
@@ -146,7 +154,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
   useEffect(() => {
     if (_msg.type) {
       if (_msg.type === "error") {
-        toast.error(_msg.message);
+        toast.error(<div>{_msg.message}<br />Unable to update Staff!</div>);
       } else if (_msg.type === "success") {
         toast.success(_msg.message);
         toast.success("Changes will take effect on the next login");
@@ -200,7 +208,12 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       // onClick={}
-                      onClick={() => {setImgBase64(""); setStatus(""); setImgUpdated(false); setUpdEmp(false); }}
+                      onClick={() => {
+                        setImgBase64("");
+                        setStatus("");
+                        setImgUpdated(false);
+                        setUpdEmp(false);
+                      }}
                     >
                       Close
                     </button>
@@ -219,9 +232,8 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                               onSubmit={onSubmit}
                               validationSchema={validationSchema}
                             >
-                            
                               <Form>
-                              {/* <img src={`/uploads/staffImages/${staff.img}`} /> */}
+                                {/* <img src={`/uploads/staffImages/${staff.img}`} /> */}
                                 <div className="flex justify-between my-4  ">
                                   {/* IMAGE */}
                                   <div className="w-5/6  h- flex flex-col    px-2">
@@ -242,8 +254,8 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                           //cropRadius={1000}
                                           src={`/uploads/staffImages/${staff.img}`}
                                           onFileLoad={onFileLoad}
-                                           //onImageLoad={onImageLoad}
-                                           //onBeforeFileLoad={onBeforeFileLoad}
+                                          //onImageLoad={onImageLoad}
+                                          //onBeforeFileLoad={onBeforeFileLoad}
                                           label={
                                             <>
                                               <div className="mt-1 flex justify-center  items-center px-6 pt-5 pb-6 h-96 ">
@@ -531,7 +543,7 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                         </div>
                                       </div>
                                       <div className="flex w-full space-x-4">
-                                          <label>Account Status: </label>
+                                        <label>Account Status: </label>
                                         <div className="relative flex flex-col items-center justify-center overflow-hidden">
                                           <div className="flex">
                                             <label className="inline-flex relative items-center mr-5 cursor-pointer">
@@ -543,15 +555,21 @@ const Updatestaff = ({ updEmp, setUpdEmp, staffId }: Props) => {
                                               />
                                               <div
                                                 onClick={() => {
-                                                  setAccountStatus(!accountStatus);
+                                                  setAccountStatus(
+                                                    !accountStatus
+                                                  );
                                                   // The string value for status 'Active' 'Inactive'
-                                                  setStatus(accountStatus ? "Inactive" : "Active" );
+                                                  setStatus(
+                                                    accountStatus
+                                                      ? "Inactive"
+                                                      : "Active"
+                                                  );
                                                 }}
                                                 className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
                                               ></div>
                                               <span className="ml-2 text-sm font-medium text-gray-900">
-                                              {accountStatus && 'Active'}
-                                              {!accountStatus && 'Inactive'}
+                                                {accountStatus && "Active"}
+                                                {!accountStatus && "Inactive"}
                                               </span>
                                             </label>
                                           </div>

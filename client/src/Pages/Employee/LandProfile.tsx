@@ -13,7 +13,8 @@ import ReactToPrint, {
 
 import { Dialog, Transition } from "@headlessui/react";
 import Axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import notFound from "../../assets/notFound.png";
 
 type Props = {
   showland: boolean;
@@ -60,6 +61,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
       cartaPlannedLandUse: null,
       cartaPermittedUse: null,
       issuerStaffName: null,
+      lastChanged: null,
       cartaCoordinateData: [
         {
           X1: null,
@@ -88,12 +90,20 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
       },
     }).then((response) => {
       setCurrCitizen(response.data.citizenInfo[0]);
+
       setCartaInfo(response.data.carta);
     });
     console.log("Here");
     console.log(cartaInfo);
     //console.log(cartaCoordinateData);
   }, [showland]);
+  const navigate = useNavigate();
+  const updateLand = (citizenId: any) => {
+    //let titleDeedNo = (document.getElementById("titleDeedNo") as HTMLInputElement).value;
+    navigate("/employeehomepage/updateland", {
+      state: {citizenId: citizenId },
+    });
+  };
   return (
     <>
       <Transition appear show={showland} as={Fragment}>
@@ -134,6 +144,8 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                     </button>
                   </div>
                   <div ref={componentRef}>
+                  {cartaInfo[selectedCarta] ? (
+                    <>
                     <Dialog.Title
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex text-center justify-center items-center"
@@ -143,41 +155,39 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                       Deed
                     </Dialog.Title>
 
-                    {/* <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
-                  </div> */}
-                  {cartaInfo[selectedCarta] ? (
-                    <div className="w-1/2 h-auto flex items-center ">
-                      <label
-                        className="font-bold text-xl font-poppins w-1/4 ml-3"
-                        htmlFor="Landid"
-                      >
-                        Title Deed No:
-                      </label>
+                    
+                    
+                      <div className="w-1/2 h-auto flex items-center ">
+                        <label
+                          className="font-bold text-xl font-poppins w-1/4 ml-3"
+                          htmlFor="Landid"
+                        >
+                          Title Deed No:
+                        </label>
 
-                      <select
-                        className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        aria-label=".form-select-sm example"
-                        onChange={onChangeDeedNo}
-                      >
-                        {(() => {
-                          const options = [];
-                          for (let x in cartaInfo) {
-                            //TitleDeedNo
-                            options.push(
-                              <option value={parseInt(x)}>
-                                {cartaInfo[parseInt(x)].cartaTitleDeedNo}
-                              </option>
-                            );
-                          }
-                          return options;
-                        })()}
-                      </select>
-                    </div>
-                  ):<></>}
+                        <select
+                          className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          aria-label=".form-select-sm example"
+                          onChange={onChangeDeedNo}
+                        >
+                          {(() => {
+                            const options = [];
+                            for (let x in cartaInfo) {
+                              //TitleDeedNo
+                              options.push(
+                                <option value={parseInt(x)}>
+                                  {cartaInfo[parseInt(x)].cartaTitleDeedNo}
+                                </option>
+                              );
+                            }
+                            return options;
+                          })()}
+                        </select>
+                      </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     <div className="mt- px-3">
                       {/* <div className="w-full  flex justify-end font-semibold text-base">
                       <p>Date: current date</p>
@@ -229,16 +239,24 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                             <div className="flex flex-col space-y-3 px-4 font-semibold text-base">
                               {/* <h1>Date: current date</h1> */}
                               <h1>
-                                House Number:
-                                {cartaInfo[selectedCarta].cartaHouseNumber}
-                              </h1>
-                              <h1>
                                 Registration Number:
                                 {cartaInfo[selectedCarta].cartaRegistrationNo}
                               </h1>
                               <h1>
-                                Permmit Use:
+                                House Number:
+                                {cartaInfo[selectedCarta].cartaHouseNumber}
+                              </h1>
+                              <h1>
+                                Type of Holding:
+                                {cartaInfo[selectedCarta].cartaTypeOfHolding}
+                              </h1>
+                              <h1>
+                                Planned Land Use:
                                 {cartaInfo[selectedCarta].cartaPlannedLandUse}
+                              </h1>
+                              <h1>
+                                Permitted Land Use:
+                                {cartaInfo[selectedCarta].cartaPermittedUse}
                               </h1>
                               <h1>
                                 Carta Issue date:
@@ -251,11 +269,36 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                 Issued By:
                                 {cartaInfo[selectedCarta].issuerStaffName}
                               </h1>
+                              {cartaInfo[selectedCarta].issuerStaffName !==
+                              cartaInfo[selectedCarta].lastChanged ? (
+                                <>
+                                <h1>
+                                  Last Changed By:
+                                  {cartaInfo[selectedCarta].lastChanged}
+                                </h1>
+                                <h1>
+                                Last Modified Date:
+                                {cartaInfo[selectedCarta].lastModifiedDate && cartaInfo[selectedCarta].lastModifiedDate.substring(0, 10)}
+                              </h1>
+                              </>
+                              ) : (
+                                <></>
+                              )}
                             </div>
                           </>
                         ) : (
                           <>
-                            <p> ui must be added</p>
+                            <div className="w-full justify-center flex">
+                              <section className="flex items-center h-full sm:p-16 dark:bg-white dark:text-black">
+                                <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8 space-y-8 text-center sm:max-w-md">
+                                  <img src={notFound} />
+                                  <p className="text-3xl font-poppins">
+                                    Cadaster Information Not Found
+                                  </p>
+                                  {/* <a rel="noopener noreferrer" href="#" className="px-8 py-3 font-semibold rounded dark:bg-violet-400 dark:text-gray-900">Back to homepage</a> */}
+                                </div>
+                              </section>
+                            </div>
                           </>
                         )}
                       </div>
@@ -267,6 +310,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               <img
                                 className="w-full h-full"
                                 src={`/uploads/cartaImages/${cartaInfo[selectedCarta].cartaImage}`}
+                                alt="cartaImg"
                               />
                             </div>
                             <div className="w-1/2  p-4   ">
@@ -441,13 +485,13 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                         >
                                           Base Map Number
                                         </th>
-                                        <th
+                                        {/* <th
                                           scope="col"
                                           className="text-sm font-medium text-gray-900 px-6 py-4"
                                         >
                                           Type of holding
-                                        </th>
-                                        <th
+                                        </th> */}
+                                        {/* <th
                                           scope="col"
                                           className="text-sm font-medium text-gray-900 px-6 py-4"
                                         >
@@ -464,7 +508,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                           className="text-sm font-medium text-gray-900 px-6 py-4"
                                         >
                                           Permitted Land Use
-                                        </th>
+                                        </th> */}
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -529,7 +573,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                               .cartaBasemapNo
                                           }
                                         </td>
-                                        <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                        {/* <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                           {
                                             cartaInfo[selectedCarta]
                                               .cartaTypeOfHolding
@@ -546,7 +590,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                             cartaInfo[selectedCarta]
                                               .cartaPermittedUse
                                           }
-                                        </td>
+                                        </td> */}
                                       </tr>
                                     </tbody>
                                   </table>
@@ -556,14 +600,17 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                           </div>
 
                           <div className="flex justify-end space-x-3">
-                            <Link to="/employeehomepage/updateland">
-                              <button
-                                type="button"
-                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                              >
-                                Update
-                              </button>
-                            </Link>
+                            {/* <Link to="/employeehomepage/updateland"> */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                updateLand(citizenId);
+                              }}
+                              className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            >
+                              Update
+                            </button>
+
                             <button
                               onClick={handlePrintdata}
                               type="button"

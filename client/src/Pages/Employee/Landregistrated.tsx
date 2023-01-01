@@ -4,7 +4,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { Dialog, Transition } from "@headlessui/react";
 import { Menu } from "@headlessui/react";
 import QRcodePage from "../authentication/QRcodePage";
-import Ownerprofile from "../Employee/Ownerprofile";
+//import Ownerprofile from "../Reports/Ownerprofile";
 import { Link } from "react-router-dom";
 import LandProfile from "./LandProfile";
 
@@ -251,7 +251,7 @@ const Landregistrated = (props: Props) => {
         </div>
       </div>
       {<QRcodePage QRcode={showOption} setQRcode={setShowOption} />}
-      {<Ownerprofile show={isOpen} setShow={setIsOpen} />}
+      {/* {<Ownerprofile show={isOpen} setShow={setIsOpen} />} */}
       {
         <LandProfile
           showland={landshow}

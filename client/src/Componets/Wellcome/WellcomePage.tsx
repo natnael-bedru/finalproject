@@ -20,26 +20,26 @@ const WellcomePage = (props: Props) => {
       */}
 
       <section>
-        <div className=" text-white py-20 h-screen bg-wellcomeimg bg-no-repeat bg-cover scroll-smooth">
+        <div className=" text-white py-20 h-screen bg-wellcomeimg bg-no-repeat bg-cover scroll-smooth font-poppins">
           <div className="container mx-auto flex flex-col md:flex-row items-center my-12 md:my-24">
             <div className="flex flex-col w-full lg:w-1/3 justify-center items-start p-8">
               <h1
                 data-aos="fade-up"
-                className="text-3xl md:text-5xl  dark:text-gray-900 font-bold tracking-loose"
+                className="text-3xl md:text-5xl   dark:text-white font-bold tracking-loose"
               >
                 LRAS
               </h1>
               <h2
                 data-aos-delay="500"
                 data-aos="fade-up"
-                className="text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2"
+                className="text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-black"
               >
                 Secure and ease
               </h2>
               <p
                 data-aos-delay="800"
                 data-aos="fade-up"
-                className="text-sm md:text-base text-white mb-4"
+                className="text-sm md:text-base text-black mb-4"
               >
                 LRAS provides simple and dependable software that can be easily
                 managed and controlled for greater comprehension.
@@ -49,7 +49,7 @@ const WellcomePage = (props: Props) => {
                   data-aos-delay="1200"
                   data-aos="fade-up"
                   href="/"
-                  className="bg-transparent hover:dark:bg-gray-900 text-white hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border border-white hover:border-transparent"
+                  className="bg-transparent hover:dark:bg-gray-900 text-black hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border border-white hover:border-transparent"
                 >
                   Get Started
                 </a>
@@ -64,15 +64,10 @@ const WellcomePage = (props: Props) => {
       */}
       <section className="relative  bg-blueGray-50">
         <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
-          <div
-            className="absolute top-0 w-full h-full bg-center bg-cover style"
-            //   style="
-            //   background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1267&amp;q=80');
-            // "
-          >
+          <div className="absolute top-0 w-full h-full  bg-no-repeat bg-center bg-wellcomeimg2 ">
             <span
-              id="blackOverlay"
-              className="w-full h-full absolute opacity-75 bg-black"
+              //id="blackOverlay"
+              className="w-full h-full absolute  bg-black opacity-80 "
             ></span>
           </div>
           <div className="container relative mx-auto">

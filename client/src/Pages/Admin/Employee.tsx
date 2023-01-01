@@ -147,6 +147,8 @@ const Employee = (props: Props) => {
           //  state: { device },
           //}}
           // your link creation
+          //TODO:
+          //https://stackoverflow.com/questions/52238637/react-router-how-to-pass-data-between-pages-in-react#:~:text=You%20can%20use%20the%20Link,you%20want%20to%20pass%20on.
           <Link
             to={{ pathname: `/adminhomepage/staffprofile/${row.values.id}` }}
           >
