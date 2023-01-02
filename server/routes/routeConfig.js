@@ -51,6 +51,7 @@ router
   .get(_controllers.verifyJWT, _controllers.retriveAllWoredaInfo);
 
 //viewAllLand
+// http://localhost:3000/AALHRIA/viewAllCarta/:id
 router
   .route("/viewAllCarta/:id")
   .get(_controllers.verifyJWT, _controllers.viewAllCarta);

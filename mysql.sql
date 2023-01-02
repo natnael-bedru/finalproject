@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `lras_system` /*!40100 DEFAULT CHARACTER SET utf8
 USE `lras_system`;
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: login_system
+-- Host: 127.0.0.1    Database: lras_system
 -- ------------------------------------------------------
 -- Server version	8.0.31
 
@@ -56,7 +56,7 @@ CREATE TABLE `carta` (
   CONSTRAINT `coordinateId` FOREIGN KEY (`coordinateId`) REFERENCES `coordinateland` (`id`),
   CONSTRAINT `FK_WoredaCarta` FOREIGN KEY (`woredaId`) REFERENCES `woreda` (`id`),
   CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) REFERENCES `staff` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `carta` (
 
 LOCK TABLES `carta` WRITE;
 /*!40000 ALTER TABLE `carta` DISABLE KEYS */;
-INSERT INTO `carta` VALUES (1,17,1,'Dagem Tiruneh Tewolde-[2023-01-01][4JOme].jpeg',3333,44444,2222,77777,8888,'66666','1111','2023-01-01','55555','9999','Permits hold',1,'Mixed','Residence',7,7,'2023-01-01');
+INSERT INTO `carta` VALUES (1,2,1,'Abera Misgina Noab-[2023-01-02][SCCuu].jpeg',3333,44444,2222,77777,8888,'66666','1111','2023-01-01','55555','9999','Permits hold',1,'Mixed','Residence',7,3,'2023-01-02'),(2,2,3,'Abera Misgina Noab-[2023-01-01][ZQ5o3].jpeg',3333,44444,565656,6666,8888,'3/4','1234','2023-01-01','555555','2341','Permits new',2,'Mixed','Residence',3,7,'2023-01-01');
 /*!40000 ALTER TABLE `carta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +89,7 @@ CREATE TABLE `citizen` (
   PRIMARY KEY (`id`),
   KEY `woredaId_idx` (`woredaId`),
   CONSTRAINT `woredaId` FOREIGN KEY (`woredaId`) REFERENCES `woreda` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +122,7 @@ CREATE TABLE `coordinateland` (
   `X5` double DEFAULT NULL,
   `Y5` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `coordinateland` (
 
 LOCK TABLES `coordinateland` WRITE;
 /*!40000 ALTER TABLE `coordinateland` DISABLE KEYS */;
-INSERT INTO `coordinateland` VALUES (1,1212.43,4545.644,6453.534,53432.435,23434.55,3453.53,443.544,543.45,6645.65,345.65);
+INSERT INTO `coordinateland` VALUES (1,1212.43,4545.644,6453.534,53432.435,23434.55,3453.53,443.544,543.45,6645.65,345.65),(2,1234,434,33,44,222,54234,2452,19,23452,1011);
 /*!40000 ALTER TABLE `coordinateland` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +146,7 @@ CREATE TABLE `role` (
   `id` int NOT NULL AUTO_INCREMENT,
   `rolename` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +194,7 @@ CREATE TABLE `staff` (
   KEY `id_idx` (`assignedBy`) /*!80000 INVISIBLE */,
   CONSTRAINT `id` FOREIGN KEY (`assignedBy`) REFERENCES `staff` (`id`),
   CONSTRAINT `roleid` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,7 +203,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16','2022-12-10'),(2,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$afUFUZ2PP7aYeqqWVaya1OPYNhvKlG8p04V8q2Jqo4..KiEY1KoNC','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-31','2022-12-11'),(3,2,'Employee/Alemu Shemsu Kebede-26.png',1,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-29','2022-12-12'),(7,2,'Employee/Dave Hailu Kasahun-[2022-12-30][uc7G4].png',1,'Dave','Hailu','Kasahun','dave','$2b$10$Gg/LlhhjXCEuIO19IyfXc.OSwY3nX2blhzoQMRdlP6Zc7daoxt44O','Active','dave@gmail.com','098475457','Male','1994-06-07','Saris','2022-12-30','2022-12-30');
+INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16','2022-12-10'),(2,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$afUFUZ2PP7aYeqqWVaya1OPYNhvKlG8p04V8q2Jqo4..KiEY1KoNC','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-31','2022-12-11'),(3,2,'Employee/Alemu Shemsu Kebede-26.png',2,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-29','2022-12-12'),(7,2,'Employee/Dave Hailu Kasahun-[2023-01-01][hCr3k].png',1,'Dave','Hailu','Kasahun','dave','$2b$10$Gg/LlhhjXCEuIO19IyfXc.OSwY3nX2blhzoQMRdlP6Zc7daoxt44O','Inactive','dave@gmail.com','098475457','Male','1994-06-07','Saris','2023-01-02','2022-12-30');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,7 +218,7 @@ CREATE TABLE `subcity` (
   `id` int NOT NULL AUTO_INCREMENT,
   `subCityName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,7 +246,7 @@ CREATE TABLE `woreda` (
   PRIMARY KEY (`id`),
   KEY `subCityId_idx` (`subCityId`),
   CONSTRAINT `subCityId` FOREIGN KEY (`subCityId`) REFERENCES `subcity` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,4 +268,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-01 17:17:38
+-- Dump completed on 2023-01-02 11:32:01
