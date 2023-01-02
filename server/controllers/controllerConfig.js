@@ -55,7 +55,7 @@ exports.verifyJWT = (request, response, next) => {
 // route callback functions
 exports.login = (request, response) => {
   const { username, password } = request.body;
-  const result = db.login(username, password);
+  const result = db.login(username);
   result
     .then((data) => {
       return new Promise((resolve, reject) => {
@@ -367,7 +367,7 @@ exports.retriveAllWoredaInfo = (request, response) => {
   });
 };
 //registerLand
-exports.registerLand = (request, response) => {
+exports.registerCarta = (request, response) => {
   var duplicate = false;
   // Retriving the Woreda Foreign-Key BEGINNING
   /*
@@ -515,7 +515,7 @@ exports.registerLand = (request, response) => {
   });
 };
 //viewAllLand
-exports.viewAllLand = (request, response) => {
+exports.viewAllCarta = (request, response) => {
   // console.log(`Parameter: ${request.params.id}`);
   const citizenId = request.params.id;
   var jsonOut = {
@@ -721,8 +721,8 @@ exports.updateStaff = async (request, response) => {
       });
   }
 };
-//updateLandOwnership
-exports.updateLandOwnership = async (request, response) => {
+//updateCartaOwnership
+exports.updateCartaOwnership = async (request, response) => {
   /*
   currentOwner: 1,
   newOwner: 8,

@@ -75,7 +75,7 @@ const Updateland = (props: Props) => {
   ]);
   useLayoutEffect(() => {
     Axios.get(
-      `http://localhost:3001/AALHRIA/viewAllLand/${parseInt(
+      `http://localhost:3001/AALHRIA/viewAllCarta/${parseInt(
         location.state.citizenId
       )}`,
       {
@@ -199,7 +199,7 @@ const Updateland = (props: Props) => {
     data.issuedBy=user.id;
     data.cartaTitleDeedNo= cartaInfo[selectedCarta].cartaTitleDeedNo;
     data.lastModifiedDate= new Date().toISOString().substring(0, 10);
-     Axios.post("http://localhost:3001/AALHRIA/updateLandOwnership", data, {
+     Axios.post("http://localhost:3001/AALHRIA/updateCartaOwnership", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },

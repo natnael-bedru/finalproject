@@ -154,7 +154,7 @@ const Landreg = (props: Props) => {
     data.formerKebele = dropdownKebele.current
       ? dropdownKebele.current.value
       : 0;
-    Axios.post("http://localhost:3001/AALHRIA/registerLand", data, {
+    Axios.post("http://localhost:3001/AALHRIA/registerCarta", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },

@@ -87,7 +87,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     //data.file = imgBase64;
     //imgBase64
     console.log(`FILE HERE2: ${data.img}`);
-    Axios.post("http://localhost:3001/AALHRIA/register", data, {
+    Axios.post("http://localhost:3001/AALHRIA/registerStaff", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },

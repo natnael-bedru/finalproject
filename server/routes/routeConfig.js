@@ -17,7 +17,7 @@ router
 // .route("/register/:id")
 //console.log(`Parameter: ${request.params.id}`);
 router
-  .route("/register")
+  .route("/registerStaff")
   .post(_controllers.verifyJWT, _controllers.registerStaff);
 
 // view all staff members
@@ -41,8 +41,9 @@ router
   .get(_controllers.verifyJWT, _controllers.viewCitizen);
 
 // registerLand
-//TODO:
-router.route("/registerLand").post(_controllers.registerLand);
+router
+  .route("/registerCarta")
+  .post(_controllers.verifyJWT, _controllers.registerCarta);
 
 //retriveWoredaInfo
 router
@@ -51,8 +52,8 @@ router
 
 //viewAllLand
 router
-  .route("/viewAllLand/:id")
-  .get(_controllers.verifyJWT, _controllers.viewAllLand);
+  .route("/viewAllCarta/:id")
+  .get(_controllers.verifyJWT, _controllers.viewAllCarta);
 
 //updateStaff
 router
@@ -60,8 +61,8 @@ router
   .post(_controllers.verifyJWT, _controllers.updateStaff);
 //updateLandOwnership
 router
-  .route("/updateLandOwnership")
-  .post(_controllers.verifyJWT, _controllers.updateLandOwnership);
+  .route("/updateCartaOwnership")
+  .post(_controllers.verifyJWT, _controllers.updateCartaOwnership);
 
 //.get(_controllers.viewStaff);
 

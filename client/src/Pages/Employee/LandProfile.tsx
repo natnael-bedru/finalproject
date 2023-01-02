@@ -84,7 +84,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
     setSelectedCarta(e.target.selectedIndex);
   };
   useLayoutEffect(() => {
-    Axios.get(`http://localhost:3001/AALHRIA/viewAllLand/${citizenId}`, {
+    Axios.get(`http://localhost:3001/AALHRIA/viewAllCarta/${citizenId}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
