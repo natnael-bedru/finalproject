@@ -27,14 +27,11 @@ exports.verifyJWT = (request, response, next) => {
   const token = request.headers["x-access-token"];
   if (!token) {
     response.status(401).send("Token is Required");
-    //response.status(401).send("Token is required!");
   } else {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         response.json({ auth: false, message: "Authentication Failure!" });
       } else {
-        //TODO: The token should be decoded better
-        //console.log(`Decoded :${JSON.stringify(decoded)}`);
         request.userId = decoded.id;
         request.roleName = decoded.roleName;
         request.img = decoded.img;
@@ -83,30 +80,29 @@ exports.login = (request, response) => {
 
       const re = await retriveRole;
       // <== this function adds role value in litteral form
-      // removes the last part of the string json variable of data i.e( }] )
+      // removes the last part of the string json variable of data i.e( `}]` )
       temp = temp.slice(0, -2);
       temp += `,"roleName":"${re[0].rolename}"}]`;
       data = JSON.parse(temp);
       return data;
     })
     .then(async (data) => {
-      //console.log(`Result: ${JSON.stringify(data[0].assignedBy)}`);
       var temp = JSON.stringify(data).toString();
       const retriveAdminName = db.retriveAdminName(data[0].assignedBy);
       const re = await retriveAdminName;
       // <== this function converts the assignedBy value to its refering name in the table called staff
-      // removes the last part of the string json variable of data i.e( }] )
+      // removes the last part of the string json variable of data i.e( `}]` )
       temp = temp.slice(0, -2);
-      console.log(`Status: ${JSON.stringify(re.status)}`);
+      //console.log(`Status: ${JSON.stringify(re.status)}`);
       if (re.status === "NULL") temp += `,"adminName":"NULL"}]`;
       else temp += `,"adminName":"${re[0].firstName} ${re[0].middleName}"}]`;
       data = JSON.parse(temp);
       return data;
     })
     .then((data) => {
-      console.log(`Result: ${JSON.stringify(data[0])}`);
+      // console.log(`Result: ${JSON.stringify(data[0])}`);
       // this part creates the jwt token with the data variable
-      console.log(`Data: ${data[0].roleName}`);
+      //console.log(`Data: ${data[0].roleName}`);
       const {
         id,
         assignedBy,
@@ -148,7 +144,7 @@ exports.login = (request, response) => {
       response.json({ auth: true, token: token, data: data });
     })
     .catch((err) => {
-      console.error(`${err}`);
+      //console.error(`${err}`);
       response.json({ auth: false, message: err.message });
     });
 };
@@ -183,7 +179,7 @@ exports.loginStatus = (request, response) => {
 
 exports.registerStaff = (request, response) => {
   //TODO:
-  // the image is handled inthis
+  // the image is handled in this
   var string = request.body.img;
   //console.log(request.body.img);
   var imageName = "Unspecified/defaultPicture.png";
@@ -223,7 +219,7 @@ exports.registerStaff = (request, response) => {
       })
       .catch((err) => {
         // console.log("error form controller line 255");
-        //console.log(err);
+        // console.log(err);
         //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
         //
         // HTTP errors say something about the HTTP protocol.
@@ -241,7 +237,7 @@ exports.registerStaff = (request, response) => {
   });
 };
 
-//viewallstaff
+// viewallstaff
 exports.viewAllStaff = (request, response) => {
   const result = db.viewAllStaff(request.assignedBy, request.userId);
   result.then(async (data) => {
@@ -276,7 +272,7 @@ exports.viewStaff = (request, response) => {
   const result = db.viewStaff(request.params.id);
   result
     .then(async (data) => {
-      //console.log(`Result: ${JSON.stringify(data[0].assignedBy)}`);
+      // console.log(`Result: ${JSON.stringify(data[0].assignedBy)}`);
       var temp = JSON.stringify(data).toString();
       const retriveAdminName = db.retriveAdminName(data[0].assignedBy);
       const re = await retriveAdminName;
@@ -311,10 +307,10 @@ exports.viewStaff = (request, response) => {
     });
 };
 
-//viewAllOwner
+//viewAllCitizen
 //NOTE: BETTER VERSION
-exports.viewAllOwner = (request, response) => {
-  const result = db.viewAllOwner();
+exports.viewAllCitizen = (request, response) => {
+  const result = db.viewAllCitizen();
   result.then(async (data) => {
     var jsonObj = [];
     for (let x in data) {
@@ -340,9 +336,9 @@ exports.viewAllOwner = (request, response) => {
     response.json(jsonObj);
   });
 };
-//viewOwner
-exports.viewOwner = (request, response) => {
-  const result = db.viewOwner(request.params.id);
+//viewCitizen
+exports.viewCitizen = (request, response) => {
+  const result = db.viewCitizen(request.params.id);
   result.then(async (data) => {
     var jsonObj = [];
     const retrieveSubCity = db.retriveWoredaInfo(data[0].woredaId);
@@ -373,7 +369,7 @@ exports.retriveAllWoredaInfo = (request, response) => {
 //registerLand
 exports.registerLand = (request, response) => {
   var duplicate = false;
-  // Retriving the Woreda Foreign-Key BEGINING
+  // Retriving the Woreda Foreign-Key BEGINNING
   /*
       console.log(`Woreda ${request.body.currentWoreda}`);
       console.log(`Kebele ${request.body.formerKebele}`);
@@ -386,7 +382,7 @@ exports.registerLand = (request, response) => {
     /* console.log(woredaId); */
     // Retriving the Woreda Foreign-Key END
 
-    // Checking For Duplicate Carta Information BEGINING
+    // Checking For Duplicate Carta Information BEGINNING
     const checkParameter = {
       citizenId: request.body.citizenId,
       woredaId: woredaId,
@@ -414,7 +410,7 @@ exports.registerLand = (request, response) => {
       .then((duplicate) => {
         if (!duplicate) {
           // Checking For Duplicate Carta Information END
-          // Registering the Coodrinate Data BEGINING
+          // Registering the Coodrinate Data BEGINNING
           const coodrinateData = {
             x1: parseFloat(request.body.x1),
             y1: parseFloat(request.body.y1),
@@ -438,14 +434,14 @@ exports.registerLand = (request, response) => {
             if (res.affectedRows === 1) {
               coordinateId = res.insertId;
               // Registering the Coodrinate Data END
-              // Fetching Citizen Name For Naming Carta Image BEGINING
-              const result2 = db.viewOwner(request.body.citizenId);
+              // Fetching Citizen Name For Naming Carta Image BEGINNING
+              const result2 = db.viewCitizen(request.body.citizenId);
               result2.then((citizen) => {
                 citizenFirstName = citizen[0].firstName;
                 citizenMiddleName = citizen[0].middleName;
                 citizenLastName = citizen[0].lastName;
                 // Fetching Citizen Name For Naming Carta Image END
-                // Storing Image On Server BEGINING
+                // Storing Image On Server BEGINNING
                 var string = request.body.img;
                 var regex = /^data:.+\/(.+);base64,(.*)$/;
                 var matches = string.match(regex);
@@ -459,7 +455,7 @@ exports.registerLand = (request, response) => {
 
                 fs.writeFileSync(`./uploads/cartaImages/${imageName}`, buffer);
                 // Storing Image On Server END
-                // REGISTERING CARTA BEGINING
+                // REGISTERING CARTA BEGINNING
                 const carta = {
                   citizenId: request.body.citizenId,
                   woredaId: woredaId,
@@ -527,7 +523,7 @@ exports.viewAllLand = (request, response) => {
     carta: [],
   };
   // GET CITIZEN INFORMATION BEGINING
-  const result = db.viewOwner(citizenId);
+  const result = db.viewCitizen(citizenId);
   result.then((citizenData) => {
     var fullName = `${citizenData[0].firstName} ${citizenData[0].middleName} ${citizenData[0].lastName}`;
     var img = citizenData[0].img;
@@ -536,7 +532,7 @@ exports.viewAllLand = (request, response) => {
     var dateOfBirth = citizenData[0].dateofbirth;
 
     // GET CITIZEN INFORMATION END
-    // GET WOREDA INFORMATION BEGINING
+    // GET WOREDA INFORMATION BEGINNING
     const result1 = db.retriveWoredaInfo(citizenData[0].woredaId);
     result1.then((woreda) => {
       // console.log("Woreda Information");
@@ -556,11 +552,12 @@ exports.viewAllLand = (request, response) => {
       };
       jsonOut.citizenInfo.push(citizenData);
       // GET WOREDA INFORMATION END
-      // GET CARTA INFORMATION BEGINING
+      // GET CARTA INFORMATION BEGINNING
       const result3 = db.viewCarta(citizenId);
       result3
         .then(async (carta) => {
-          //console.log("CARTA INFORMATION");
+          // console.log("CARTA INFORMATION");
+          //console.log(carta);
           if (carta) {
             for (let x in carta) {
               var result4 = db.retriveWoredaInfo(carta[x].woredaId);
@@ -609,6 +606,7 @@ exports.viewAllLand = (request, response) => {
                 lastChanged: `${staffLastModifiedBy[0].firstName} ${staffLastModifiedBy[0].middleName}`,
                 lastModifiedDate: carta[x].lastModifiedDate,
               };
+              // console.log(carta[x]);
               jsonOut.carta.push(cartaData);
             }
           }

@@ -106,7 +106,7 @@ const Updateland = (props: Props) => {
   useLayoutEffect(() => {
     var ownersName: string[] = [];
     // /viewallowner
-    Axios.get(`http://localhost:3001/AALHRIA/viewallowner`, {
+    Axios.get(`http://localhost:3001/AALHRIA/viewAllCitizen`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -221,38 +221,6 @@ const Updateland = (props: Props) => {
         });
       }
     });
-   // console.log("Data Here [Update Land]");
-   // console.log(data);
-    // data.img = preview;
-    // data.citizenId = currCitizen.id;
-    // data.currentWoreda = dropdownWoreda.current
-    //   ? dropdownWoreda.current.value
-    //   : 0;
-    // data.formerKebele = dropdownKebele.current
-    //   ? dropdownKebele.current.value
-    //   : 0;
-    // Axios.post("http://localhost:3001/AALHRIA/registerLand", data, {
-    //   headers: {
-    //     "x-access-token": localStorage.getItem("token"),
-    //   },
-    // }).then((response) => {
-    //   console.log(`Response: ${JSON.stringify(response.data)}`);
-    //   if (response.data.status === "fail") {
-    //     //errorcode
-    //     //message
-    //     setMsg({
-    //       type: "error",
-    //       message: response.data.message,
-    //     });
-    //   } else if (response.data.status === "success") {
-    //     //affectedRows
-    //     //message
-    //     setMsg({
-    //       type: "success",
-    //       message: response.data.message,
-    //     });
-    //   }
-    // });
   };
   // Register Land Form Submit END
 
@@ -275,6 +243,18 @@ const Updateland = (props: Props) => {
       });
     }
   }, [_msg]);
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
   return (
     <>
       <div className="w-full h-screen font-poppins ">
@@ -385,8 +365,7 @@ const Updateland = (props: Props) => {
                       </p>
                       <p className=" dark:text-black">
                         Date of Birth:
-                        {newCitizen.dateofbirth &&
-                          newCitizen.dateofbirth.substring(0, 10)}
+                        {dateConverter(newCitizen.dateofbirth)}
                       </p>
                       <p className=" dark:text-black">
                         Sex:{newCitizen && newCitizen.sex}
@@ -432,8 +411,7 @@ const Updateland = (props: Props) => {
                       </p>
                       <p className=" dark:text-black">
                         Date of Birth:
-                        {currCitizen.dateOfBirth &&
-                          currCitizen.dateOfBirth.substring(0, 10)}
+                        {dateConverter(currCitizen.dateOfBirth)}
                       </p>
                       <p className=" dark:text-black">Sex:{currCitizen.sex}</p>
                       <p className=" dark:text-black">

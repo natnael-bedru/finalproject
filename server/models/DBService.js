@@ -109,8 +109,8 @@ class DbService {
     });
   }
 
-  //viewAllOwner
-  async viewAllOwner() {
+  //viewAllCitizen
+  async viewAllCitizen() {
     //console.log(`Assigned by: ${assignedBy} \n Id: ${id}`);
     return new Promise((resolve, reject) => {
       // if (assignedBy) {
@@ -169,9 +169,8 @@ class DbService {
       });
     });
   }
-  //viewOwner
-  //TODO: FIX NAME TO CITIZEN
-  async viewOwner(id) {
+  //viewCitizen
+  async viewCitizen(id) {
     return new Promise((resolve, reject) => {
       //This retrives Citizen information by using the id
       const query = `SELECT * FROM citizen WHERE id = ?;`;
@@ -280,7 +279,7 @@ class DbService {
   }
   //registerLand
   async registerLand(carta) {
-    //console.log(`Data :${Object.values(carta)}`);
+    console.log(`Data :${Object.values(carta)}`);
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO carta  VALUES (0,?);`;
       dbConn.query(query, [Object.values(carta)], (err, result) => {
@@ -341,6 +340,7 @@ class DbService {
       dbConn.query(query, citizenId, (err, result) => {
         if (err) reject(new Error("Unable to retrive database information!"));
         //if (result.length > 0) {
+        //console.log(result);
         resolve(result);
         // }
       });
@@ -414,14 +414,6 @@ class DbService {
         }
       });
     });
-
-    // if (err) reject(new Error("Unable to retrive database information!"));
-    //if (result.length > 0) {
-    // resolve(result);
-    // }
-
-    //console.log(query);
-    //UPDATE `login_system`.`staff` SET `roleid` = '5' WHERE (`id` = '2');
   }
   async updateStaffImg(imgPath, staffId) {
     //console.log(`${imgPath}`);
@@ -430,7 +422,7 @@ class DbService {
       // This updates the image with the appropriate image path name
       const query = `UPDATE staff SET img = \'${imgPath}\' WHERE (id = ${staffId} ) ;`;
       dbConn.query(query, (err, result) => {
-        console.log(err);
+        // console.log(err);
         if (err) reject(new Error("Unable to retrive database information!"));
         //if (result.length > 0) {
         // console.log(result);

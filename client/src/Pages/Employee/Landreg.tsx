@@ -33,7 +33,7 @@ const Landreg = (props: Props) => {
     subCityName: "",
   });
   useLayoutEffect(() => {
-    Axios.get(`http://localhost:3001/AALHRIA/viewowner/${param.id}`, {
+    Axios.get(`http://localhost:3001/AALHRIA/viewCitizen/${param.id}`, {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -193,6 +193,18 @@ const Landreg = (props: Props) => {
       });
     }
   }, [_msg]);
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
 
   return (
     <>
@@ -229,7 +241,8 @@ const Landreg = (props: Props) => {
                   Full Name: {currCitizen.fullName}
                 </p>
                 <p className=" dark:text-black">
-                  Date of Birth:{currCitizen.dateofbirth.substring(0, 10)}
+                  Date of Birth:{dateConverter(currCitizen.dateofbirth)}
+
                 </p>
                 <p className=" dark:text-black">Sex:{currCitizen.sex}</p>
                 <p className=" dark:text-black">

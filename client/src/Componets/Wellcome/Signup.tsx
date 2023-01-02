@@ -161,7 +161,7 @@ const Signup = (props: Props) => {
                           </button>
                         </div>
 
-                        <p className="mt-6 text-sm text-center text-gray-400">
+                        {/* <p className="mt-6 text-sm text-center text-gray-400">
                           Don&#x27;t have an account yet?{" "}
                           <button
                             // onClick={notify}
@@ -169,7 +169,7 @@ const Signup = (props: Props) => {
                           >
                             Sign up
                           </button>
-                        </p>
+                        </p> */}
                       </Form>
                     </Formik>
                   </div>

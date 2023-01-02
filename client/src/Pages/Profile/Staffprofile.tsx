@@ -55,6 +55,18 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
       setStaff(response.data[0]);
     });
   }, [param.id]);
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
 
   return (
     <>
@@ -124,13 +136,13 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                     <li className="flex items-center py-3">
                       <span>Member Since</span>
                       <span className="ml-auto">
-                        {staff.joinedDate.substring(0, 10)}
+                        {dateConverter(staff.joinedDate)}
                       </span>
                     </li>
                     <li className="flex items-center py-3">
                       <span>Last Modified</span>
                       <span className="ml-auto">
-                        {staff.lastChanged.substring(0, 10)}
+                        {dateConverter(staff.lastChanged)}
                       </span>
                     </li>
                   </ul>
@@ -229,7 +241,8 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-semibold">Birthday</div>
                         <div className="px-4 py-2">
-                          {staff.birthday.substring(0, 10)}
+                          {dateConverter(staff.birthday)}
+                          
                         </div>
                       </div>
                     </div>

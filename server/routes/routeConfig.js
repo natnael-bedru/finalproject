@@ -30,15 +30,15 @@ router
   .route("/viewstaff/:id")
   .get(_controllers.verifyJWT, _controllers.viewStaff);
 
-//viewallowner
+//viewAllCitizen
 router
-  .route("/viewallowner")
-  .get(_controllers.verifyJWT, _controllers.viewAllOwner);
+  .route("/viewAllCitizen")
+  .get(_controllers.verifyJWT, _controllers.viewAllCitizen);
 
-//viewowner
+//viewCitizen
 router
-  .route("/viewowner/:id")
-  .get(_controllers.verifyJWT, _controllers.viewOwner);
+  .route("/viewCitizen/:id")
+  .get(_controllers.verifyJWT, _controllers.viewCitizen);
 
 // registerLand
 //TODO:

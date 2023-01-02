@@ -101,9 +101,22 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
   const updateLand = (citizenId: any) => {
     //let titleDeedNo = (document.getElementById("titleDeedNo") as HTMLInputElement).value;
     navigate("/employeehomepage/updateland", {
-      state: {citizenId: citizenId },
+      state: { citizenId: citizenId },
     });
   };
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
+
   return (
     <>
       <Transition appear show={showland} as={Fragment}>
@@ -144,46 +157,44 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                     </button>
                   </div>
                   <div ref={componentRef}>
-                  {cartaInfo[selectedCarta] ? (
-                    <>
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex text-center justify-center items-center"
-                    >
-                      Addis Ababa City Goverment Land Adminstration <br />
-                      and permit Authority permit Hold Certificate of Tittle
-                      Deed
-                    </Dialog.Title>
-
-                    
-                    
-                      <div className="w-1/2 h-auto flex items-center ">
-                        <label
-                          className="font-bold text-xl font-poppins w-1/4 ml-3"
-                          htmlFor="Landid"
+                    {cartaInfo[selectedCarta] ? (
+                      <>
+                        <Dialog.Title
+                          as="h3"
+                          className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex text-center justify-center items-center"
                         >
-                          Title Deed No:
-                        </label>
+                          Addis Ababa City Goverment Land Adminstration <br />
+                          and permit Authority permit Hold Certificate of Tittle
+                          Deed
+                        </Dialog.Title>
 
-                        <select
-                          className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          aria-label=".form-select-sm example"
-                          onChange={onChangeDeedNo}
-                        >
-                          {(() => {
-                            const options = [];
-                            for (let x in cartaInfo) {
-                              //TitleDeedNo
-                              options.push(
-                                <option value={parseInt(x)}>
-                                  {cartaInfo[parseInt(x)].cartaTitleDeedNo}
-                                </option>
-                              );
-                            }
-                            return options;
-                          })()}
-                        </select>
-                      </div>
+                        <div className="w-1/2 h-auto flex items-center ">
+                          <label
+                            className="font-bold text-xl font-poppins w-1/4 ml-3"
+                            htmlFor="Landid"
+                          >
+                            Title Deed No:
+                          </label>
+
+                          <select
+                            className="  form-select form-select-sm appearance-none  w-1/2 px-2 py-1 text-sm  font-normal  text-gray-700  bg-white bg-clip-padding bg-no-repeat  border border-solid border-gray-300 rounded  transition  ease-in-out  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            aria-label=".form-select-sm example"
+                            onChange={onChangeDeedNo}
+                          >
+                            {(() => {
+                              const options = [];
+                              for (let x in cartaInfo) {
+                                //TitleDeedNo
+                                options.push(
+                                  <option value={parseInt(x)}>
+                                    {cartaInfo[parseInt(x)].cartaTitleDeedNo}
+                                  </option>
+                                );
+                              }
+                              return options;
+                            })()}
+                          </select>
+                        </div>
                       </>
                     ) : (
                       <></>
@@ -215,8 +226,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                 </p>
                                 <p className=" dark:text-black">
                                   Date of Birth:{" "}
-                                  {currCitizen.dateOfBirth &&
-                                    currCitizen.dateOfBirth.substring(0, 10)}
+                                  {dateConverter(currCitizen.dateOfBirth)}
                                 </p>
                                 <p className=" dark:text-black">
                                   Sex: {currCitizen.sex}
@@ -259,11 +269,10 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                 {cartaInfo[selectedCarta].cartaPermittedUse}
                               </h1>
                               <h1>
-                                Carta Issue date:
-                                {cartaInfo[selectedCarta].cartaIssuedDate &&
-                                  cartaInfo[
-                                    selectedCarta
-                                  ].cartaIssuedDate.substring(0, 10)}
+                                Carta Issued date:
+                                {dateConverter(
+                                  cartaInfo[selectedCarta].cartaIssuedDate
+                                )}
                               </h1>
                               <h1>
                                 Issued By:
@@ -272,15 +281,17 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               {cartaInfo[selectedCarta].issuerStaffName !==
                               cartaInfo[selectedCarta].lastChanged ? (
                                 <>
-                                <h1>
-                                  Last Changed By:
-                                  {cartaInfo[selectedCarta].lastChanged}
-                                </h1>
-                                <h1>
-                                Last Modified Date:
-                                {cartaInfo[selectedCarta].lastModifiedDate && cartaInfo[selectedCarta].lastModifiedDate.substring(0, 10)}
-                              </h1>
-                              </>
+                                  <h1>
+                                    Last Changed By:
+                                    {cartaInfo[selectedCarta].lastChanged}
+                                  </h1>
+                                  <h1>
+                                    Last Modified Date:
+                                    {dateConverter(
+                                      cartaInfo[selectedCarta].lastModifiedDate
+                                    )}
+                                  </h1>
+                                </>
                               ) : (
                                 <></>
                               )}

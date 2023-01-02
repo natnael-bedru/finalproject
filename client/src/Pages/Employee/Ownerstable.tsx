@@ -33,7 +33,7 @@ const Ownerstable = (props: Props) => {
   const [citizenId, setCitizenId] = useState(0);
 
   useLayoutEffect(() => {
-    Axios.get("http://localhost:3001/AALHRIA/viewallowner", {
+    Axios.get("http://localhost:3001/AALHRIA/viewAllCitizen", {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -42,6 +42,18 @@ const Ownerstable = (props: Props) => {
       setOwnersList(data.data);
     });
   }, []);
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
 
   const columns = useMemo(
     () => [
@@ -75,7 +87,7 @@ const Ownerstable = (props: Props) => {
       {
         Header: "Date of Birth",
         accessor: "dateofbirth",
-        Cell: ({ value }: CellProps<any>) => <p>{value.substring(0, 10)}</p>,
+        Cell: ({ value }: CellProps<any>) => <p>{dateConverter(value)}</p>,
       },
       {
         Header: "Woreda",
