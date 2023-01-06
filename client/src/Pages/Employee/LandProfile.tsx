@@ -15,6 +15,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import Axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import notFound from "../../assets/notFound.png";
+import QRCode from "react-qr-code";
+import logo from "../../assets/logo.jpg";
 
 type Props = {
   showland: boolean;
@@ -62,6 +64,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
       cartaPermittedUse: null,
       issuerStaffName: null,
       lastChanged: null,
+      generatedPassword: null,
       cartaCoordinateData: [
         {
           X1: null,
@@ -93,8 +96,8 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
 
       setCartaInfo(response.data.carta);
     });
-    console.log("Here");
-    console.log(cartaInfo);
+    //console.log("Here");
+    //console.log(cartaInfo);
     //console.log(cartaCoordinateData);
   }, [showland]);
   const navigate = useNavigate();
@@ -144,9 +147,8 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <div className="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className=" flex justify-between p-3 items-center">
-                    <h1 className="font-semibold text-2xl">Land Details</h1>
+                <div className="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all font-poppins">
+                  <div className=" flex justify-end p-3 items-center">
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -161,14 +163,23 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                       <>
                         <Dialog.Title
                           as="h3"
-                          className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex text-center justify-center items-center"
+                          className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex flex-col text-center justify-center items-center"
                         >
-                          Addis Ababa City Goverment Land Adminstration <br />
-                          and permit Authority permit Hold Certificate of Tittle
-                          Deed
+                          <div>
+                            <img src={logo} className="w-32 h-32 mb-4" alt="" />
+                          </div>
+                          <div>
+                            {" "}
+                            Addis Ababa City Goverment Land Adminstration <br />
+                            and permit Authority permit Hold Certificate of
+                            Tittle Deed
+                          </div>
+
+                          <div> </div>
                         </Dialog.Title>
 
                         <div className="w-1/2 h-auto flex items-center ">
+                          <div></div>
                           <label
                             className="font-bold text-xl font-poppins w-1/4 ml-3"
                             htmlFor="Landid"
@@ -206,7 +217,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                       <div className=" w-full flex justify-between  mt-2">
                         {cartaInfo[selectedCarta] ? (
                           <>
-                            <div className="grid grid-cols-3  font-poppins space-y-3">
+                            <div className="grid grid-cols-2  font-poppins space-y-3 justify-center items-center">
                               <div>
                                 <label className="block text-sm  font-medium">
                                   Citizen Image
@@ -246,7 +257,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               </div>
                             </div>
 
-                            <div className="flex flex-col space-y-3 px-4 font-semibold text-base">
+                            <div className="flex flex-col space-y-3 px-4 font-semibold text-base justify-center">
                               {/* <h1>Date: current date</h1> */}
                               <h1>
                                 Registration Number:
@@ -296,6 +307,19 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                 <></>
                               )}
                             </div>
+                            {/* <div className="w-1/3 p-20">
+                              <QRCode
+                                className="w-full h-full "
+                                size={256}
+                                // style={{
+                                //   height: "auto",
+                                //   maxWidth: "100%",
+                                //   width: "100%",
+                                // }}
+                                value="http://192.168.196.54:3000/employeehomepage/owners"
+                                viewBox={`0 0 256 256`}
+                              />
+                            </div> */}
                           </>
                         ) : (
                           <>
@@ -319,7 +343,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                           <div className="w-full flex justify-between mt-4">
                             <div className="w-1/2 h-[450px] bg-black flex justify-center items-center text-white">
                               <img
-                                className="w-full h-full"
+                                className="w-full h-full flex justify-center items-center"
                                 src={`/uploads/cartaImages/${cartaInfo[selectedCarta].cartaImage}`}
                                 alt="cartaImg"
                               />
@@ -609,8 +633,47 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               </div>
                             </div>
                           </div>
+                          {/* QR code */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col space-y-2 ">
+                              <h1 className="font-bold text-lg">Reminder</h1>
+                              <h1 className="text-base font-light">
+                                This certificate is issued for holdings governed
+                                by existing/ex-existing rent regulations.
+                              </h1>
+                              <ul className="list-disc text-gray-500 text-sm px-5">
+                                <li>
+                                  The area/possession shown on this map shall
+                                  not be used for occupation without the
+                                  <br /> permission of the legally authorized
+                                  body.
+                                </li>
 
-                          <div className="flex justify-end space-x-3">
+                                <li>
+                                  {" "}
+                                  If the site is required for development for
+                                  the public good, the government has the <br />
+                                  right to unconditionally confirm its legality
+                                  and release the site as per <br /> Kasana
+                                  Substitute Guidelines.
+                                </li>
+                              </ul>
+                            </div>
+                            <div>
+                              <QRCode
+                                className="w-full h-full p-2 "
+                                size={230}
+                                // style={{
+                                //   height: "auto",
+                                //   maxWidth: "100%",
+                                //   width: "100%",
+                                // }}
+                                value={`http://localhost:3000/checklandauth/${citizenId}`}
+                                viewBox={`0 0 256 256`}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end space-x-3 mt-5">
                             {/* <Link to="/employeehomepage/updateland"> */}
                             <button
                               type="button"
@@ -630,11 +693,13 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               print land details
                             </button>
                           </div>
+                          {/* button end */}
                         </>
                       ) : (
                         <></>
                       )}
                     </div>
+                    {/* print */}
                   </div>
                 </div>
               </Transition.Child>

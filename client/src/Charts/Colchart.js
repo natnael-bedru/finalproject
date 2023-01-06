@@ -5,6 +5,7 @@ function Colchart() {
   const [colchart, setColcart] = useState({
     series: [
       {
+        name: "Land Regstrations",
         data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
       },
     ],
@@ -25,16 +26,16 @@ function Colchart() {
       },
       xaxis: {
         categories: [
-          "South Korea",
-          "Canada",
-          "United Kingdom",
-          "Netherlands",
-          "Italy",
-          "France",
-          "Japan",
-          "United States",
-          "China",
-          "Addis Ababa",
+          "Seromeda",
+          "4killo",
+          "Kaliti",
+          "Bulbula",
+          "Megenaya",
+          "Kotebe",
+          "CMC",
+          "Semit",
+          "Bole",
+          "Ayat",
         ],
       },
     },

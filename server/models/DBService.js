@@ -287,14 +287,14 @@ class DbService {
           /*
           Handling error caused by context value of the staffId becoming 0
           ERROR:
-          Cannot add or update a child row: 
-          a foreign key constraint fails (`login_system`.`carta`, 
-          CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) 
-          REFERENCES `staff` (`id`))
+          'Cannot add or update a child row: a foreign key constraint fails 
+          (`lras_system`.`carta`, CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) 
+          REFERENCES `staff` (`id`))'
            // parsing for "staffId_fk"
           */
+          //console.log(err);
           var errMessage = err.sqlMessage;
-          errMessage = errMessage.slice(102, -52);
+          errMessage = errMessage.slice(101, -52);
           //console.log(errMessage.slice(102, -52));
           //console.log(err.sqlMessage);
           if (errMessage === "staffId_fk") {
@@ -483,6 +483,18 @@ class DbService {
         console.log(err);
         if (err) reject(new Error("Unable to retrive database information!"));
 
+        resolve(result);
+      });
+    });
+  }
+  //checkLandAuth
+  async checkLandAuth(citizenId, password) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT id , citizenId FROM carta WHERE (citizenId = \'${citizenId}\' && generatedPassword= \'${password}\' );`;
+      dbConn.query(query, (err, result) => {
+        //console.log(err);
+        if (err) reject(new Error("Unable to retrive database information!"));
+        //[ { img: 'Hailu Tesfai Nataye-[2022-12-31][B7sY9].jpeg' } ]
         resolve(result);
       });
     });

@@ -70,7 +70,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
 
   return (
     <>
-      <div className="w-full h-full bg-white flex flex-col px-8 py-4">
+      <div className="w-full h-full bg-white flex flex-col px-8 py-4 font-poppins">
         <div className="flex  items-center max-h-min justify-between w-full ">
           <div className="flex flex-col">
             <h2 className=" text-2xl font-semibold my-0">{`Staff Details `}</h2>
@@ -81,7 +81,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
         </div>
         {/* <!-- component --> */}
 
-        <div className="bg-gray-100">
+        <div className="drop-shadow-lg">
           {/* <!-- End of Navbar --> */}
 
           <div className="container mx-auto my-5 p-5">
@@ -242,7 +242,6 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                         <div className="px-4 py-2 font-semibold">Birthday</div>
                         <div className="px-4 py-2">
                           {dateConverter(staff.birthday)}
-                          
                         </div>
                       </div>
                     </div>
@@ -257,7 +256,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                     <div className="my-4"></div>
 
                     <table className="w-full text-sm text-left border text-gray-500 dark:text-gray-400 mb-auto">
-                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-white dark:text-black">
                         <tr>
                           <th scope="col" className="px-6 py-3">
                             Sales ID
@@ -279,7 +278,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <tr className="bg-white border-b dark:bg-white dark:border-gray-700 hover:bg-gray-50">
                           <th
                             scope="row"
                             className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
@@ -290,7 +289,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                           <td className="px-12 py-4"></td>
 
                           <td className="px-9 py-4">
-                            <div className="inline-flex space-x-1.5 items-center justify-center py-0.5 pl-1.5 pr-2 bg-green-50 rounded-full">
+                            <div className="inline-flex space-x-1.5 items-center justify-center py-0.5 pl-1.5 pr-2 bg-green-200 rounded-full">
                               <p className="text-xs font-medium leading-none text-center text-green-700">
                                 Succseful
                               </p>
@@ -308,7 +307,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                         <li>
                           <a
                             href="/"
-                            className="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            className="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:border-gray-700 dark:text-gray-400  dark:hover:text-black"
                           >
                             Previous
                           </a>
@@ -316,7 +315,7 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                         <li>
                           <a
                             href="/"
-                            className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:bg-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                           >
                             1
                           </a>

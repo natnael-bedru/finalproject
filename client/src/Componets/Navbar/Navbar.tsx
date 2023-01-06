@@ -162,13 +162,13 @@ const Navbar = (props: Props) => {
                       >
                         Manage Employees
                       </Link>
-                      <Link
+                      {/* <Link
                         to="/adminhomepage/report"
                         className=" hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                         aria-current="page"
                       >
                        Report Archive
-                      </Link>
+                      </Link> */}
                     </>
                   ) : user.role === "Employee" ? (
                     <>

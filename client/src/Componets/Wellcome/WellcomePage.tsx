@@ -231,8 +231,8 @@ const WellcomePage = (props: Props) => {
               </div>
             </div>
           </div>
-          <div className="md:w-1/2 w-full h-full   p-4">
-            <div className="w-full  h-full  md:py-7 my-0">
+          <div className="lg:w-1/2 hidden md:flex h-full   p-4">
+            <div className="md:w-full   h-full  md:py-7 my-0">
               <div
                 data-aos-delay="500"
                 data-aos="fade-up"

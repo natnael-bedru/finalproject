@@ -456,6 +456,13 @@ exports.registerCarta = (request, response) => {
                 fs.writeFileSync(`./uploads/cartaImages/${imageName}`, buffer);
                 // Storing Image On Server END
                 // REGISTERING CARTA BEGINNING
+                var gereratedPassword =
+                  request.body.citizenId +
+                  woredaId +
+                  makeid(2) +
+                  request.body.houseNumber +
+                  makeid(3);
+                gereratedPassword = gereratedPassword.toUpperCase();
                 const carta = {
                   citizenId: request.body.citizenId,
                   woredaId: woredaId,
@@ -477,6 +484,7 @@ exports.registerCarta = (request, response) => {
                   staffId: request.body.staffId,
                   lastModifiedBy: request.body.lastModifiedBy,
                   lastModifiedDate: request.body.lastModifiedDate,
+                  generatedPassword: gereratedPassword,
                 };
                 const result3 = db.registerLand(carta);
                 // console.log("Carta Registerd Successfully!");
@@ -490,6 +498,7 @@ exports.registerCarta = (request, response) => {
                     });
                   })
                   .catch((err) => {
+                    //console.log(err);
                     //Controller ERROR : {"code":"ER_DUP_ENTRY","message":"staff.name_UNIQUE"}
                     //
                     // HTTP errors say something about the HTTP protocol.
@@ -767,6 +776,140 @@ exports.updateCartaOwnership = async (request, response) => {
         }
       );
     }
+  });
+};
+//checkLandAuth
+exports.checkLandAuth = async (request, response) => {
+  const result = db.checkLandAuth(
+    request.body.citizenId,
+    request.body.password
+  );
+  const carta_Id = await result;
+
+  if (carta_Id[0] === undefined) {
+    response.json({
+      status: "fail",
+    });
+  } else {
+    response.json({
+      status: "success",
+      //affectedRows: data.affectedRows,
+      cartaId: carta_Id[0].id,
+      citizenId: carta_Id[0].citizenId,
+    });
+  }
+  // console.log(carta_Id[0].id);
+  // console.log(carta_Id[0].citizenId);
+};
+exports.viewAuthLand = (request, response) => {
+  //var x = parse
+  // console.log(carta_Id[0].id);
+  // console.log(carta_Id[0].citizenId);
+  var jsonOut = {
+    citizenInfo: [],
+    carta: [],
+  };
+  // GET CITIZEN INFORMATION BEGINING
+  const result1 = db.viewCitizen(parseInt(request.params.citizenId));
+  result1.then((citizenData) => {
+    var firstName = citizenData[0].firstName;
+    var middleName = citizenData[0].middleName;
+    var lastName = citizenData[0].lastName;
+    //var fullName = `${citizenData[0].firstName} ${citizenData[0].middleName} ${citizenData[0].lastName}`;
+    var img = citizenData[0].img;
+    var sex = citizenData[0].sex;
+    var phoneNumber = citizenData[0].phonenumber;
+    var dateOfBirth = citizenData[0].dateofbirth;
+
+    // GET CITIZEN INFORMATION END
+    // GET WOREDA INFORMATION BEGINNING
+    const result1 = db.retriveWoredaInfo(citizenData[0].woredaId);
+    result1.then((woreda) => {
+      // console.log("Woreda Information");
+      var woredaNumber = woreda.woredaNumber;
+      var kebeleNumber = woreda.kebeleNumber;
+      var subCityName = woreda.subCityName;
+
+      const citizenData = {
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        //fullName: fullName,
+        img: img,
+        sex: sex,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+        woredaNumber: woredaNumber,
+        kebeleNumber: kebeleNumber,
+        subCityName: subCityName,
+      };
+      jsonOut.citizenInfo.push(citizenData);
+      // GET WOREDA INFORMATION END
+      // GET CARTA INFORMATION BEGINNING
+      const result3 = db.viewCarta(parseInt(request.params.citizenId));
+      result3
+        .then(async (carta) => {
+          //console.log("CARTA INFORMATION");
+          //console.log(carta);
+          if (carta) {
+            for (let x in carta) {
+              if (parseInt(carta[x].id) === parseInt(request.params.cartaId)) {
+                var result4 = db.retriveWoredaInfo(carta[x].woredaId);
+                var woreda = await result4;
+                var result5 = db.viewStaff(carta[x].staffId);
+                var staff = await result5;
+                var result6 = db.viewStaff(carta[x].lastModifiedBy);
+                var staffLastModifiedBy = await result6;
+                var result7 = db.getCoordinate(carta[x].coordinateId);
+                var coordinateData = await result7;
+
+                var cartaData = {
+                  cartaId: carta[x].id,
+                  currentWoredaNumber: woreda.woredaNumber,
+                  formerKebeleNumber: woreda.kebeleNumber,
+                  cartaSubCityName: woreda.subCityName,
+                  cartaImage: carta[x].img,
+                  cartaBlockNumber: carta[x].blockNumber,
+                  cartaParcelNumber: carta[x].parcelNumber,
+                  cartaHouseNumber: carta[x].houseNumber,
+                  cartaPlotArea: carta[x].plotArea,
+                  cartaBuiltUpArea: carta[x].builtUpArea,
+                  cartaLandGrade: carta[x].landGrade,
+                  cartaTitleDeedNo: carta[x].titleDeedNo,
+                  cartaIssuedDate: carta[x].cartaIssuedDate,
+                  cartaBasemapNo: carta[x].basemapNo,
+                  cartaRegistrationNo: carta[x].registrationNo,
+                  cartaTypeOfHolding: carta[x].typeOfHolding,
+                  cartaCoordinateData: [
+                    {
+                      X1: coordinateData[0].X1,
+                      Y1: coordinateData[0].Y1,
+                      X2: coordinateData[0].X2,
+                      Y2: coordinateData[0].Y2,
+                      X3: coordinateData[0].X3,
+                      Y3: coordinateData[0].Y3,
+                      X4: coordinateData[0].X4,
+                      Y4: coordinateData[0].Y4,
+                      X5: coordinateData[0].X5,
+                      Y5: coordinateData[0].Y5,
+                    },
+                  ],
+                  cartaPlannedLandUse: carta[x].plannedLandUse,
+                  cartaPermittedUse: carta[x].permittedUse,
+                  issuerStaffName: `${staff[0].firstName} ${staff[0].middleName}`,
+                  lastChanged: `${staffLastModifiedBy[0].firstName} ${staffLastModifiedBy[0].middleName}`,
+                  lastModifiedDate: carta[x].lastModifiedDate,
+                };
+                jsonOut.carta.push(cartaData);
+              }
+            }
+          }
+        })
+        .then(() => {
+          //console.log(jsonOut);
+          response.json(jsonOut);
+        });
+    });
   });
 };
 

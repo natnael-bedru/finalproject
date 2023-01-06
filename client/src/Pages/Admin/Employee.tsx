@@ -235,7 +235,7 @@ const Employee = (props: Props) => {
 
   return (
     <>
-      <div className="bg-white p-8 rounded-md w-full">
+      <div className="bg-white p-8 rounded-md w-full font-poppins">
         <div className=" flex items-center justify-between pb-6">
           <div>
             <h2 className="text-gray-600 font-semibold md:text-4xl text-2xl ">
@@ -327,7 +327,7 @@ const Employee = (props: Props) => {
                   }
                 </tbody>
               </table>
-
+              {/* pagination */}
               <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
                 <span className="text-xs xs:text-sm text-gray-900">
                   Showing 1 to 4 of 50 Entries

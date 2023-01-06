@@ -50,8 +50,7 @@ router
   .route("/retriveAllWoredaInfo")
   .get(_controllers.verifyJWT, _controllers.retriveAllWoredaInfo);
 
-//viewAllLand
-// http://localhost:3000/AALHRIA/viewAllCarta/:id
+//viewAllLand   http://localhost:3000/AALHRIA/viewAllCarta/:id
 router
   .route("/viewAllCarta/:id")
   .get(_controllers.verifyJWT, _controllers.viewAllCarta);
@@ -65,19 +64,12 @@ router
   .route("/updateCartaOwnership")
   .post(_controllers.verifyJWT, _controllers.updateCartaOwnership);
 
-//.get(_controllers.viewStaff);
+//checkLandAuth
+router.route("/checkLandAuth").post(_controllers.checkLandAuth);
 
-/*
-// create
-router.route("/insert").post(_controllers.insertNewName);
-// read
-router.route("/getAll").get(_controllers.getAllData);
-// update
-router.route("/update").patch(_controllers.updateNameById);
-// delete
-router.route("/delete/:id").delete(_controllers.deleteRowById);
-// search
-router.route("/search/:name").get(_controllers.searchByName);
-*/
+//viewAuthLand
+router
+  .route("/viewAuthLand/:citizenId/:cartaId")
+  .get(_controllers.viewAuthLand);
 
 module.exports = router;

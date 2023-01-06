@@ -35,6 +35,11 @@ import Ownerprofile from "./Pages/Reports/Ownerprofile";
 import LandRegReport from "./Pages/Reports/LandRegReport";
 import EmployeeReport from "./Pages/Reports/EmployeeReport";
 
+// import Reporthomepage from "./Pages/Reports/Reporthomepage";
+import LandprofileReport from "./Pages/Reports/LandProfileReport";
+import LandupdateReport from "./Pages/Reports/LandUpdateReport";
+import Landauthpage from "./Pages/authentication/Landauthpage";
+import Erorrpage from "./Pages/authentication/Erorrpage";
 function App() {
   // const [userid, setuserid] = useState([]);
   Axios.defaults.withCredentials = true;
@@ -57,6 +62,7 @@ function App() {
         <Routes>
           {/* test route */}
           <Route path="/report" element={<Reportlist />} />
+
           <Route
             path="/employeeReport"
             element={
@@ -126,6 +132,8 @@ function App() {
 
           <Route path="/AdminPage" element={<AdminPage />} />
           <Route path="/employees" element={<Employee />} />
+          {/* <Route path="/landUpdateReport " element={<LandupdateReport />} />
+          <Route path="/landProfileReport " element={<LandprofileReport />} /> */}
           <Route path="/landregistration" element={<Landreg />} />
           <Route path="/updateland" element={<Updateland />} />
           <Route path="/manageEmployee" element={<ManageEmp />} />
@@ -136,6 +144,13 @@ function App() {
           <Route path="/EmployeePage" element={<EmployeePage />} />
           <Route path="/owners" element={<Ownerstable />} />
           {/*  this will decise which route it will take based on the role */}
+
+          {/* auth pages route */}
+          <Route path="/checklandauth/:userId" element={<Landauthpage />}>
+            <Route index element={<PasswrdPage />} />
+            <Route path="landauth" element={<DetailsPage />} />
+            <Route path="errorpage" element={<Erorrpage />} />
+          </Route>
 
           {/* Admin Route */}
 
@@ -164,12 +179,16 @@ function App() {
                 />
               }
             />
+            {/* <Route path="/reporthomepage" element={<Reporthomepage />}></Route> */}
             <Route path="employees" element={<Employee />} />
-            <Route path="employees " element={<Employee />} />
-
+            {/* <Route path="landUpdateReport " element={<LandupdateReport />} />
+            <Route path="landProfileReport " element={<LandprofileReport />} /> */}
+            <Route path="landprofilereport" element={<LandprofileReport />} />
+            <Route path="landupdatereport" element={<LandupdateReport />} />
             <Route path="manageEmployee" element={<ManageEmp />} />
             <Route path="lands" element={<Landregistrated />} />
             <Route path="report" element={<Reportlist />} />
+
             <Route
               path="employeeReport"
               element={

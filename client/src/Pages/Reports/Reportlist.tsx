@@ -145,56 +145,15 @@ const Reportlist = (props: Props) => {
                       </button> */}
                     </td>
                     <td className=" py-5 border-b border-gray-200 bg-white text-sm">
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left"
-                      >
-                        <div>
-                          <Menu.Button
-                            // onClick={() => setShowOption(!showOption)}
-                            className="  "
-                          >
-                            <button
-                              type="button"
-                              className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
-                            >
-                              Activity
-                            </button>
-                          </Menu.Button>{" "}
-                        </div>
-
-                        <Menu.Items
-                          className="absolute right-0 z-20 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                          role="menu"
-                          aria-orientation="vertical"
-                          aria-labelledby="menu-button"
+                      <div>
+                        <button
+                          onClick={() => setshowActivity(true)}
+                          type="button"
+                          className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
                         >
-                          <div className="py-1" role="none">
-                            <h1
-                              onClick={() => setshowActivity(true)}
-                              className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
-                              role="menuitem"
-                              id="menu-item-0"
-                            >
-                              Admin activtiy
-                            </h1>
-                            <h1
-                              onClick={() => setIsOpen(true)}
-                              className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
-                              role="menuitem"
-                              id="menu-item-1"
-                            >
-                              Admin Profile
-                            </h1>
-                          </div>
-                        </Menu.Items>
-                      </Menu>
-                      {/* <button
-                              type="button"
-                              className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
-                            >
-                              Details
-                            </button> */}
+                          Activity
+                        </button>
+                      </div>
                     </td>
                   </tr>
 
@@ -241,56 +200,15 @@ const Reportlist = (props: Props) => {
                       </span>
                     </td>
                     <td className=" py-5 border-b border-gray-200 bg-white text-sm">
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left"
-                      >
-                        <div>
-                          <Menu.Button
-                            // onClick={() => setShowOption(!showOption)}
-                            className="  "
-                          >
-                            <button
-                              type="button"
-                              className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
-                            >
-                              Activity
-                            </button>
-                          </Menu.Button>{" "}
-                        </div>
-
-                        <Menu.Items
-                          className="absolute right-0 z-20 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                          role="menu"
-                          aria-orientation="vertical"
-                          aria-labelledby="menu-button"
+                      <div>
+                        <button
+                          onClick={() => setreposhow(true)}
+                          type="button"
+                          className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
                         >
-                          <div className="py-1" role="none">
-                            <h1
-                              onClick={() => setreposhow(true)}
-                              className="text-gray-700 block px-4 py-2 text-sm cursor-pointer "
-                              role="menuitem"
-                              id="menu-item-0"
-                            >
-                              Employee activtiy
-                            </h1>
-                            <h1
-                              onClick={() => setIsOpen(true)}
-                              className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
-                              role="menuitem"
-                              id="menu-item-1"
-                            >
-                              Employee profile
-                            </h1>
-                          </div>
-                        </Menu.Items>
-                      </Menu>
-                      {/* <button
-                              type="button"
-                              className="inline-block px-4 py-2.5 bg-transparent text-black font-medium text-md leading-tight  rounded hover:text-blue-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-0 active:bg-gray-100 transition duration-150 ease-in-out"
-                            >
-                              Details
-                            </button> */}
+                          Activity
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 </tbody>

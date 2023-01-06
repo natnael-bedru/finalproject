@@ -82,7 +82,7 @@ const EmployeePage = (Props: Props) => {
                             Latest Registration
                           </h3>
                           <span className="text-base font-normal text-gray-500">
-                            This is a list of latest Registration
+                            This is a list of latest land Registration
                           </span>
                         </div>
                         <Link to="/employeehomepage/owners">
@@ -126,100 +126,93 @@ const EmployeePage = (Props: Props) => {
                                 <tbody className="bg-white">
                                   <tr>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                      Payment from{" "}
                                       <span className="font-semibold">
-                                        Bonnie Green
+                                        Hailu Tesfai Nataye
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 23 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      $2300
+                                      Kebede Gebre Yohannes
                                     </td>
                                   </tr>
                                   <tr className="bg-gray-50">
-                                    <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                      Payment refund to{" "}
+                                    <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                                       <span className="font-semibold">
-                                        #00910
+                                        Zewedu Feleke Caleb
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 23 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      -$670
+                                      Alemu Kebede
                                     </td>
                                   </tr>
                                   <tr>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                      Payment failed from{" "}
                                       <span className="font-semibold">
-                                        #087651
+                                        Mahdere Negasi Getahun
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 18 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      $234
+                                      Alemu Kebede
                                     </td>
                                   </tr>
                                   <tr className="bg-gray-50">
-                                    <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                      Payment from{" "}
+                                    <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                                       <span className="font-semibold">
-                                        Lana Byrd
+                                        Tesfaye Goliad Keya
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 15 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      $5000
+                                      Alemu Kebede
                                     </td>
                                   </tr>
                                   <tr>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                      Payment from{" "}
                                       <span className="font-semibold">
-                                        Jese Leos
+                                        Dagem Tiruneh Tewolde
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 15 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      $2300
+                                      Gedion Getachew Mitku
                                     </td>
                                   </tr>
                                   <tr className="bg-gray-50">
-                                    <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                      Payment from{" "}
+                                    <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                                       <span className="font-semibold">
-                                        THEMESBERG LLC
+                                        Eyoab Beyne Taye
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 11 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      $560
+                                      Dave Hailu Kasahun
                                     </td>
                                   </tr>
                                   <tr>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                      Payment from{" "}
                                       <span className="font-semibold">
-                                        Lana Lysle
+                                        Eyasu Duri Bessufekad
                                       </span>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                      Apr 6 ,2021
+                                      03/12/2022
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                      $1437
+                                      Dave Hailu Kasahun
                                     </td>
                                   </tr>
                                 </tbody>

@@ -46,6 +46,7 @@ CREATE TABLE `carta` (
   `staffId` int DEFAULT NULL,
   `lastModifiedBy` int DEFAULT NULL,
   `lastModifiedDate` date DEFAULT NULL,
+  `generatedPassword` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `woredaId_idx` (`woredaId`),
   KEY `citizenId_idx` (`citizenId`),
@@ -56,7 +57,7 @@ CREATE TABLE `carta` (
   CONSTRAINT `coordinateId` FOREIGN KEY (`coordinateId`) REFERENCES `coordinateland` (`id`),
   CONSTRAINT `FK_WoredaCarta` FOREIGN KEY (`woredaId`) REFERENCES `woreda` (`id`),
   CONSTRAINT `staffId_fk` FOREIGN KEY (`staffId`) REFERENCES `staff` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +66,7 @@ CREATE TABLE `carta` (
 
 LOCK TABLES `carta` WRITE;
 /*!40000 ALTER TABLE `carta` DISABLE KEYS */;
-INSERT INTO `carta` VALUES (1,2,1,'Abera Misgina Noab-[2023-01-02][SCCuu].jpeg',3333,44444,2222,77777,8888,'66666','1111','2023-01-01','55555','9999','Permits hold',1,'Mixed','Residence',7,3,'2023-01-02'),(2,2,3,'Abera Misgina Noab-[2023-01-01][ZQ5o3].jpeg',3333,44444,565656,6666,8888,'3/4','1234','2023-01-01','555555','2341','Permits new',2,'Mixed','Residence',3,7,'2023-01-01');
+INSERT INTO `carta` VALUES (6,1,1,'Hailu Tesfai Nataye-[2023-01-05][CbMCJ].png',33333,44444,222222,77777,888888,'66666','1111','2023-01-05','55555','99999','Permits hold',6,'Mixed','Residence',7,7,'2023-01-05',NULL),(14,2,1,'Abera Misgina Noab-[2023-01-06][OnEbb].png',232,2345,4234,22253,33356,'22566','2323','2023-01-06','2252','22','Permits hold',16,'Residence','Mixed',3,3,'2023-01-06','3GG4234CNH'),(15,2,3,'Abera Misgina Noab-[2023-01-06][E08aq].png',26223,3532,2352,223,3262,'2525','2234','2023-01-06','2562','3562','Permits hold',17,'Mixed','Residence',3,3,'2023-01-06','5UC2352H0D');
 /*!40000 ALTER TABLE `carta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +123,7 @@ CREATE TABLE `coordinateland` (
   `X5` double DEFAULT NULL,
   `Y5` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +132,7 @@ CREATE TABLE `coordinateland` (
 
 LOCK TABLES `coordinateland` WRITE;
 /*!40000 ALTER TABLE `coordinateland` DISABLE KEYS */;
-INSERT INTO `coordinateland` VALUES (1,1212.43,4545.644,6453.534,53432.435,23434.55,3453.53,443.544,543.45,6645.65,345.65),(2,1234,434,33,44,222,54234,2452,19,23452,1011);
+INSERT INTO `coordinateland` VALUES (6,111.9999,222.8888,3333.7777,4444.6666,5555.555,66666.4444,777.333,8888.222,9999.1111,12121.565),(7,333,444,555,443,335,445,5436,3345,445,225),(8,333,444,555,443,335,445,5436,3345,445,225),(9,333,444,555,443,335,445,5436,3345,445,225),(10,333,444,555,443,335,445,5436,3345,445,225),(11,224,3345,332,344,5552,335,3355,225,3356,335),(12,224,3345,332,344,5552,335,3355,225,3356,335),(13,224,3345,332,344,5552,335,3355,225,3356,335),(14,224,3345,332,344,5552,335,3355,225,3356,335),(15,224,3345,332,344,5552,335,3355,225,3356,335),(16,224,3345,332,344,5552,335,3355,225,3356,335),(17,222,333,44,556,55,33,445,33,446,2242);
 /*!40000 ALTER TABLE `coordinateland` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +195,7 @@ CREATE TABLE `staff` (
   KEY `id_idx` (`assignedBy`) /*!80000 INVISIBLE */,
   CONSTRAINT `id` FOREIGN KEY (`assignedBy`) REFERENCES `staff` (`id`),
   CONSTRAINT `roleid` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,7 +204,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16','2022-12-10'),(2,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$afUFUZ2PP7aYeqqWVaya1OPYNhvKlG8p04V8q2Jqo4..KiEY1KoNC','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-31','2022-12-11'),(3,2,'Employee/Alemu Shemsu Kebede-26.png',2,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-29','2022-12-12'),(7,2,'Employee/Dave Hailu Kasahun-[2023-01-01][hCr3k].png',1,'Dave','Hailu','Kasahun','dave','$2b$10$Gg/LlhhjXCEuIO19IyfXc.OSwY3nX2blhzoQMRdlP6Zc7daoxt44O','Inactive','dave@gmail.com','098475457','Male','1994-06-07','Saris','2023-01-02','2022-12-30');
+INSERT INTO `staff` VALUES (1,1,'Admin/Natnael abc Abdulkadir-16.png',NULL,'Natnael','Bedru','Abdulkadir','Nati','$2b$10$rIRw3Fjdx0MUsueeV8.Cw.XTJIpoYXhvzEqQybohzYjXyUSQ3PV/O','Active','nati@gmail.com','0911223344','Male','1920-09-09','Bole','2022-12-16','2022-12-10'),(2,1,'Unspecified/defaultPicture.png',1,'Kebede','Gebre','Yohannes','kebede','$2b$10$afUFUZ2PP7aYeqqWVaya1OPYNhvKlG8p04V8q2Jqo4..KiEY1KoNC','Active','natiwe@gmail.com','0911223343','Male','2022-12-15','Gergi','2022-12-31','2022-12-11'),(3,2,'Employee/Alemu Shemsu Kebede-26.png',2,'Alemu','Shemsu','Kebede','alemu','$2b$10$S1Pchmn.QH80cxXIux0c3Oi.rH42g7UnM2ELCWge4GFA6AMoEcx5e','Active','alemu@gmail.com','0912345678','Male','2022-12-14','Saris','2022-12-29','2022-12-12'),(7,2,'Employee/Dave Hailu Kasahun-[2023-01-01][hCr3k].png',1,'Dave','Hailu','Kasahun','dave','$2b$10$Gg/LlhhjXCEuIO19IyfXc.OSwY3nX2blhzoQMRdlP6Zc7daoxt44O','Active','dave@gmail.com','098475457','Male','1994-06-07','Saris','2023-01-04','2022-12-30'),(27,1,'Unspecified/defaultPicture.png',1,'test1','test2','test3','ewtswt','$2b$10$Sp1ZT7DiLfQokSL2rg4Qa.mI0o5oi8N1gtaNPWvAyYsCmLOWVJari','Active','ndweerat@gmail.com','0911288888','Male','2022-10-13','qwer2','2023-01-04','2023-01-04');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -268,4 +269,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-02 11:32:01
+-- Dump completed on 2023-01-06 16:54:28
