@@ -83,7 +83,7 @@ const Signup = (props: Props) => {
   return (
     <>
       <div className=" ">
-        <div className="bg-white dark:bg-gray-900">
+        <div className="bg-gray-900">
           <div className="flex justify-center h-screen">
             {/* login */}
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 import Aos from "aos";
@@ -7,6 +7,14 @@ import Graphcharts from "../../Charts/Graphchart";
 
 import Barchart from "../../Charts/Barchart";
 import IdContext from "../../Context/Context";
+import Axios from "axios";
+import {
+  CellProps,
+  Hooks,
+  useSortBy,
+  useGlobalFilter,
+  useTable,
+} from "react-table";
 
 // tsrafce
 type Props = {};
@@ -17,6 +25,110 @@ const AdminPage = (props: Props) => {
   useEffect(() => {
     Aos.init({ duration: 2000 });
   }, []);
+  const [staffList, setStaffList] = useState([]); // array ??
+  useEffect(() => {
+    Axios.get("http://localhost:3001/AALHRIA/viewstaffdetails", {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((data) => {
+      setStaffList(data.data);
+    });
+  }, []);
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
+  const columns = useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "id",
+      },
+      {
+        Header: "Picture",
+        accessor: "img",
+        Cell: ({ value }: CellProps<any>) => (
+          // eslint-disable-next-line jsx-a11y/alt-text
+          <img
+            className="rounded-full"
+            src={`/uploads/staffImages/${value}`}
+            style={{ height: "40px" }}
+          />
+        ),
+      },
+      {
+        Header: "Employee Name",
+        accessor: "name",
+      },
+      {
+        Header: "Total Carta Issued",
+        accessor: "numberOfCartaIssued",
+      },
+      {
+        Header: "Account Status",
+        accessor: "accountStatus",
+        Cell: ({ value }: CellProps<any>) =>
+          value === "Active" ? (
+            <>
+              <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-green-200  opacity-50 rounded-full"
+                ></span>
+                <span className="relative">{value}</span>
+              </span>
+            </>
+          ) : value === "Inactive" ? (
+            <>
+              <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
+                ></span>
+                <span className="relative">{value}</span>
+              </span>
+            </>
+          ) : (
+            <></>
+          ),
+      },
+      {
+        Header: "Joined Date",
+        accessor: "joinedDate",
+        Cell: ({ value }: CellProps<any>) => <p>{dateConverter(value)}</p>,
+      },
+    ],
+    []
+  );
+  const staffData = useMemo(() => [...staffList], [staffList]);
+  const tableInstance = useTable(
+    {
+      columns: columns,
+      data: staffData,
+      initialState: {
+        hiddenColumns: ["id"],
+      },
+    },
+    useGlobalFilter,
+    useSortBy
+  );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = tableInstance;
+  const isEven = (idx: number) => idx % 2 === 0;
   return (
     <>
       {/* <!-- This is an example component --> */}
@@ -332,7 +444,7 @@ const AdminPage = (props: Props) => {
                 <div className="flex flex-col justify-center md:w-2/3 w-full h-full ">
                   <div className="w-full max-w-6xl  bg-white shadow-lg rounded-md border border-gray-200">
                     <header className="px-5 py-4 border-b border-gray-100 flex justify-between ">
-                      <h2 className="font-semibold text-gray-800">Staff</h2>
+                      <h2 className="font-semibold text-gray-800">Employee</h2>
                       <Link to="/adminhomepage/employees">
                         <div className="flex-shrink-0 pr-10">
                           <a
@@ -346,217 +458,62 @@ const AdminPage = (props: Props) => {
                     </header>
                     <div className="p-3">
                       <div className="overflow-x-auto">
-                        <table className="table-auto w-full">
-                          <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                            <tr>
-                              <th className="p-2 whitespace-nowrap">
-                                <div className="font-semibold text-left">
-                                  Employees Name
-                                </div>
-                              </th>
-                              <th className="p-2 whitespace-nowrap">
-                                <div className="font-semibold text-left">
-                                  Joined
-                                </div>
-                              </th>
-                              <th className="p-2 whitespace-nowrap">
-                                <div className="font-semibold text-left">
-                                  Total Registration
-                                </div>
-                              </th>
-                              <th className="p-2 whitespace-nowrap">
-                                <div className="font-semibold text-center">
-                                  Status
-                                </div>
-                              </th>
-                            </tr>
+                        <table
+                          {...getTableProps()}
+                          className="min-w-full leading-normal"
+                        >
+                          <thead>
+                            {headerGroups.map((headerGroup) => (
+                              <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column) => (
+                                  <th
+                                    {...column.getHeaderProps(
+                                      column.getSortByToggleProps()
+                                    )}
+                                    className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                  >
+                                    {column.render("Header")}
+                                    {column.isSorted
+                                      ? column.isSortedDesc
+                                        ? " ▼"
+                                        : " ▲"
+                                      : ""}
+                                  </th>
+                                ))}
+                              </tr>
+                            ))}
                           </thead>
-                          <tbody className="text-sm divide-y divide-gray-100">
-                            <tr>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                    <img
-                                      className="rounded-full"
-                                      src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg"
-                                      width="40"
-                                      height="40"
-                                      alt="Alex Shatov"
-                                    />
-                                  </div>
-                                  <div className="font-medium text-gray-800">
-                                    Kebede Gebre Yohannes
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left">03/12/2022</div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left font-medium text-black">
-                                  36
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-sm text-center">
-                                  <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span
-                                      aria-hidden
-                                      className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                                    ></span>
-                                    <span className="relative">Active</span>
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                    <img
-                                      className="rounded-full"
-                                      src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-06.jpg"
-                                      width="40"
-                                      height="40"
-                                      alt="Philip Harbach"
-                                    />
-                                  </div>
-                                  <div className="font-medium text-gray-800">
-                                    Alemu Kebede
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left">03/12/2022</div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left font-medium text-black">
-                                  45
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-sm text-center">
-                                  <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span
-                                      aria-hidden
-                                      className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                                    ></span>
-                                    <span className="relative">Active</span>
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                    <img
-                                      className="rounded-full"
-                                      src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-07.jpg"
-                                      width="40"
-                                      height="40"
-                                      alt="Mirko Fisuk"
-                                    />
-                                  </div>
-                                  <div className="font-medium text-gray-800">
-                                    Mirko Fisuk
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left">01/08/2020</div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left font-medium text-black">
-                                  21
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-sm text-center">
-                                  <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                    <span
-                                      aria-hidden
-                                      className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                                    ></span>
-                                    <span className="relative">InActive</span>
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                    <img
-                                      className="rounded-full"
-                                      src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-08.jpg"
-                                      width="40"
-                                      height="40"
-                                      alt="Olga Semklo"
-                                    />
-                                  </div>
-                                  <div className="font-medium text-gray-800">
-                                    Gedion Getachew Mitku
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left">07/03/2022</div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left font-medium text-black">
-                                  15
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-sm text-center">
-                                  <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span
-                                      aria-hidden
-                                      className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                                    ></span>
-                                    <span className="relative">Active</span>
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                    <img
-                                      className="rounded-full"
-                                      src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-09.jpg"
-                                      width="40"
-                                      height="40"
-                                      alt="Burak Long"
-                                    />
-                                  </div>
-                                  <div className="font-medium text-gray-800">
-                                    Dave Hailu Kasahun
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left">05/17/2021</div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-left font-medium text-black">
-                                  33
-                                </div>
-                              </td>
-                              <td className="p-2 whitespace-nowrap">
-                                <div className="text-sm text-center">
-                                  <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                    <span
-                                      aria-hidden
-                                      className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                                    ></span>
-                                    <span className="relative">InActive</span>
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
+                          <tbody {...getTableBodyProps()}>
+                            {
+                              // Loop over the table rows
+                              rows.map((row, idx) => {
+                                // Prepare the row for display statusStyle
+                                // red
+                                // "relative inline-block px-3 py-1 font-semibold  leading-tight"
+                                // green
+                                // "relative inline-block px-3 py-1 font-semibold  leading-tight"
+                                prepareRow(row);
+                                return (
+                                  <tr
+                                    {...row.getRowProps()}
+                                    className={
+                                      isEven(idx) ? "bg-slate-100/25 " : ""
+                                    }
+                                  >
+                                    {row.cells.map((cell, idx) => (
+                                      <td
+                                        {...cell.getCellProps()}
+                                        className="px-5 py-5 border-b border-gray-200  text-sm"
+                                      >
+                                        {/* {cell.column.Header === "Joined Date" ? cell.render(cell.value.substring(0, 10)): ""} */}
+
+                                        {cell.render("Cell")}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                );
+                              })
+                            }
                           </tbody>
                         </table>
                       </div>

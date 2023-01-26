@@ -7,6 +7,8 @@ class DbService {
       // send the select statement result to the controllerConfig for password checking
       const query = "SELECT * FROM staff WHERE username = ?;";
       dbConn.query(query, username, (err, result) => {
+        //console.log("")
+        console.log(result);
         if (result.length > 0) {
           resolve(result);
         } else {
@@ -82,7 +84,7 @@ class DbService {
           }
         });
       } else {
-        console.log("HERE2");
+        // console.log("HERE2");
         // if the current id is null which is the original main Admin
         const query = `SELECT * FROM staff ;`;
         dbConn.query(query, (err, result) => {
@@ -279,7 +281,7 @@ class DbService {
   }
   //registerLand
   async registerLand(carta) {
-    console.log(`Data :${Object.values(carta)}`);
+    //console.log(`Data :${Object.values(carta)}`);
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO carta  VALUES (0,?);`;
       dbConn.query(query, [Object.values(carta)], (err, result) => {
@@ -338,6 +340,19 @@ class DbService {
       // This adds staff members into the database
       const query = `SELECT * FROM carta WHERE citizenId = ?;`;
       dbConn.query(query, citizenId, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
+        //if (result.length > 0) {
+        //console.log(result);
+        resolve(result);
+        // }
+      });
+    });
+  }
+  // viewCarta by staffid [lastModifiedBy]
+  async viewCartaByStaff(staffId) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM carta WHERE lastModifiedBy = ?;`;
+      dbConn.query(query, staffId, (err, result) => {
         if (err) reject(new Error("Unable to retrive database information!"));
         //if (result.length > 0) {
         //console.log(result);
@@ -433,6 +448,7 @@ class DbService {
   }
 
   async updateLandOwnership(updateData) {
+    //console.log(updateData);
     /*
     currentOwner: 1,
     newOwner: 8,
@@ -443,17 +459,28 @@ class DbService {
     //console.log(updateData);
     return new Promise((resolve, reject) => {
       //SET SQL_SAFE_UPDATES = 0;
+      //titleDeedNo = \'${updateData.cartaTitleDeedNo}\' &&
       const query = `UPDATE carta SET 
       citizenId=\'${updateData.newOwner}\',
       lastModifiedBy=\'${updateData.issuedBy}\',
-      lastModifiedDate=\'${updateData.lastModifiedDate}\'  
-      WHERE (titleDeedNo = \'${updateData.cartaTitleDeedNo}\' ) ;`;
+      lastModifiedDate=\'${updateData.lastModifiedDate}\',
+      generatedPassword=\'${updateData.generatedPassword}\',
+      action=\'Updated\'  
+      WHERE (
+        titleDeedNo = \'${updateData.cartaTitleDeedNo}\' &&
+        woredaId = ${updateData.woredaId} && 
+        blockNumber = ${updateData.cartaBlockNumber} && 
+        parcelNumber = ${updateData.cartaParcelNumber} && 
+        houseNumber = ${updateData.cartaHouseNumber} && 
+        plotArea = ${updateData.cartaPlotArea} && 
+        builtUpArea = ${updateData.cartaBuiltUpArea} && 
+        basemapNo = ${updateData.cartaBasemapNo} ) ;`;
 
       dbConn.query(query, (err, result) => {
         // console.log(err);
         if (err) reject(new Error("Unable to retrive database information!"));
         //if (result.length > 0) {
-        // console.log(result);
+        //  console.log(result);
         resolve(result);
         // }
       });
@@ -461,7 +488,15 @@ class DbService {
       //If the update was successful without the image part
       if (result1.affectedRows === 1) {
         return new Promise((resolve, reject) => {
-          const query = `SELECT img FROM carta WHERE (titleDeedNo = \'${updateData.cartaTitleDeedNo}\' );`;
+          const query = `SELECT img FROM carta  WHERE (
+            titleDeedNo = \'${updateData.cartaTitleDeedNo}\' &&
+            woredaId = ${updateData.woredaId} && 
+            blockNumber = ${updateData.cartaBlockNumber} && 
+            parcelNumber = ${updateData.cartaParcelNumber} && 
+            houseNumber = ${updateData.cartaHouseNumber} && 
+            plotArea = ${updateData.cartaPlotArea} && 
+            builtUpArea = ${updateData.cartaBuiltUpArea} && 
+            basemapNo = ${updateData.cartaBasemapNo} ) ;`;
           dbConn.query(query, (err, result) => {
             // console.log(err);
             if (err)
@@ -475,12 +510,20 @@ class DbService {
     });
   }
 
-  async updateLandImage(updateImage, cartaTitleDeedNo) {
+  async updateLandImage(updateImage, updateData) {
     //console.log(updateImage);
     return new Promise((resolve, reject) => {
-      const query = `UPDATE carta SET img=\'${updateImage}\' WHERE (titleDeedNo = \'${cartaTitleDeedNo}\' ) ;`;
+      const query = `UPDATE carta SET img=\'${updateImage}\'  WHERE (
+        titleDeedNo = \'${updateData.cartaTitleDeedNo}\' &&
+        woredaId = ${updateData.woredaId} && 
+        blockNumber = ${updateData.cartaBlockNumber} && 
+        parcelNumber = ${updateData.cartaParcelNumber} && 
+        houseNumber = ${updateData.cartaHouseNumber} && 
+        plotArea = ${updateData.cartaPlotArea} && 
+        builtUpArea = ${updateData.cartaBuiltUpArea} && 
+        basemapNo = ${updateData.cartaBasemapNo} ) ;`;
       dbConn.query(query, (err, result) => {
-        console.log(err);
+        //console.log(err);
         if (err) reject(new Error("Unable to retrive database information!"));
 
         resolve(result);
@@ -495,6 +538,17 @@ class DbService {
         //console.log(err);
         if (err) reject(new Error("Unable to retrive database information!"));
         //[ { img: 'Hailu Tesfai Nataye-[2022-12-31][B7sY9].jpeg' } ]
+        resolve(result);
+      });
+    });
+  }
+  async getCartaIssuedCount(staffId) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT COUNT(id) AS numberOfCartaIssued FROM carta  WHERE (staffId = ${parseInt(
+        staffId
+      )});`;
+      dbConn.query(query, (err, result) => {
+        if (err) reject(new Error("Unable to retrive database information!"));
         resolve(result);
       });
     });

@@ -12,6 +12,21 @@ const fs = require("fs");
 const path = require("path");
 const { json } = require("body-parser");
 
+// Vonage SMS
+const { Vonage } = require("@vonage/server-sdk");
+const vonage = new Vonage({
+  apiKey: process.env.VONAGE_APIKEY,
+  apiSecret: process.env.VONAGE_APISECRET,
+});
+async function vonage_Sms(message) {
+  const response = await vonage.sms.send({
+    to: process.env.TESTPHONENUMBER,
+    from: "Vonage APIs",
+    text: message,
+  });
+  return response;
+}
+
 // This is Used for generating random id for when storing the file in server
 function makeid(length) {
   var result = "";
@@ -23,6 +38,9 @@ function makeid(length) {
   }
   return result;
 }
+//JSON Web Tokens are an open,
+//industry standard RFC 7519 method for representing
+//claims securely between two parties.
 exports.verifyJWT = (request, response, next) => {
   const token = request.headers["x-access-token"];
   if (!token) {
@@ -76,6 +94,7 @@ exports.login = (request, response) => {
     })
     .then(async (data) => {
       var temp = JSON.stringify(data).toString();
+      // this code checks from the role table
       const retriveRole = db.retriveRole(data[0].roleid);
 
       const re = await retriveRole;
@@ -88,6 +107,7 @@ exports.login = (request, response) => {
     })
     .then(async (data) => {
       var temp = JSON.stringify(data).toString();
+      // this code checks the staff table and sets the name of who assigned the staff
       const retriveAdminName = db.retriveAdminName(data[0].assignedBy);
       const re = await retriveAdminName;
       // <== this function converts the assignedBy value to its refering name in the table called staff
@@ -97,12 +117,12 @@ exports.login = (request, response) => {
       if (re.status === "NULL") temp += `,"adminName":"NULL"}]`;
       else temp += `,"adminName":"${re[0].firstName} ${re[0].middleName}"}]`;
       data = JSON.parse(temp);
+      //
       return data;
     })
     .then((data) => {
       // console.log(`Result: ${JSON.stringify(data[0])}`);
       // this part creates the jwt token with the data variable
-      //console.log(`Data: ${data[0].roleName}`);
       const {
         id,
         assignedBy,
@@ -144,7 +164,7 @@ exports.login = (request, response) => {
       response.json({ auth: true, token: token, data: data });
     })
     .catch((err) => {
-      //console.error(`${err}`);
+      // if there is a reject this is where it is handled
       response.json({ auth: false, message: err.message });
     });
 };
@@ -157,7 +177,7 @@ exports.loginStatus = (request, response) => {
   console.log(`User name : ${request.username}`);
   console.log(`User role : ${request.roleName}`);
   console.log(`Admin name : ${request.adminName}`);
-  response.json({
+  response.status(200).json({
     loggedIn: true,
     userId: request.userId,
     img: request.img,
@@ -239,6 +259,7 @@ exports.registerStaff = (request, response) => {
 
 // viewallstaff
 exports.viewAllStaff = (request, response) => {
+  // request is the data from the jwt authentication
   const result = db.viewAllStaff(request.assignedBy, request.userId);
   result.then(async (data) => {
     // console.log(`User ID: ${request.userId}`);
@@ -456,13 +477,7 @@ exports.registerCarta = (request, response) => {
                 fs.writeFileSync(`./uploads/cartaImages/${imageName}`, buffer);
                 // Storing Image On Server END
                 // REGISTERING CARTA BEGINNING
-                var gereratedPassword =
-                  request.body.citizenId +
-                  woredaId +
-                  makeid(2) +
-                  request.body.houseNumber +
-                  makeid(3);
-                gereratedPassword = gereratedPassword.toUpperCase();
+                var gereratedPassword = makeid(8).toUpperCase();
                 const carta = {
                   citizenId: request.body.citizenId,
                   woredaId: woredaId,
@@ -485,17 +500,48 @@ exports.registerCarta = (request, response) => {
                   lastModifiedBy: request.body.lastModifiedBy,
                   lastModifiedDate: request.body.lastModifiedDate,
                   generatedPassword: gereratedPassword,
+                  action: "Registered",
                 };
                 const result3 = db.registerLand(carta);
                 // console.log("Carta Registerd Successfully!");
                 result3
-                  .then((data) => {
-                    // data = "fieldCount":0,"affectedRows":1,"insertId":32,"info":"","serverStatus":2,"warningStatus":0
-                    response.json({
-                      status: "success",
-                      affectedRows: data.affectedRows,
-                      message: `Carta registered successfuly!`,
-                    });
+                  .then(async (data) => {
+                    if (data.affectedRows === 1) {
+                      const sms = await vonage_Sms(
+                        `A Carta In your possession has been successfully registered.\nYour HouseNumber: ${request.body.houseNumber}\nCertificate Password: ${gereratedPassword} \n`
+                      );
+                      if (
+                        sms.messages[0].remainingBalance <
+                        sms.messages[0].messagePrice
+                      ) {
+                        console.log(
+                          `Insufficient SMS credit \n Current Balance: ${sms.messages[0].remainingBalance} \n Current SMS Cost: ${sms.messages[0].messagePrice}`
+                        );
+                      } else {
+                        for (let x in sms.messages) {
+                          console.log("------------------------------");
+                          console.log("Message Information");
+                          console.log("------------------------------");
+                          console.log(
+                            `Message Id: ${sms.messages[x].messageId}`
+                          );
+                          console.log(`Message Count: ${sms.messageCount}`);
+                          console.log(
+                            `Message Price: ${sms.messages[x].messagePrice}`
+                          );
+                          console.log(
+                            `Remaining Balance: ${sms.messages[x].remainingBalance}`
+                          );
+                          console.log("------------------------------");
+                        }
+                      }
+                      // data = "fieldCount":0,"affectedRows":1,"insertId":32,"info":"","serverStatus":2,"warningStatus":0
+                      response.json({
+                        status: "success",
+                        affectedRows: data.affectedRows,
+                        message: `Carta registered successfuly!`,
+                      });
+                    }
                   })
                   .catch((err) => {
                     //console.log(err);
@@ -614,6 +660,7 @@ exports.viewAllCarta = (request, response) => {
                 issuerStaffName: `${staff[0].firstName} ${staff[0].middleName}`,
                 lastChanged: `${staffLastModifiedBy[0].firstName} ${staffLastModifiedBy[0].middleName}`,
                 lastModifiedDate: carta[x].lastModifiedDate,
+                action: carta[x].action,
               };
               // console.log(carta[x]);
               jsonOut.carta.push(cartaData);
@@ -701,7 +748,8 @@ exports.updateStaff = async (request, response) => {
           fs.writeFileSync(`./uploads/staffImages/${imageName}`, buffer);
           const result1 = db.updateStaffImg(imageName, staffId);
           //TODO: the result of the image being inserted hasn't been checked!
-          //successImageChange = await result1;
+          // successImageChange = await result1;
+          //console.log(successImageChange);
         }
         if (Object.values(imgData).length > 0) {
           // console.log("HERE");
@@ -732,6 +780,18 @@ exports.updateStaff = async (request, response) => {
 };
 //updateCartaOwnership
 exports.updateCartaOwnership = async (request, response) => {
+  var gereratedPassword = makeid(8).toUpperCase();
+  request.body.generatedPassword = gereratedPassword;
+  //console.log("HERE");
+  // console.log(request.body.currentWoredaNumber);
+  const result1 = db.getWoredaKebeleId(
+    request.body.currentWoredaNumber,
+    request.body.formerKebeleNumber
+  );
+  const woredaId = await result1;
+  //console.log(woredaId);
+  request.body.woredaId = parseInt(woredaId);
+  //console.log(request.body);
   /*
   currentOwner: 1,
   newOwner: 8,
@@ -741,42 +801,80 @@ exports.updateCartaOwnership = async (request, response) => {
   newOwnerName: 'Gizaw Barnabas Gorfu'
   */
   const result = db.updateLandOwnership(request.body);
-  result.then((data) => {
-    // Getting the image name from the result
-    //console.log(data[0].img.toString().split(".").pop());
-    var imgExt = data[0].img.toString().split(".").pop();
-    var imageName =
-      `${request.body.newOwnerName}-[${request.body.lastModifiedDate}][${makeid(
-        5
-      )}].` + imgExt;
-    if (data) {
-      //Here the image is duplicated and renamed by the new owner name
-      fs.copyFile(
-        `./uploads/cartaImages/${data[0].img}`,
-        `./uploads/cartaImages/${imageName}`,
-        (err) => {
-          if (err) throw err;
-          if (!err) {
-            const result1 = db.updateLandImage(
-              imageName,
-              request.body.cartaTitleDeedNo
-            );
-            result1.then((data) => {
-              if (data) {
-                if (data.affectedRows === 1) {
-                  response.json({
-                    status: "success",
-                    //affectedRows: data.affectedRows,
-                    message: `Owner Information Updated successfuly!`,
-                  });
+  result
+    .then((data) => {
+      // Getting the image name from the result
+      //console.log(data[0].img.toString().split(".").pop());
+      var imgExt = data[0].img.toString().split(".").pop();
+      var imageName =
+        `${request.body.newOwnerName}-[${
+          request.body.lastModifiedDate
+        }][${makeid(5)}].` + imgExt;
+      if (data) {
+        //Here the image is duplicated and renamed by the new owner name
+        fs.copyFile(
+          `./uploads/cartaImages/${data[0].img}`,
+          `./uploads/cartaImages/${imageName}`,
+          (err) => {
+            if (err) throw err;
+            if (!err) {
+              const result1 = db.updateLandImage(imageName, request.body);
+              result1.then(async (data) => {
+                // console.log(data);
+                if (data) {
+                  if (data.affectedRows === 1) {
+                    const sms = await vonage_Sms(
+                      `The Carta In your possession with House Number [${request.body.cartaHouseNumber}] has been successfully transfered to \n${request.body.newOwnerName}. \nCertificate Password is [${gereratedPassword}]\n`
+                    );
+                    if (
+                      sms.messages[0].remainingBalance <
+                      sms.messages[0].messagePrice
+                    ) {
+                      console.log(
+                        `Insufficient SMS credit \n Current Balance: ${sms.messages[0].remainingBalance} \n Current SMS Cost: ${sms.messages[0].messagePrice}`
+                      );
+                    } else {
+                      for (let x in sms.messages) {
+                        console.log("------------------------------");
+                        console.log("Message Information");
+                        console.log("------------------------------");
+                        console.log(`Message Id: ${sms.messages[x].messageId}`);
+                        console.log(`Message Count: ${sms.messageCount}`);
+                        console.log(
+                          `Message Price: ${sms.messages[x].messagePrice}`
+                        );
+                        console.log(
+                          `Remaining Balance: ${sms.messages[x].remainingBalance}`
+                        );
+                        console.log("------------------------------");
+                      }
+                    }
+
+                    response.json({
+                      status: "success",
+                      //affectedRows: data.affectedRows,
+                      message: `Owner Information Updated successfuly!`,
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }
           }
-        }
-      );
-    }
-  });
+        );
+      }
+    })
+    .catch((err) => {
+      console.log("Error Here");
+      console.log(err);
+      console.log("--------------");
+      //TypeError: Cannot read properties of undefined (reading '0')
+      if (err.message.slice(37, -1) === `reading '0'`) {
+        response.json({
+          status: "fail",
+          message: `Please relogin, there has been changes made on your account!`,
+        });
+      }
+    });
 };
 //checkLandAuth
 exports.checkLandAuth = async (request, response) => {
@@ -849,8 +947,6 @@ exports.viewAuthLand = (request, response) => {
       const result3 = db.viewCarta(parseInt(request.params.citizenId));
       result3
         .then(async (carta) => {
-          //console.log("CARTA INFORMATION");
-          //console.log(carta);
           if (carta) {
             for (let x in carta) {
               if (parseInt(carta[x].id) === parseInt(request.params.cartaId)) {
@@ -906,53 +1002,77 @@ exports.viewAuthLand = (request, response) => {
           }
         })
         .then(() => {
-          //console.log(jsonOut);
           response.json(jsonOut);
         });
     });
   });
 };
 
-/*
-exports.insertNewName = (request, response) => {
-  //console.log(request.body);
-  const { name } = request.body;
-  const db = dbService.getDbServiceInstance();
-  const result = db.insertNewName(name);
-  result
-    .then((data) => response.json({ data: data }))
-    .catch((err) => console.log(err));
+exports.viewStaffDetail = async (request, response) => {
+  // request is the data from the jwt authentication
+  const result = db.viewAllStaff(request.assignedBy, request.userId);
+  const data = await result;
+  var jsonObj = [];
+  var employeeCounter = 0;
+  for (let x in data) {
+    if (employeeCounter < 5) {
+      //TODO:
+      if (data[x].id !== request.userId) {
+        const retriveRole = db.retriveRole(data[x].roleid);
+        const re = await retriveRole;
+        const result1 = db.getCartaIssuedCount(parseInt(data[x].id));
+        const data2 = await result1;
+        if (re[0].rolename === "Employee") {
+          employeeCounter++;
+          const view = {
+            id: data[x].id,
+            img: data[x].img,
+            name: `${data[x].firstName} ${data[x].middleName} ${data[x].lastName}`,
+            roleName: re[0].rolename,
+            accountStatus: data[x].accountStatus,
+            lastChanged: data[x].lastChanged,
+            joinedDate: data[x].joinedDate,
+            numberOfCartaIssued:
+              re[0].rolename === "Employee"
+                ? data2[0].numberOfCartaIssued
+                : null,
+          };
+          jsonObj.push(view);
+        }
+      }
+    }
+  }
+  response.json(jsonObj);
 };
-exports.getAllData = (request, response) => {
-  const db = dbService.getDbServiceInstance();
-  const result = db.getAllData();
-  result
-    .then((data) => response.json({ data: data }))
-    .catch((err) => console.log(err));
+
+//viewCarta
+exports.viewCarta = async (request, response) => {
+  var jsonObj = {
+    citizenInfo: [],
+    carta: [],
+  };
+  const staffId = parseInt(request.params.id);
+  // Getting the carta with respect to by whom it was issued [BEGINNING]
+  const result = db.viewCartaByStaff(staffId);
+  const cartaData = await result;
+  // Getting the carta with respect to by whom it was issued [END]
+  for (let x in cartaData) {
+    // Parsing through the cartaData to fetch the Citizen Data [BEGINNING]
+    var result1 = db.viewCitizen(cartaData[x].citizenId);
+    var citizenData = await result1;
+    var citizenData1 = {
+      fullName: `${citizenData[0].firstName} ${citizenData[0].middleName} ${citizenData[0].lastName}`,
+      img: citizenData[0].img,
+    };
+    // Parsing through the cartaData to fetch the Citizen Data [END]
+    // Setting carta data here
+    var cartaData1 = {
+      cartaTitleDeedNo: cartaData[x].titleDeedNo,
+      action: cartaData[x].action,
+      lastModifiedDate: cartaData[x].lastModifiedDate,
+    };
+    jsonObj.citizenInfo.push(citizenData1);
+    jsonObj.carta.push(cartaData1);
+  }
+  response.json(jsonObj);
 };
-exports.updateNameById = (request, response) => {
-  const { id, name } = request.body;
-  const db = dbService.getDbServiceInstance();
-  const result = db.updateNameById(id, name);
-  result
-    .then((data) => response.json({ success: data }))
-    .catch((err) => console.log(err));
-};
-exports.deleteRowById = (request, response) => {
-  // console.log(request.params); displays the id to be deleted in the back end
-  const { id } = request.params;
-  const db = dbService.getDbServiceInstance();
-  const result = db.deleteRowById(id);
-  result
-    .then((data) => response.json({ success: data }))
-    .catch((err) => console.log(err));
-};
-exports.searchByName = (request, response) => {
-  const { name } = request.params;
-  const db = dbService.getDbServiceInstance();
-  const result = db.searchByName(name);
-  result
-    .then((data) => response.json({ data: data }))
-    .catch((err) => console.log(err));
-};
-*/

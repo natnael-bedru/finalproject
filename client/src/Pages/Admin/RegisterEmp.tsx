@@ -84,7 +84,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     roleid: Yup.string().required("*required"),
   });
   const onSubmit = (data: any) => {
-    console.log(`FILE HERE: ${data.img}`);
+    //console.log(`FILE HERE: ${data.img}`);
     if (accountStatus) {
       data.accountStatus = "Active";
     } else {
@@ -95,7 +95,7 @@ const RegisterEmp = ({ Empreg, setEmpreg }: Props) => {
     data.img = imgBase64;
     //data.file = imgBase64;
     //imgBase64
-    console.log(`FILE HERE2: ${data.img}`);
+    //console.log(`FILE HERE2: ${data.img}`);
     Axios.post("http://localhost:3001/AALHRIA/registerStaff", data, {
       headers: {
         "x-access-token": localStorage.getItem("token"),

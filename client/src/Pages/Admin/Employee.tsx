@@ -26,6 +26,7 @@ const Employee = (props: Props) => {
     // rowid: 0,
     false
   );
+
   // used to pass id of the selected employee
   const [sid, setSid] = useState(0);
 

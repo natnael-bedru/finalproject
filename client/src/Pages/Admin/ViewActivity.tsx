@@ -5,12 +5,14 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useLayoutEffect,
 } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { HiDotsHorizontal } from "react-icons/hi";
+import Axios from "axios";
 
 type Props = {
   viewactvity: boolean;
@@ -20,6 +22,38 @@ type Props = {
 
 const ViewActivity = ({ viewactvity, setViewactvity, setid }: Props) => {
   const style = { color: "gray", fontSize: "1.5em" };
+
+  const [citizen, setCitizen] = useState<any>({
+    fullName: null,
+    img: null,
+  });
+  const [cartaInfo, setCartaInfo] = useState<any>({
+    cartaTitleDeedNo: null, //
+    action: null, //
+    lastModifiedDate: null, //
+  });
+  useEffect(() => {
+    Axios.get(`http://localhost:3001/AALHRIA/viewCarta/${setid}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((data) => {
+      setCartaInfo(data.data.carta);
+      setCitizen(data.data.citizenInfo);
+    });
+  }, [viewactvity, setid]);
+  const dateConverter = (date: string) => {
+    if (date) {
+      var temp_date = new Date(date.substring(0, 10));
+      var new_Date = new Date(
+        temp_date.getTime() +
+          Math.abs(temp_date.getTimezoneOffset() * 60000) * 12
+      )
+        .toISOString()
+        .substring(0, 10);
+      return new_Date;
+    }
+  };
   return (
     <>
       <Transition appear show={viewactvity} as={Fragment}>
@@ -86,84 +120,56 @@ const ViewActivity = ({ viewactvity, setViewactvity, setid }: Props) => {
                             </>
                           </tr>
                         </thead>
-
                         <tbody>
-                          <tr>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <div className="flex items-center">
-                                <div className="flex-shrink-0 w-10 h-10">
-                                  <img
-                                    className="w-full h-full rounded-full"
-                                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="ml-3">
-                                  <p className="text-gray-900 whitespace-no-wrap">
-                                    Vera Carpenter
-                                  </p>
-                                </div>
-                              </div>
-                            </td>
+                          {(() => {
+                            const tableData = [];
+                            if(cartaInfo.cartaTitleDeedNo !== null || citizen.img !== null)
+                            for (let x in cartaInfo) {
+                              tableData.push(
+                                <tr>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <div className="flex items-center">
+                                      <div className="flex-shrink-0 w-10 h-10">
+                                        <img
+                                          className="w-full h-full rounded-full"
+                                          src={`/uploads/citizenImages/${citizen[x].img}`}
+                                          alt=""
+                                        />
+                                      </div>
+                                      <div className="ml-3">
+                                        <p className="text-gray-900 whitespace-no-wrap">
+                                          {citizen[x].fullName}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </td>
 
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                Admin
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                <span
-                                  aria-hidden
-                                  className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                                ></span>
-                                <span className="relative">Active</span>
-                              </span>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                Jan 21, 2020
-                              </p>
-                            </td>
-                          </tr>
-
-                          <tr>
-                            <td className="px-5 py-5 bg-white text-sm">
-                              <div className="flex items-center">
-                                <div className="flex-shrink-0 w-10 h-10">
-                                  <img
-                                    className="w-full h-full rounded-full"
-                                    src="https://images.unsplash.com/photo-1522609925277-66fea332c575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&h=160&w=160&q=80"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="ml-3">
-                                  <p className="text-gray-900 whitespace-no-wrap">
-                                    Alonzo Cox
-                                  </p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-5 py-5 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                Admin
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                <span
-                                  aria-hidden
-                                  className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                                ></span>
-                                <span className="relative">Active</span>
-                              </span>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                Jan 21, 2020
-                              </p>
-                            </td>
-                          </tr>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                      {cartaInfo[x].cartaTitleDeedNo}
+                                    </p>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                      <span
+                                        aria-hidden
+                                        className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
+                                      ></span>
+                                      <span className="relative">
+                                        {cartaInfo[x].action}
+                                      </span>
+                                    </span>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                      {dateConverter(cartaInfo[x].lastModifiedDate)}
+                                    </p>
+                                  </td>
+                                </tr>
+                              );
+                            }
+                            return tableData;
+                          })()}
                         </tbody>
                       </table>
                     </div>

@@ -26,6 +26,7 @@ const HomePage = (props: Props) => {
   });
   // Navigation Fix Here
   if (user.role !== "Admin") {
+    //console.log(user);
     navigate("/not_found");
   }
   return (

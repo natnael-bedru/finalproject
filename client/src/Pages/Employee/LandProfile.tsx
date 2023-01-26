@@ -18,6 +18,7 @@ import notFound from "../../assets/notFound.png";
 import QRCode from "react-qr-code";
 import logo from "../../assets/logo.jpg";
 
+
 type Props = {
   showland: boolean;
   setShowland: Dispatch<SetStateAction<boolean>>;
@@ -64,7 +65,6 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
       cartaPermittedUse: null,
       issuerStaffName: null,
       lastChanged: null,
-      generatedPassword: null,
       cartaCoordinateData: [
         {
           X1: null,
@@ -149,6 +149,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
               >
                 <div className="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all font-poppins">
                   <div className=" flex justify-end p-3 items-center">
+                    {/* <h1 className="font-semibold text-2xl">Land Details</h1> */}
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -165,21 +166,19 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                           as="h3"
                           className="text-lg font-medium leading-6 text-gray-900 px-3 py-3 flex flex-col text-center justify-center items-center"
                         >
-                          <div>
+                         
+                         <div>
                             <img src={logo} className="w-32 h-32 mb-4" alt="" />
                           </div>
                           <div>
-                            {" "}
-                            Addis Ababa City Goverment Land Adminstration <br />
+                           
+                          Addis Ababa City Goverment Land Adminstration <br />
                             and permit Authority permit Hold Certificate of
                             Tittle Deed
                           </div>
-
-                          <div> </div>
                         </Dialog.Title>
 
                         <div className="w-1/2 h-auto flex items-center ">
-                          <div></div>
                           <label
                             className="font-bold text-xl font-poppins w-1/4 ml-3"
                             htmlFor="Landid"
@@ -223,9 +222,11 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                   Citizen Image
                                 </label>
                                 <div className="mt-1 mr-9 flex justify-center items-center px-1 pt-1 pb-1 border-2 h-[200px] w-[200px] border-gray-300 border-dashed rounded-md">
+                                 { // eslint-disable-next-line jsx-a11y/alt-text
                                   <img
                                     src={`/uploads/citizenImages/${currCitizen.img}`}
                                   />
+                                 }
                                 </div>
                               </div>
                               <div className="space-y-2">
@@ -307,19 +308,6 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                 <></>
                               )}
                             </div>
-                            {/* <div className="w-1/3 p-20">
-                              <QRCode
-                                className="w-full h-full "
-                                size={256}
-                                // style={{
-                                //   height: "auto",
-                                //   maxWidth: "100%",
-                                //   width: "100%",
-                                // }}
-                                value="http://192.168.196.54:3000/employeehomepage/owners"
-                                viewBox={`0 0 256 256`}
-                              />
-                            </div> */}
                           </>
                         ) : (
                           <>
@@ -343,7 +331,7 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                           <div className="w-full flex justify-between mt-4">
                             <div className="w-1/2 h-[450px] bg-black flex justify-center items-center text-white">
                               <img
-                                className="w-full h-full flex justify-center items-center"
+                                 className="w-full h-full flex justify-center items-center"
                                 src={`/uploads/cartaImages/${cartaInfo[selectedCarta].cartaImage}`}
                                 alt="cartaImg"
                               />
@@ -633,8 +621,8 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               </div>
                             </div>
                           </div>
-                          {/* QR code */}
-                          <div className="flex items-center justify-between">
+{/* QR code */}
+<div className="flex items-center justify-between">
                             <div className="flex flex-col space-y-2 ">
                               <h1 className="font-bold text-lg">Reminder</h1>
                               <h1 className="text-base font-light">
@@ -648,7 +636,6 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                                   <br /> permission of the legally authorized
                                   body.
                                 </li>
-
                                 <li>
                                   {" "}
                                   If the site is required for development for
@@ -693,13 +680,11 @@ const LandProfile = ({ showland, setShowland, citizenId }: Props) => {
                               print land details
                             </button>
                           </div>
-                          {/* button end */}
                         </>
                       ) : (
                         <></>
                       )}
                     </div>
-                    {/* print */}
                   </div>
                 </div>
               </Transition.Child>

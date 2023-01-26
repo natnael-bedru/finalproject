@@ -197,6 +197,15 @@ const Updateland = (props: Props) => {
     data.newOwner = newCitizen.id;
     data.issuedBy = user.id;
     data.cartaTitleDeedNo = cartaInfo[selectedCarta].cartaTitleDeedNo;
+    data.currentWoredaNumber = cartaInfo[selectedCarta].currentWoredaNumber;
+    data.formerKebeleNumber = cartaInfo[selectedCarta].formerKebeleNumber;
+    data.cartaBlockNumber = cartaInfo[selectedCarta].cartaBlockNumber;
+    data.cartaParcelNumber = cartaInfo[selectedCarta].cartaParcelNumber;
+    data.cartaHouseNumber = cartaInfo[selectedCarta].cartaHouseNumber;
+    data.cartaPlotArea = cartaInfo[selectedCarta].cartaPlotArea;
+    data.cartaBuiltUpArea = cartaInfo[selectedCarta].cartaBuiltUpArea;
+    data.cartaBasemapNo = cartaInfo[selectedCarta].cartaBasemapNo;
+    
     data.lastModifiedDate = new Date().toISOString().substring(0, 10);
     Axios.post("http://localhost:3001/AALHRIA/updateCartaOwnership", data, {
       headers: {

@@ -55,6 +55,11 @@ router
   .route("/viewAllCarta/:id")
   .get(_controllers.verifyJWT, _controllers.viewAllCarta);
 
+// id is staff id
+router
+  .route("/viewCarta/:id")
+  .get(_controllers.verifyJWT, _controllers.viewCarta);
+
 //updateStaff
 router
   .route("/updateStaff")
@@ -63,6 +68,11 @@ router
 router
   .route("/updateCartaOwnership")
   .post(_controllers.verifyJWT, _controllers.updateCartaOwnership);
+
+// view staff members
+router
+  .route("/viewstaffdetails")
+  .get(_controllers.verifyJWT, _controllers.viewStaffDetail);
 
 //checkLandAuth
 router.route("/checkLandAuth").post(_controllers.checkLandAuth);

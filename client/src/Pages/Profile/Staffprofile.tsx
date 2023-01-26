@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useLayoutEffect,
   useState,
 } from "react";
@@ -67,6 +68,26 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
       return new_Date;
     }
   };
+
+  const [citizen, setCitizen] = useState<any>({
+    fullName: null,
+    img: null,
+  });
+  const [cartaInfo, setCartaInfo] = useState<any>({
+    cartaTitleDeedNo: null, //
+    action: null, //
+    lastModifiedDate: null, //
+  });
+  useEffect(() => {
+    Axios.get(`http://localhost:3001/AALHRIA/viewCarta/${param.id}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((data) => {
+      setCartaInfo(data.data.carta);
+      setCitizen(data.data.citizenInfo);
+    });
+  }, [param.id]);
 
   return (
     <>
@@ -258,44 +279,72 @@ const Employeeprofile = ({ empProfile, setempProfile }: Props) => {
                     <table className="w-full text-sm text-left border text-gray-500 dark:text-gray-400 mb-auto">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-white dark:text-black">
                         <tr>
-                          <th scope="col" className="px-6 py-3">
-                            Sales ID
+                          
+                          <th scope="col" className="px-12 py-3">
+                            Full Name
                           </th>
                           <th scope="col" className="px-12 py-3">
-                            Sales Name
+                            Title Deed Number
                           </th>
                           <th scope="col" className="px-12 py-3">
-                            Driver Name
+                            Action
                           </th>
 
                           <th scope="col" className="px-12 py-3">
-                            Driver Phone Number
-                          </th>
-
-                          <th scope="col" className="px-9 py-3">
-                            Registration
+                            Date
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="bg-white border-b dark:bg-white dark:border-gray-700 hover:bg-gray-50">
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                          ></th>
-                          <td className="px-12 py-4"></td>
-                          <td className="px-7 py-4"></td>
+                      {(() => {
+                            const tableData = [];
+                            if(cartaInfo.cartaTitleDeedNo !== null || citizen.img !== null)
+                            for (let x in cartaInfo) {
+                              tableData.push(
+                                <tr>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <div className="flex items-center">
+                                      <div className="flex-shrink-0 w-10 h-10">
+                                        <img
+                                          className="w-full h-full rounded-full"
+                                          src={`/uploads/citizenImages/${citizen[x].img}`}
+                                          alt=""
+                                        />
+                                      </div>
+                                      <div className="ml-3">
+                                        <p className="text-gray-900 whitespace-no-wrap">
+                                          {citizen[x].fullName}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </td>
 
-                          <td className="px-12 py-4"></td>
-
-                          <td className="px-9 py-4">
-                            <div className="inline-flex space-x-1.5 items-center justify-center py-0.5 pl-1.5 pr-2 bg-green-200 rounded-full">
-                              <p className="text-xs font-medium leading-none text-center text-green-700">
-                                Succseful
-                              </p>
-                            </div>
-                          </td>
-                        </tr>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                      {cartaInfo[x].cartaTitleDeedNo}
+                                    </p>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                      <span
+                                        aria-hidden
+                                        className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
+                                      ></span>
+                                      <span className="relative">
+                                        {cartaInfo[x].action}
+                                      </span>
+                                    </span>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                      {dateConverter(cartaInfo[x].lastModifiedDate)}
+                                    </p>
+                                  </td>
+                                </tr>
+                              );
+                            }
+                            return tableData;
+                          })()}
                       </tbody>
                     </table>
                     {/* <!-- Pagination --> */}
