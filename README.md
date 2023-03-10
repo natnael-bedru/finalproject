@@ -1,7 +1,7 @@
 # Senior Final Project
 
 Project title : **`Digital Land Administration and Certificate Authentication System for Yeka Sub City`**
-> This project is done with colaboration with [Gedion Getachew](https://github.com/gedion24).
+> This project is done in colaboration with [Gedion Getachew](https://github.com/gedion24).
 > <br /> Gedion Getachew - Front-end
 > <br /> Natnael Bedru (me) - Back-end
 
