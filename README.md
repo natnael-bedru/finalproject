@@ -48,7 +48,7 @@ Project title : **`Digital Land Administration and Certificate Authentication Sy
         - And replace with the following <br>
           `VONAGE_APIKEY=[apikey]` <br>
           `VONAGE_APISECRET=[apisecret]` <br>
-          `TESTPHONENUMBER=251944075503` <br> _the phone number must have the country code without the `+` sign_
+          `TESTPHONENUMBER=[251933445566]{countrycode+phonenumber}` <br> _the phone number must have the country code without the `+` sign_
 
   4. Open two terminals in Visual Studio Code. _(use keyboard shortcut **<code>ctrl + `</code>**)_
      1. On the first terminal run the following
